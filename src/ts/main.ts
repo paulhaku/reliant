@@ -22,3 +22,19 @@ function pretty(str: string): string
     return str.replace(/_/g, ' ').replace(/\w+\s*/g, (txt: string) => txt.charAt(0).toUpperCase()
     + txt.substr(1).toLowerCase());
 }
+
+/*
+ * Keybind Handling
+ */
+
+function keyPress(e: KeyboardEvent): void
+{
+    const textboxSelected = document.querySelector("input:focus, textarea:focus");
+    if (e.ctrlKey || e.altKey || e.shiftKey)
+        return;
+    else if (textboxSelected)
+        return;
+    const pressedKey = e.key.toUpperCase();
+}
+
+document.addEventListener("keyup", keyPress);

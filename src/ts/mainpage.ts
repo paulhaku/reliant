@@ -66,6 +66,7 @@ pageContent.innerHTML = `
     <div id="chasing-container">
         <span id="chasing-header" class="header">Chasing</span>
         <br>
+        <input type="button" id="move-to-jp" value="Move to JP">
         <input type="button" id="chasing-button" value="Refresh">
     </div>
 </div>

@@ -42,3 +42,5 @@ document.addEventListener("keyup", keyPress);
 /*
  * Keybind Functionality
  */
+
+let keys: object = {};

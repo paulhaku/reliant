@@ -33,10 +33,7 @@ pageContent.innerHTML = `
         <br>
         <br>
         <div class="information">
-            <ul>
-                <li><a href="/nation=nation1">Nation 1</a></li>
-                <li><a href="/nation=nation2">Nation 2</a></li>
-                <li><a href="/nation=nation3">Nation 3</a></li>
+            <ul id="nations-to-endorse">
             </ul>
         </div>
     </div>
@@ -53,9 +50,6 @@ pageContent.innerHTML = `
         </div>
         <div class="information">
             <ul id="nations-to-dossier">
-                <li><a href="/nation=nation1">Nation 1</a></li>
-                <li><a href="/nation=nation2">Nation 2</a></li>
-                <li><a href="/nation=nation3">Nation 3</a></li>
             </ul>
         </div>
     </div>
@@ -72,16 +66,25 @@ pageContent.innerHTML = `
 </div>
 
 <div id="group4">
+    <!-- Switchers -->
     <div id="switchers-container">
         <span id="switchers-container" class="header">Switchers Left</span>
+        <input type="button" id="refresh-switchers" value="Refresh">
         <div class="information">
             <ul id="switchers">
-            <li>scent of night</li>
-            <li>rising walls</li>
-            <li>disintegrating</li>
             </ul>
         </div>
     </div>
 </div>
 `;
 document.body.appendChild(pageContent);
+
+/*
+ * Dynamic Information
+ */
+
+const status: HTMLElement = document.querySelector("#status");
+const currentWaNation: HTMLElement = document.querySelector("#current-wa-nation");
+const nationsToEndorse: HTMLElement = document.querySelector("#nations-to-endorse");
+const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossier");
+const switchers: HTMLElement = document.querySelector("switchers");

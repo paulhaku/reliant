@@ -17,19 +17,6 @@ pageContent.innerHTML = `
 <textarea id="switchers"></textarea>
 <input class="button" type="button" id="set-switchers" value="Set">
 </fieldset>
-<fieldset id="buttons">
-<legend>One Click Button Status</legend>
-<p>
-<label for="endorse">Endorse Buttons</label>
-<input type="radio" name="one-click-button" value="endorse">
-</p>
-<p>
-<label for="move">Move Buttons</label>
-<input type="radio" name="one-click-button" value="move">
-</p>
-<input type="button" class="button" id="enable-button" value="Enable">
-<input type="button" class="button" id="disable-button" value="Disable">
-</fieldset>
 <fieldset id="keys">
 <legend>Change Keys</legend>
 <p id="current-key"></p>

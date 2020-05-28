@@ -1,6 +1,6 @@
 const pageContent: HTMLElement = document.querySelector("#content");
 pageContent.innerHTML = `
-<h1>Avid Settings</h1>
+<h1>Reliant Settings</h1>
 <form>
 <fieldset>
 <legend>Jump Point</legend>

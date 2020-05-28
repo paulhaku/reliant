@@ -29,12 +29,16 @@ function pretty(str: string): string
 
 function keyPress(e: KeyboardEvent): void
 {
-    const textboxSelected = document.querySelector("input:focus, textarea:focus");
+    const textboxSelected: HTMLElement = document.querySelector("input:focus, textarea:focus");
     if (e.ctrlKey || e.altKey || e.shiftKey)
         return;
     else if (textboxSelected)
         return;
-    const pressedKey = e.key.toUpperCase();
+    const pressedKey: string = e.key.toUpperCase();
 }
 
 document.addEventListener("keyup", keyPress);
+
+/*
+ * Keybind Functionality
+ */

@@ -44,3 +44,14 @@ document.addEventListener("keyup", keyPress);
  */
 
 let keys: object = {};
+
+chrome.storage.local.get("movekey", (result) => {
+    const moveKey = result.movekey || 'X';
+    keys[moveKey] = () => {
+        const moveButton = document.querySelector('button[name=move_region]');
+        if (moveButton)
+            moveButton.click();
+        else if (urlParameters["page"] === "reports")
+            document.querySelector("li > a:nth-of-type(3)").click();
+    };
+});

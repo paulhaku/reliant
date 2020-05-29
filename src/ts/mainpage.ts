@@ -174,6 +174,8 @@ function admitWA(e: MouseEvent): void
             chrome.storage.local.set({'chk': chk});
             console.log(`chk set to ${chk}`);
         }
+        else
+            status.innerHTML = `Error admitting to the WA on ${selectedSwitcher}.`;
         delete storedSwitchers[selectedSwitcher];
         chrome.storage.local.set({"switchers": storedSwitchers});
     });
@@ -198,7 +200,6 @@ function refreshEndorse(e: MouseEvent): void
                 resigned.push(nationName);
             else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
                 if (resigned.indexOf(nationName) === -1) {
-                    // nationsToEndorse.innerHTML += `<li>${pretty(nationName)}</li>`;
                     let endorseButton: Element = document.createElement('input');
                     endorseButton.setAttribute('type', 'button');
                     endorseButton.setAttribute('class', 'ajaxbutton');

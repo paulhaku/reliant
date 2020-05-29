@@ -53,8 +53,10 @@ function getChk(page: string): void
 
 const urlParameters: object = getUrlParameters(document.URL);
 
-if (urlParameters["page"] !== "blank")
+if (urlParameters["page"] !== "blank") {
     getLocalId();
+    getChk();
+}
 
 /*
  * Keybind Handling

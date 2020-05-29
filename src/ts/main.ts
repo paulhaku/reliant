@@ -23,6 +23,8 @@ function pretty(str: string): string
     + txt.substr(1).toLowerCase());
 }
 
+const urlParameters: object = getUrlParameters(document.URL);
+
 /*
  * Keybind Handling
  */

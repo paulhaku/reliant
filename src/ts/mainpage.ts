@@ -125,7 +125,7 @@ function makeAjaxQuery(url: string, method: string, data: object): string
         xhr.addEventListener("loadend", onLoadEnd);
         xhr.open(method, url);
         xhr.responseType = "text";
-        if (data === undefined)
+        if (data !== undefined)
             xhr.send(data);
         else
             xhr.send();
@@ -141,10 +141,19 @@ function resignWA(e: MouseEvent): void
 
 }
 
-async function admitWA(e: MouseEvent): void
+function admitWA(e: MouseEvent): void
 {
-    let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
-    console.log(response);
+    chrome.storage.local.get('switchers', async (result) => {
+        let storedSwitchers = result.switchers;
+        let switcherNames = Object.keys(storedSwitchers);
+        let selectedSwitcher = switcherNames[0];
+        let formData = new FormData();
+        formData.set('nation', selectedSwitcher);
+        formData.set('appid', storedSwitchers[selectedSwitcher]);
+        let response = await makeAjaxQuery("/cgi-bin/join_un.cgi", "POST", formData);
+        delete storedSwitchers[selectedSwitcher];
+        chrome.storage.local.set({"switchers": storedSwitchers});
+    });
 }
 
 function refreshEndorse(e: MouseEvent): void

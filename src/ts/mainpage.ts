@@ -17,8 +17,8 @@ pageContent.innerHTML = `
     <div id="current-wa-nation-container">
     <span id="current-wa-nation-header" class="header">Current WA Nation</span>
     <br>
-    <input type="button" id="resign" value="Resign">
-    <input type="button" id="admit" value="Admit on Next Switcher">
+    <input type="button" id="resign" value="Resign" class="ajaxbutton">
+    <input type="button" id="admit" value="Admit on Next Switcher" class="ajaxbutton">
     <br>
     <span id="current-wa-nation" class="information">N/A</span>
     </div>
@@ -29,7 +29,7 @@ pageContent.innerHTML = `
     <div id="endorse-container">
         <span id="endorse-header" class="header">Endorse</span>
         <br>
-        <input type="button" id="refresh-endorse" value="Refresh">
+        <input type="button" id="refresh-endorse" value="Refresh" class="ajaxbutton">
         <br>
         <br>
         <div class="information">
@@ -42,7 +42,7 @@ pageContent.innerHTML = `
     <div id="dossier-container">
         <span id="dossier-header" class="header">Dossier</span>
         <br>
-        <input type="button" id="refresh-dossier" value="Refresh">
+        <input type="button" id="refresh-dossier" value="Refresh" class="ajaxbutton">
         <div>
             <label for="raider-jp">Raider Jump Point</label>
             <input type="text" id="raider-jp">
@@ -60,8 +60,8 @@ pageContent.innerHTML = `
     <div id="chasing-container">
         <span id="chasing-header" class="header">Chasing</span>
         <br>
-        <input type="button" id="move-to-jp" value="Move to JP">
-        <input type="button" id="chasing-button" value="Refresh">
+        <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
+        <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
     </div>
 </div>
 

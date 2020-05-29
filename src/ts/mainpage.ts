@@ -305,6 +305,33 @@ async function chasingButton(e: MouseEvent): void
     'plum_island'];
     if (e.target.value == "Refresh") {
         let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
+        let responseDiv = document.createElement('div');
+        responseDiv.innerHTML = response;
+        let moveRegion = responseDiv.querySelector('.rlink:nth-of-type(3)');
+        if (!moveRegion)
+            return;
+        let moveRegionValue = canonicalize(moveRegion.innerHTML);
+        if (jumpPoints.indexOf(moveRegionValue) !== -1)
+            return;
+        let moveRegionParent = moveRegion.parentElement;
+        if (moveRegionParent.innerHTML.indexOf('relocated from') === -1)
+            return;
+        else {
+            e.target.value = `Move to ${moveRegionValue}`;
+            e.target.setAttribute('data-moveregion', moveRegionValue);
+        }
+    }
+    else if (e.target.getAttribute('data-moveregion')) {
+        chrome.storage.local.get('localid', async (result) => {
+            const localId = result.localid;
+            const moveRegion = e.target.getAttribute('data-moveregion');
+            let formData = new FormData();
+            formData.set('localid', localId);
+            formData.set('region_name', moveRegion);
+            formData.set('move_region', '1');
+            let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
+            console.log(response);
+        });
     }
 }
 

@@ -151,6 +151,17 @@ function admitWA(e: MouseEvent): void
         formData.set('nation', selectedSwitcher);
         formData.set('appid', storedSwitchers[selectedSwitcher]);
         let response = await makeAjaxQuery("/cgi-bin/join_un.cgi", "POST", formData);
+        if (response.indexOf("Welcome to the World Assembly, new member") !== -1) {
+            currentWANation.innerHTML = pretty(selectedSwitcher);
+            status.innerHTML = `Admitted to the WA on ${selectedSwitcher}.`;
+
+            // Update Chk
+            const chkRegex: RegExp = new RegExp(`<input type="hidden" name="chk" value="([A-za-z0-9]+?)">`);
+            const match = chkRegex.exec(response);
+            const chk = match[1];
+            chrome.storage.local.set({'chk': chk});
+            console.log(`chk set to ${chk}`);
+        }
         delete storedSwitchers[selectedSwitcher];
         chrome.storage.local.set({"switchers": storedSwitchers});
     });

@@ -1,17 +1,15 @@
 function addSwitcher(switcher: string, appid: string): void
 {
     chrome.storage.local.get('switchers', (result) => {
-        let oldSwitchers: object[];
+        let oldSwitchers: object;
         if (result.switchers !== undefined)
             oldSwitchers = result.switchers;
         else
-            oldSwitchers = [];
-        console.log(typeof(oldSwitchers));
-        let switcherObject: object = {
-            'name': switcher,
-            'appid': appid
-        };
-        oldSwitchers.push(switcherObject);
+            oldSwitchers = {};
+        if (switcher in oldSwitchers)
+            return;
+        else
+            oldSwitchers[switcher] = appid;
         chrome.storage.local.set({'switchers': oldSwitchers});
     });
 }

@@ -69,7 +69,7 @@ pageContent.innerHTML = `
     <!-- Switchers -->
     <div id="switchers-container">
         <span id="switchers-container" class="header">Switchers Left</span>
-        <input type="button" id="refresh-switchers" value="Refresh">
+        <br>
         <div class="information">
             <ul id="switchers">
             </ul>
@@ -77,6 +77,7 @@ pageContent.innerHTML = `
     </div>
 </div>
 `;
+
 document.body.appendChild(pageContent);
 
 /*
@@ -84,7 +85,92 @@ document.body.appendChild(pageContent);
  */
 
 const status: HTMLElement = document.querySelector("#status");
-const currentWaNation: HTMLElement = document.querySelector("#current-wa-nation");
+const currentWANation: HTMLElement = document.querySelector("#current-wa-nation");
 const nationsToEndorse: HTMLElement = document.querySelector("#nations-to-endorse");
 const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossier");
-const switchers: HTMLElement = document.querySelector("switchers");
+const switchers: HTMLElement = document.querySelector("#switchers");
+
+/*
+ * Helpers
+ */
+
+function resetSwitchers(switcherList: string[]): void
+{
+    const toAdd = Object.keys(switcherList);
+    switchers.innerHTML = '';
+    for (let i = 0; i != toAdd.length; i++)
+        switchers.innerHTML += `<li>${toAdd[i]}</li>`;
+}
+
+/*
+ * Event Handlers
+ */
+
+function resignWA(e: MouseEvent): void
+{
+
+}
+
+function admitWA(e: MouseEvent): void
+{
+
+}
+
+function refreshEndorse(e: MouseEvent): void
+{
+
+}
+
+function refreshDossier(e: MouseEvent): void
+{
+
+}
+
+function setRaiderJP(e: MouseEvent): void
+{
+
+}
+
+function moveToJP(e: MouseEvent): void
+{
+
+}
+
+function chasingButton(e: MouseEvent): void
+{
+
+}
+
+function onStorageChange(changes: object, areaName: string)
+{
+    for (let key in changes) {
+        let storageChange = changes[key];
+        if (key == "switchers") {
+            const newSwitchers: string[] = storageChange.newValue;
+            resetSwitchers(newSwitchers);
+            break;
+        }
+    }
+}
+
+/*
+ * Event Listeners
+ */
+
+document.querySelector("#resign").addEventListener("click", resignWA);
+document.querySelector("#admit").addEventListener("click", admitWA);
+document.querySelector("#refresh-endorse").addEventListener("click", refreshEndorse);
+document.querySelector("#refresh-dossier").addEventListener("click", refreshDossier);
+document.querySelector("#set-raider-jp").addEventListener("click", setRaiderJP);
+document.querySelector("#move-to-jp").addEventListener("click", moveToJP);
+document.querySelector("#chasing-button").addEventListener("click", chasingButton);
+chrome.storage.onChanged.addListener(onStorageChange);
+
+/*
+ * Initialization
+ */
+
+chrome.storage.local.get("switchers", (result) =>
+{
+    resetSwitchers(result.switchers);
+});

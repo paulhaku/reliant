@@ -25,9 +25,9 @@ function pretty(str: string): string
 
 function getLocalId(page: string): void
 {
-    const localId = document.querySelector("input[name=localid]").value;
+    const localId = document.querySelector("input[name=localid]");
     if (localId)
-        chrome.storage.local.set({'localid': localId});
+        chrome.storage.local.set({'localid': localId.value});
     else if (page) {
         const localIdRegex: RegExp = new RegExp('<input type="hidden" name="localid" value="([A-Za-z0-9]+?)">');
         const match = localIdRegex.exec(page);
@@ -39,9 +39,9 @@ function getLocalId(page: string): void
 
 function getChk(page: string): void
 {
-    const chk = document.querySelector("input[name=chk]").value;
+    const chk = document.querySelector("input[name=chk]");
     if (chk)
-        chrome.storage.local.set({'chk': chk});
+        chrome.storage.local.set({'chk': chk.value});
     else if (page) {
         const chkRegex: RegExp = new RegExp('<input type="hidden" name="chk" value="([A-Za-z0-9]+?)">');
         const match = chkRegex.exec(page);

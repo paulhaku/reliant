@@ -23,11 +23,16 @@ function pretty(str: string): string
     + txt.substr(1).toLowerCase());
 }
 
-function getLocalId(): void
+function getLocalId(page: string): void
 {
     const localId = document.querySelector("input[name=localid]").value;
     if (localId)
         chrome.storage.local.set({'localid': localId});
+    else if (page) {
+        const localIdRegex: RegExp = new RegExp('<input type="hidden" name="localid" value="([A-Za-z0-9]+?)">');
+        const match = localIdRegex.exec(page);
+        chrome.storage.local.set({'localid': match[1]});
+    }
     else
         return;
 }

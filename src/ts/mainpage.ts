@@ -4,6 +4,8 @@ const pageContent = document.createElement('div');
 pageContent.id = "content";
 pageContent.innerHTML = `
 <div id="group1">
+    <input type="button" id="update-localid" value="Update Localid">
+    
     <!-- Status -->
     <div id="status-container">
     <span id="status-header" class="header">Status</span>
@@ -134,8 +136,10 @@ function makeAjaxQuery(url: string, method: string, data: object): string
 
 async function manualLocalIdUpdate(e: MouseEvent): void
 {
+    console.log('manually updating localid');
     let response = await makeAjaxQuery('/region=rwby', 'GET');
     getLocalId(response);
+    status.innerHTML = 'Updated localid.';
 }
 
 /*
@@ -209,6 +213,7 @@ function refreshEndorse(e: MouseEvent): void
                 if (resigned.indexOf(nationName) === -1) {
                     function onEndorseClick(e: MouseEvent)
                     {
+                        console.log('doing endorse click');
                         chrome.storage.local.get('localid', async (localidresult) => {
                             const localId = localidresult.localid;
                             let formData = new FormData();
@@ -216,12 +221,8 @@ function refreshEndorse(e: MouseEvent): void
                             formData.set('localid', localId);
                             formData.set('action', 'endorse');
                             let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
-                            // Switch the button to one that updates thee localid if it fails
-                            if (endorseResponse.indexOf('Failed security check.') !== -1) {
+                            if (endorseResponse.indexOf('Failed security check.') !== -1)
                                 status.innerHTML = `Failed to endorse ${nationName}.`;
-                                endorseButton.value = 'Update Localid';
-                                endorseButton.addEventListener('click', manualLocalIdUpdate, {once: true});
-                            }
                             else
                                 status.innerHTML = `Endorsed ${nationName}.`;
                         });
@@ -231,7 +232,7 @@ function refreshEndorse(e: MouseEvent): void
                     endorseButton.setAttribute('type', 'button');
                     endorseButton.setAttribute('class', 'ajaxbutton');
                     endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
-                    endorseButton.addEventListener('click', onEndorseClick, {once: true});
+                    endorseButton.addEventListener('click', onEndorseClick);
                     let endorseLi = document.createElement('li');
                     endorseLi.appendChild(endorseButton);
                     nationsToEndorse.appendChild(endorseLi);
@@ -285,6 +286,7 @@ document.querySelector("#refresh-dossier").addEventListener("click", refreshDoss
 document.querySelector("#set-raider-jp").addEventListener("click", setRaiderJP);
 document.querySelector("#move-to-jp").addEventListener("click", moveToJP);
 document.querySelector("#chasing-button").addEventListener("click", chasingButton);
+document.querySelector("#update-localid").addEventListener('click', manualLocalIdUpdate);
 chrome.storage.onChanged.addListener(onStorageChange);
 
 /*

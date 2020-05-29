@@ -207,7 +207,8 @@ function refreshDossier(e: MouseEvent): void
 
 function setRaiderJP(e: MouseEvent): void
 {
-
+    const newRaiderJP = canonicalize(document.querySelector("#raider-jp").value);
+    chrome.storage.local.set({"raiderjp": newRaiderJP});
 }
 
 function moveToJP(e: MouseEvent): void

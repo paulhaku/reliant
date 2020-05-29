@@ -23,6 +23,15 @@ function pretty(str: string): string
     + txt.substr(1).toLowerCase());
 }
 
+function getLocalId(): void
+{
+    const localId = document.querySelector("input[name=localid]").value;
+    if (localId)
+        chrome.storage.local.set({'localid': localId});
+    else
+        return;
+}
+
 const urlParameters: object = getUrlParameters(document.URL);
 
 /*

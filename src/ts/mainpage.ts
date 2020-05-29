@@ -132,6 +132,12 @@ function makeAjaxQuery(url: string, method: string, data: object): string
     });
 }
 
+async function manualLocalIdUpdate(e: MouseEvent): void
+{
+    let response = await makeAjaxQuery('/region=rwby', 'GET');
+    getLocalId(response);
+}
+
 /*
  * Event Handlers
  */
@@ -196,15 +202,13 @@ function refreshEndorse(e: MouseEvent): void
             const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
             const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
             const nationName = nationNameMatch[1];
+            // Don't include nations that probably aren't in the WA
             if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                 resigned.push(nationName);
             else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
                 if (resigned.indexOf(nationName) === -1) {
-                    let endorseButton: Element = document.createElement('input');
-                    endorseButton.setAttribute('type', 'button');
-                    endorseButton.setAttribute('class', 'ajaxbutton');
-                    endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
-                    endorseButton.addEventListener('click', (e: MouseEvent) => {
+                    function onEndorseClick(e: MouseEvent)
+                    {
                         chrome.storage.local.get('localid', async (localidresult) => {
                             const localId = localidresult.localid;
                             let formData = new FormData();
@@ -212,9 +216,22 @@ function refreshEndorse(e: MouseEvent): void
                             formData.set('localid', localId);
                             formData.set('action', 'endorse');
                             let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
-                            console.log(endorseResponse);
+                            // Switch the button to one that updates thee localid if it fails
+                            if (endorseResponse.indexOf('Failed security check.') !== -1) {
+                                status.innerHTML = `Failed to endorse ${nationName}.`;
+                                endorseButton.value = 'Update Localid';
+                                endorseButton.addEventListener('click', manualLocalIdUpdate, {once: true});
+                            }
+                            else
+                                status.innerHTML = `Endorsed ${nationName}.`;
                         });
-                    });
+                    }
+
+                    let endorseButton: Element = document.createElement('input');
+                    endorseButton.setAttribute('type', 'button');
+                    endorseButton.setAttribute('class', 'ajaxbutton');
+                    endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
+                    endorseButton.addEventListener('click', onEndorseClick, {once: true});
                     let endorseLi = document.createElement('li');
                     endorseLi.appendChild(endorseButton);
                     nationsToEndorse.appendChild(endorseLi);

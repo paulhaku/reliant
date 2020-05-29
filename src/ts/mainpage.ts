@@ -102,6 +102,36 @@ function resetSwitchers(switcherList: string[]): void
         switchers.innerHTML += `<li>${toAdd[i]}</li>`;
 }
 
+function makeAjaxQuery(url: string, method: string, data: object): string
+{
+    return new Promise((resolve, reject) => {
+        function onLoadStart(e: Event): void
+        {
+            document.querySelectorAll('.ajaxbutton').forEach(node => {
+                node.disabled = true;
+            });
+        }
+
+        async function onLoadEnd(e: Event): void
+        {
+            document.querySelectorAll('.ajaxbutton').forEach(node => {
+                node.disabled = false;
+            });
+            resolve(xhr.response);
+        }
+
+        let xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadstart", onLoadStart);
+        xhr.addEventListener("loadend", onLoadEnd);
+        xhr.open(method, url);
+        xhr.responseType = "text";
+        if (data === undefined)
+            xhr.send(data);
+        else
+            xhr.send();
+    });
+}
+
 /*
  * Event Handlers
  */
@@ -111,9 +141,10 @@ function resignWA(e: MouseEvent): void
 
 }
 
-function admitWA(e: MouseEvent): void
+async function admitWA(e: MouseEvent): void
 {
-
+    let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
+    console.log(response);
 }
 
 function refreshEndorse(e: MouseEvent): void

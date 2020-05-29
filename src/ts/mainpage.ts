@@ -197,8 +197,27 @@ function refreshEndorse(e: MouseEvent): void
             if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                 resigned.push(nationName);
             else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
-                if (resigned.indexOf(nationName) === -1)
-                    nationsToEndorse.innerHTML += `<li>${pretty(nationName)}</li>`;
+                if (resigned.indexOf(nationName) === -1) {
+                    // nationsToEndorse.innerHTML += `<li>${pretty(nationName)}</li>`;
+                    let endorseButton: Element = document.createElement('input');
+                    endorseButton.setAttribute('type', 'button');
+                    endorseButton.setAttribute('class', 'ajaxbutton');
+                    endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
+                    endorseButton.addEventListener('click', (e: MouseEvent) => {
+                        chrome.storage.local.get('localid', async (localidresult) => {
+                            const localId = localidresult.localid;
+                            let formData = new FormData();
+                            formData.set('nation', nationName);
+                            formData.set('localid', localId);
+                            formData.set('action', 'endorse');
+                            let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
+                            console.log(endorseResponse);
+                        });
+                    });
+                    let endorseLi = document.createElement('li');
+                    endorseLi.appendChild(endorseButton);
+                    nationsToEndorse.appendChild(endorseLi);
+                }
             }
         }
     });
@@ -225,7 +244,7 @@ function chasingButton(e: MouseEvent): void
 
 }
 
-function onStorageChange(changes: object, areaName: string)
+function onStorageChange(changes: object, areaName: string): void
 {
     for (let key in changes) {
         let storageChange = changes[key];

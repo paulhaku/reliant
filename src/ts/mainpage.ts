@@ -181,7 +181,23 @@ function admitWA(e: MouseEvent): void
 
 function refreshEndorse(e: MouseEvent): void
 {
-
+    nationsToEndorse.innerHTML = '';
+    chrome.storage.local.get('jumppoint', async (result) => {
+        const jumpPoint = result.jumppoint;
+        let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
+        'GET');
+        let div = document.createElement('div');
+        div.innerHTML = response;
+        let lis = div.querySelectorAll('li');
+        for (let i = 0; i != lis.length; i++) {
+            if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
+                const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
+                const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a').href);
+                const nationName = nationNameMatch[1];
+                nationsToEndorse.innerHTML += `<li>${pretty(nationName)}</li>`;
+            }
+        }
+    });
 }
 
 function refreshDossier(e: MouseEvent): void

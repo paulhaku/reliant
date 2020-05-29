@@ -37,7 +37,24 @@ function getLocalId(page: string): void
         return;
 }
 
+function getChk(page: string): void
+{
+    const chk = document.querySelector("input[name=chk]").value;
+    if (chk)
+        chrome.storage.local.set({'chk': chk});
+    else if (page) {
+        const chkRegex: RegExp = new RegExp('<input type="hidden" name="chk" value="([A-Za-z0-9]+?)">');
+        const match = chkRegex.exec(page);
+        chrome.storage.local.set({'chk': match[1]});
+    }
+    else
+        return;
+}
+
 const urlParameters: object = getUrlParameters(document.URL);
+
+if (urlParameters["page"] !== "blank")
+    getLocalId();
 
 /*
  * Keybind Handling

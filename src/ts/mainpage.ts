@@ -330,8 +330,14 @@ async function chasingButton(e: MouseEvent): void
             formData.set('region_name', moveRegion);
             formData.set('move_region', '1');
             let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
-            console.log(response);
+            status.innerHTML = `Possibly moved to ${moveRegion}`;
+            e.target.value = 'Update Localid';
+            e.target.setAttribute('data-moveregion', '');
         });
+    }
+    else if (e.target.value == 'Update Localid') {
+        manualLocalIdUpdate(e);
+        e.target.value = 'Refresh';
     }
 }
 

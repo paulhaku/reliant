@@ -138,7 +138,19 @@ function makeAjaxQuery(url: string, method: string, data: object): string
 
 function resignWA(e: MouseEvent): void
 {
-
+    chrome.storage.local.get('chk', async (result) => {
+        const chk = result.chk;
+        let formData = new FormData();
+        formData.set('action', 'leave_UN');
+        formData.set('chk', chk);
+        const response = await makeAjaxQuery("/page=UN_status", "POST", formData);
+        if (response.indexOf('You inform the World Assembly that') !== -1) {
+            currentWANation.innerHTML = 'N/A';
+            const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_]+?)">');
+            const match = nationNameRegex.exec(response);
+            status.innerHTML = `Resigned from the WA on ${match[1]}`;
+        }
+    });
 }
 
 function admitWA(e: MouseEvent): void
@@ -156,7 +168,7 @@ function admitWA(e: MouseEvent): void
             status.innerHTML = `Admitted to the WA on ${selectedSwitcher}.`;
 
             // Update Chk
-            const chkRegex: RegExp = new RegExp(`<input type="hidden" name="chk" value="([A-za-z0-9]+?)">`);
+            const chkRegex: RegExp = new RegExp(`<input type="hidden" name="chk" value="([A-Za-z0-9]+?)">`);
             const match = chkRegex.exec(response);
             const chk = match[1];
             chrome.storage.local.set({'chk': chk});

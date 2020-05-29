@@ -244,7 +244,48 @@ function refreshEndorse(e: MouseEvent): void
 
 function refreshDossier(e: MouseEvent): void
 {
+    nationsToDossier.innerHTML = '';
+    chrome.storage.local.get('raiderjp', async (result) => {
+        const raiderJp = result.raiderjp;
+        let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
+        'GET');
+        let div = document.createElement('div');
+        div.innerHTML = response;
+        let lis = div.querySelectorAll('li');
+        let resigned: string[] = [];
+        for (let i = 0; i != lis.length; i++) {
+            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
+            const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
+            const nationName = nationNameMatch[1];
+            // Don't include nations that probably aren't in the WA
+            if (lis[i].innerHTML.indexOf('resigned from') !== -1)
+                resigned.push(nationName);
+            else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
+                if (resigned.indexOf(nationName) === -1) {
+                    async function onDossierClick(e: MouseEvent): void
+                    {
+                        let formData = new FormData();
+                        formData.set('nation', nationName);
+                        formData.set('action', 'add');
+                        let dossierResponse = await makeAjaxQuery('/page=dossier', 'POST', formData);
+                        if (dossierResponse.indexOf('has been added to your Dossier.' !== -1))
+                            status.innerHTML = `Dossiered ${nationName}`;
+                        else
+                            status.innerHTML = `Failed to dossier ${nationName}.`;
+                    }
 
+                    let dossierButton = document.createElement('input');
+                    dossierButton.setAttribute('type', 'button');
+                    dossierButton.setAttribute('class', 'ajaxbutton');
+                    dossierButton.setAttribute('value', `Dossier ${pretty(nationName)}`);
+                    dossierButton.addEventListener('click', onDossierClick);
+                    let dossierLi = document.createElement('li');
+                    dossierLi.appendChild(dossierButton);
+                    nationsToDossier.appendChild(dossierLi);
+                }
+            }
+        }
+    });
 }
 
 function setRaiderJP(e: MouseEvent): void

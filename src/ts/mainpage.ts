@@ -189,12 +189,16 @@ function refreshEndorse(e: MouseEvent): void
         let div = document.createElement('div');
         div.innerHTML = response;
         let lis = div.querySelectorAll('li');
+        let resigned: string[] = [];
         for (let i = 0; i != lis.length; i++) {
-            if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
-                const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
-                const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a').href);
-                const nationName = nationNameMatch[1];
-                nationsToEndorse.innerHTML += `<li>${pretty(nationName)}</li>`;
+            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
+            const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
+            const nationName = nationNameMatch[1];
+            if (lis[i].innerHTML.indexOf('resigned from') !== -1)
+                resigned.push(nationName);
+            else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
+                if (resigned.indexOf(nationName) === -1)
+                    nationsToEndorse.innerHTML += `<li>${pretty(nationName)}</li>`;
             }
         }
     });

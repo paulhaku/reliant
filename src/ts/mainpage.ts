@@ -299,9 +299,13 @@ function moveToJP(e: MouseEvent): void
 
 }
 
-function chasingButton(e: MouseEvent): void
+async function chasingButton(e: MouseEvent): void
 {
-
+    const jumpPoints = ['devide_by_zero', 'artificial_solar_system', 'trieltics', '3_guys', 'frozen_circle', 'switz',
+    'plum_island'];
+    if (e.target.value == "Refresh") {
+        let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
+    }
 }
 
 function onStorageChange(changes: object, areaName: string): void

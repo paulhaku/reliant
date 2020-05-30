@@ -14,12 +14,6 @@ pageContent.innerHTML = `
     <br>
     <span id="status" class="information">N/A</span>
     </div>
-    
-    <!-- Current Region -->
-    <div id="current-region-container">
-        <span id="current-region-header" class="header">Current Region</span>
-        <span id="current-region" class="information">N/A</span>
-    </div>
 
 
     <!-- Current WA Nation -->
@@ -71,6 +65,17 @@ pageContent.innerHTML = `
         <br>
         <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
         <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
+    </div>
+    
+    <!-- Current Region -->
+    <div id="current-region-container">
+        <span id="current-region-header" class="header">Current Region</span>
+        <span id="current-region" class="information">N/A</span>
+        <span class="subheader">WA Delegate</span>
+        <span class="information" id="wa-delegate">N/A</span>
+        <span class="subheader">Last WA Update</span>
+        <span class="information" id="last-wa-update">N/A</span>
+        <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
     </div>
 </div>
 

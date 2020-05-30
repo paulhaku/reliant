@@ -14,6 +14,12 @@ pageContent.innerHTML = `
     <br>
     <span id="status" class="information">N/A</span>
     </div>
+    
+    <!-- Current Region -->
+    <div id="current-region-container">
+        <span id="current-region-header" class="header">Current Region</span>
+        <span id="current-region" class="information">N/A</span>
+    </div>
 
 
     <!-- Current WA Nation -->
@@ -92,6 +98,7 @@ const currentWANation: HTMLElement = document.querySelector("#current-wa-nation"
 const nationsToEndorse: HTMLElement = document.querySelector("#nations-to-endorse");
 const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossier");
 const switchers: HTMLElement = document.querySelector("#switchers");
+const currentRegion: HTMLElement = document.querySelector("#current-region");
 
 /*
  * Helpers
@@ -313,8 +320,10 @@ function moveToJP(e: MouseEvent): void
                 let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
                 if (response.indexOf('This request failed a security check.') !== -1)
                     status.innerHTML = `Failed to move to ${moveRegion}.`;
-                else
+                else {
                     status.innerHTML = `Moved to ${moveRegion}`;
+                    currentRegion.innerHTML = moveRegion;
+                }
                 e.target.value = 'Update Localid';
             });
         });
@@ -358,8 +367,10 @@ async function chasingButton(e: MouseEvent): void
             let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
             if (response.indexOf('This request failed a security check.') !== -1)
                 status.innerHTML = `Failed to move to ${moveRegion}.`;
-            else
+            else {
                 status.innerHTML = `Moved to ${moveRegion}`;
+                currentRegion.innerHTML = moveRegion;
+            }
             e.target.value = 'Update Localid';
             e.target.setAttribute('data-moveregion', '');
         });

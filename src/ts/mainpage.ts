@@ -395,9 +395,12 @@ async function updateRegionStatus(e: MouseEvent): void
     let responseDiv = document.createElement('div');
     responseDiv.innerHTML = response;
     console.log(response);
-    const waDelegate = responseDiv.querySelector('p:nth-child(2) > a').innerHTML;
+    const waDelegate = responseDiv.querySelector('p:nth-child(2) > a');
     const lastWaUpdate = responseDiv.querySelector('p:nth-child(4) > time').innerHTML;
-    document.querySelector("#wa-delegate").innerHTML = waDelegate;
+    if (waDelegate)
+        document.querySelector("#wa-delegate").innerHTML = waDelegate.innerHTML;
+    else
+        document.querySelector("#wa-delegate").innerHTML = 'None.';
     document.querySelector("#last-wa-update").innerHTML = lastWaUpdate;
 }
 

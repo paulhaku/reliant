@@ -305,7 +305,28 @@ function setRaiderJP(e: MouseEvent): void
 
 function moveToJP(e: MouseEvent): void
 {
-
+    if (e.target.value == 'Move to JP') {
+        chrome.storage.local.get('localid', (localidresult) => {
+            chrome.storage.local.get('jumppoint', async (jumppointresult) => {
+                const localId = localidresult.localid;
+                const moveRegion = jumppointresult.jumppoint;
+                let formData = new FormData();
+                formData.set('localid', localId);
+                formData.set('region_name', moveRegion);
+                formData.set('move_region', '1');
+                let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
+                if (response.indexOf('This request failed a security check.') !== -1)
+                    status.innerHTML = `Failed to move to ${moveRegion}.`;
+                else
+                    status.innerHTML = `Moved to ${moveRegion}`;
+                e.target.value = 'Update Localid';
+            });
+        });
+    }
+    else if (e.target.value == 'Update Localid') {
+        manualLocalIdUpdate(e);
+        e.target.value = 'Move to JP';
+    }
 }
 
 async function chasingButton(e: MouseEvent): void

@@ -361,8 +361,9 @@ function moveToJP(e: MouseEvent): void
 
 async function chasingButton(e: MouseEvent): void
 {
-    const jumpPoints = ['devide_by_zero', 'artificial_solar_system', 'trieltics', '3_guys', 'frozen_circle', 'switz',
-    'plum_island'];
+    // jump points and such
+    const doNotMove = ['devide_by_zero', 'artificial_solar_system', 'trieltics', '3_guys', 'frozen_circle', 'switz',
+    'plum_island', 'no_nope_and_nay'];
     if (e.target.value == "Refresh") {
         let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
         // only so we can use queryselector on the response DOM rather than using regex matching
@@ -372,7 +373,7 @@ async function chasingButton(e: MouseEvent): void
         if (!moveRegion)
             return;
         let moveRegionValue = canonicalize(moveRegion.innerHTML);
-        if (jumpPoints.indexOf(moveRegionValue) !== -1)
+        if (doNotMove.indexOf(moveRegionValue) !== -1)
             return;
         let moveRegionParent = moveRegion.parentElement;
         if (moveRegionParent.innerHTML.indexOf('relocated from') === -1)

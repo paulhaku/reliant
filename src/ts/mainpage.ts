@@ -77,6 +77,7 @@ pageContent.innerHTML = `
         <span class="information" id="last-wa-update">N/A</span>
         <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
         <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
+        <input type="button" id="copy-win" value="Copy Win">
     </div>
 </div>
 
@@ -436,6 +437,17 @@ async function checkIfUpdated(e: MouseEvent): void
     didIUpdate.innerHTML = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
 }
 
+function copyWin(e: MouseEvent): void
+{
+    // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+    let copyText = document.createElement('textarea');
+    copyText.value = `W: https://www.nationstates.net/region=${currentRegion.innerHTML}`;
+    document.body.appendChild(copyText);
+    copyText.select();
+    document.execCommand('copy');
+    document.body.removeChild(copyText);
+}
+
 function onStorageChange(changes: object, areaName: string): void
 {
     for (let key in changes) {
@@ -464,6 +476,7 @@ document.querySelector("#update-wa-status").addEventListener('click', manualChkU
 document.querySelector("#update-region-status").addEventListener('click', updateRegionStatus);
 document.querySelector("#check-current-region").addEventListener('click', checkCurrentRegion);
 document.querySelector("#check-if-updated").addEventListener('click', checkIfUpdated);
+document.querySelector("#copy-win").addEventListener('click', copyWin);
 chrome.storage.onChanged.addListener(onStorageChange);
 
 /*

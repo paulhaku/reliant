@@ -79,6 +79,14 @@ pageContent.innerHTML = `
         <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
         <input type="button" id="copy-win" value="Copy Win">
     </div>
+    
+    <!-- JP Happenings -->
+    <div id="jp-happenings-container">
+        <span class="header">JP Happenings</span>
+        <ul class="information" id="jp-happenings">
+        
+        </ul>
+    </div>
 </div>
 
 <div id="group4">
@@ -228,18 +236,33 @@ function admitWA(e: MouseEvent): void
 
 function refreshEndorse(e: MouseEvent): void
 {
+    const jpHappenings = document.querySelector("#jp-happenings");
     nationsToEndorse.innerHTML = '';
+    jpHappenings.innerHTML = '';
     chrome.storage.local.get('jumppoint', async (result) => {
         const jumpPoint = result.jumppoint;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
         'GET');
+        const itemRegex: RegExp = new RegExp('(nation|region)=([A-Za-z0-9_-]+)');
+        const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
         // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
         div.innerHTML = response;
         let lis = div.querySelectorAll('li');
         let resigned: string[] = [];
+        let happeningsAdded: number = 0;
         for (let i = 0; i != lis.length; i++) {
-            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
+            // update the jp happenings at the same time so we don't have to make an extra query (max 10)
+            if (happeningsAdded <= 10) {
+                lis[i].querySelectorAll('a').forEach((node) => {
+                    let itemMatch = itemRegex.exec(node.href);
+                    console.log(itemMatch);
+                    // fix the link
+                    node.href = `/template-overall=none/${itemMatch[1]}=${itemMatch[2]}`;
+                });
+                jpHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+                happeningsAdded++;
+            }
             const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
             const nationName = nationNameMatch[1];
             // Don't include nations that probably aren't in the WA

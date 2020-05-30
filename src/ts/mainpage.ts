@@ -146,7 +146,6 @@ async function manualLocalIdUpdate(e: MouseEvent): void
 async function manualChkUpdate(e: MouseEvent): void
 {
     let response = await makeAjaxQuery('/page=un', 'GET');
-    console.log(response);
     getChk(response);
     let nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
     currentWANation.innerHTML = nationNameRegex.exec(response)[1];
@@ -166,7 +165,7 @@ function resignWA(e: MouseEvent): void
         const response = await makeAjaxQuery("/page=UN_status", "POST", formData);
         if (response.indexOf('You inform the World Assembly that') !== -1) {
             currentWANation.innerHTML = 'N/A';
-            const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_]+?)">');
+            const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
             const match = nationNameRegex.exec(response);
             status.innerHTML = `Resigned from the WA on ${match[1]}`;
         }
@@ -213,7 +212,7 @@ function refreshEndorse(e: MouseEvent): void
         let lis = div.querySelectorAll('li');
         let resigned: string[] = [];
         for (let i = 0; i != lis.length; i++) {
-            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
+            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
             const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
             const nationName = nationNameMatch[1];
             // Don't include nations that probably aren't in the WA
@@ -264,7 +263,7 @@ function refreshDossier(e: MouseEvent): void
         let lis = div.querySelectorAll('li');
         let resigned: string[] = [];
         for (let i = 0; i != lis.length; i++) {
-            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_]+)');
+            const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
             const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
             const nationName = nationNameMatch[1];
             // Don't include nations that probably aren't in the WA

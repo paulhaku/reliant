@@ -4,8 +4,8 @@ const pageContent = document.createElement('div');
 pageContent.id = "content";
 pageContent.innerHTML = `
 <div id="group1">
-    <input type="button" id="update-localid" value="Update Localid">
-    <input type="button" id="update-wa-status" value="Update">
+    <input type="button" class="ajaxbutton" id="update-localid" value="Update Localid">
+    <input type="button" class="ajaxbutton" id="update-wa-status" value="Update">
     
     <!-- Status -->
     <div id="status-container">

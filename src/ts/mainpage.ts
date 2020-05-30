@@ -187,11 +187,7 @@ function admitWA(e: MouseEvent): void
             status.innerHTML = `Admitted to the WA on ${selectedSwitcher}.`;
 
             // Update Chk
-            const chkRegex: RegExp = new RegExp(`<input type="hidden" name="chk" value="([A-Za-z0-9]+?)">`);
-            const match = chkRegex.exec(response);
-            const chk = match[1];
-            chrome.storage.local.set({'chk': chk});
-            console.log(`chk set to ${chk}`);
+            getChk(response);
         }
         else
             status.innerHTML = `Error admitting to the WA on ${selectedSwitcher}.`;

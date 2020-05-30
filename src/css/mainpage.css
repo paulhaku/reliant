@@ -1,0 +1,71 @@
+#group1 {
+    width: 50%;
+    float: left;
+}
+
+#group2 {
+    width: 50%;
+    float: left;
+}
+
+#group3 {
+    width: 10%;
+    clear: both;
+    float: left;
+}
+
+#group4 {
+    /*clear: both;
+    float: right;*/
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+#group5 {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.header {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.subheader {
+    font-weight: bold;
+    display: block;
+    font-size: 15px;
+}
+
+.information {
+    border: 1px solid black;
+    display: block;
+    font-size: 15px;
+}
+
+#status-container {
+    float: left;
+    width: 50%;
+}
+
+#current-wa-nation-container {
+    float: left;
+    width: 50%;
+}
+
+#endorse-container {
+    float: left;
+    width: 50%;
+}
+
+#dossier-container {
+    float: left;
+    width: 50%;
+}
+
+#chasing-container {
+    float: left;
+    width: 100%;
+}

@@ -137,6 +137,7 @@ function makeAjaxQuery(url: string, method: string, data: object): string
     return new Promise((resolve, reject) => {
         function onLoadStart(e: Event): void
         {
+            // for adhering to the simultaneity rule
             document.querySelectorAll('.ajaxbutton').forEach(node => {
                 node.disabled = true;
             });
@@ -174,6 +175,7 @@ async function manualChkUpdate(e: MouseEvent): void
 {
     let response = await makeAjaxQuery('/page=un', 'GET');
     getChk(response);
+    // while we're getting the chk, we may as well check the current nation too
     let nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
     currentWANation.innerHTML = nationNameRegex.exec(response)[1];
 }
@@ -202,6 +204,7 @@ function resignWA(e: MouseEvent): void
 function admitWA(e: MouseEvent): void
 {
     chrome.storage.local.get('switchers', async (result) => {
+        // storedswitchers is an object of nation:appid pairs
         let storedSwitchers = result.switchers;
         let switcherNames = Object.keys(storedSwitchers);
         let selectedSwitcher = switcherNames[0];
@@ -212,7 +215,6 @@ function admitWA(e: MouseEvent): void
         if (response.indexOf("Welcome to the World Assembly, new member") !== -1) {
             currentWANation.innerHTML = pretty(selectedSwitcher);
             status.innerHTML = `Admitted to the WA on ${selectedSwitcher}.`;
-
             // Update Chk
             getChk(response);
         }
@@ -230,6 +232,7 @@ function refreshEndorse(e: MouseEvent): void
         const jumpPoint = result.jumppoint;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
         'GET');
+        // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
         div.innerHTML = response;
         let lis = div.querySelectorAll('li');
@@ -281,6 +284,7 @@ function refreshDossier(e: MouseEvent): void
         const raiderJp = result.raiderjp;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
         'GET');
+        // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
         div.innerHTML = response;
         let lis = div.querySelectorAll('li');
@@ -360,6 +364,7 @@ async function chasingButton(e: MouseEvent): void
     'plum_island'];
     if (e.target.value == "Refresh") {
         let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
+        // only so we can use queryselector on the response DOM rather than using regex matching
         let responseDiv = document.createElement('div');
         responseDiv.innerHTML = response;
         let moveRegion = responseDiv.querySelector('.rlink:nth-of-type(3)');

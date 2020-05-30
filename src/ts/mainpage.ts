@@ -76,6 +76,7 @@ pageContent.innerHTML = `
         <span class="subheader">Last WA Update</span>
         <span class="information" id="last-wa-update">N/A</span>
         <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
+        <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
     </div>
 </div>
 
@@ -386,6 +387,28 @@ async function chasingButton(e: MouseEvent): void
     }
 }
 
+async function updateRegionStatus(e: MouseEvent): void
+{
+    if (currentRegion.innerHTML == 'N/A')
+        return;
+    let response = await makeAjaxQuery(`/template-overall=none/region=${currentRegion.innerHTML}`, 'GET');
+    let responseDiv = document.createElement('div');
+    responseDiv.innerHTML = response;
+    console.log(response);
+    const waDelegate = responseDiv.querySelector('p:nth-child(2) > a').innerHTML;
+    const lastWaUpdate = responseDiv.querySelector('p:nth-child(4) > time').innerHTML;
+    document.querySelector("#wa-delegate").innerHTML = waDelegate;
+    document.querySelector("#last-wa-update").innerHTML = lastWaUpdate;
+}
+
+async function checkCurrentRegion(e: MouseEvent): void
+{
+    let response = await makeAjaxQuery('/region=artificial_solar_system', 'GET');
+    let responseElement = document.createRange().createContextualFragment(response);
+    let regionHref = responseElement.querySelector('#panelregionbar > a').href;
+    currentRegion.innerHTML = new RegExp('region=([A-Za-z0-9_]+)').exec(regionHref)[1];
+}
+
 function onStorageChange(changes: object, areaName: string): void
 {
     for (let key in changes) {
@@ -411,6 +434,8 @@ document.querySelector("#move-to-jp").addEventListener("click", moveToJP);
 document.querySelector("#chasing-button").addEventListener("click", chasingButton);
 document.querySelector("#update-localid").addEventListener('click', manualLocalIdUpdate);
 document.querySelector("#update-wa-status").addEventListener('click', manualChkUpdate);
+document.querySelector("#update-region-status").addEventListener('click', updateRegionStatus);
+document.querySelector("#check-current-region").addEventListener('click', checkCurrentRegion);
 chrome.storage.onChanged.addListener(onStorageChange);
 
 /*

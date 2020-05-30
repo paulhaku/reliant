@@ -83,12 +83,25 @@ pageContent.innerHTML = `
 <div id="group4">
     <!-- Switchers -->
     <div id="switchers-container">
-        <span id="switchers-container" class="header">Switchers Left</span>
+        <span class="header">Switchers Left</span>
         <br>
         <div class="information">
             <ul id="switchers">
             </ul>
         </div>
+    </div>
+</div>
+
+<div id="group5">
+    <!-- Did I Update? -->
+    <div id="did-i-update-container">
+        <span class="header">Did I Update?</span>
+        <input type="button" class="ajaxbutton" id="check-if-updated" value="Did I Update?">
+        <span class="information">
+            <ul id="did-i-update">
+            
+            </ul>
+        </span>
     </div>
 </div>
 `;
@@ -105,6 +118,7 @@ const nationsToEndorse: HTMLElement = document.querySelector("#nations-to-endors
 const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossier");
 const switchers: HTMLElement = document.querySelector("#switchers");
 const currentRegion: HTMLElement = document.querySelector("#current-region");
+const didIUpdate: HTmlElement = document.querySelector("#did-i-update");
 
 /*
  * Helpers
@@ -412,6 +426,12 @@ async function checkCurrentRegion(e: MouseEvent): void
     currentRegion.innerHTML = new RegExp('region=([A-Za-z0-9_]+)').exec(regionHref)[1];
 }
 
+async function checkIfUpdated(e: MouseEvent): void
+{
+    let response = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
+    didIUpdate.innerHTML = response;
+}
+
 function onStorageChange(changes: object, areaName: string): void
 {
     for (let key in changes) {
@@ -439,6 +459,7 @@ document.querySelector("#update-localid").addEventListener('click', manualLocalI
 document.querySelector("#update-wa-status").addEventListener('click', manualChkUpdate);
 document.querySelector("#update-region-status").addEventListener('click', updateRegionStatus);
 document.querySelector("#check-current-region").addEventListener('click', checkCurrentRegion);
+document.querySelector("#check-if-updated").addEventListener('click', checkIfUpdated);
 chrome.storage.onChanged.addListener(onStorageChange);
 
 /*

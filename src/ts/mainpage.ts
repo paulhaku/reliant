@@ -428,8 +428,7 @@ async function checkCurrentRegion(e: MouseEvent): void
 
 async function checkIfUpdated(e: MouseEvent): void
 {
-    let response = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
-    didIUpdate.innerHTML = response;
+    didIUpdate.innerHTML = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
 }
 
 function onStorageChange(changes: object, areaName: string): void

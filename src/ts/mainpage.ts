@@ -5,6 +5,7 @@ pageContent.id = "content";
 pageContent.innerHTML = `
 <div id="group1">
     <input type="button" id="update-localid" value="Update Localid">
+    <input type="button" id="update-wa-status" value="Update">
     
     <!-- Status -->
     <div id="status-container">
@@ -140,6 +141,15 @@ async function manualLocalIdUpdate(e: MouseEvent): void
     let response = await makeAjaxQuery('/region=rwby', 'GET');
     getLocalId(response);
     status.innerHTML = 'Updated localid.';
+}
+
+async function manualChkUpdate(e: MouseEvent): void
+{
+    let response = await makeAjaxQuery('/page=un', 'GET');
+    console.log(response);
+    getChk(response);
+    let nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
+    currentWANation.innerHTML = nationNameRegex.exec(response)[1];
 }
 
 /*
@@ -365,6 +375,7 @@ document.querySelector("#set-raider-jp").addEventListener("click", setRaiderJP);
 document.querySelector("#move-to-jp").addEventListener("click", moveToJP);
 document.querySelector("#chasing-button").addEventListener("click", chasingButton);
 document.querySelector("#update-localid").addEventListener('click', manualLocalIdUpdate);
+document.querySelector("#update-wa-status").addEventListener('click', manualChkUpdate);
 chrome.storage.onChanged.addListener(onStorageChange);
 
 /*

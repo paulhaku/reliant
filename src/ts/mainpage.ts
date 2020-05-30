@@ -414,14 +414,22 @@ async function updateRegionStatus(e: MouseEvent): void
     let response = await makeAjaxQuery(`/template-overall=none/region=${currentRegion.innerHTML}`, 'GET');
     let responseDiv = document.createElement('div');
     responseDiv.innerHTML = response;
-    console.log(response);
-    const waDelegate = responseDiv.querySelector('p:nth-child(2) > a');
-    const lastWaUpdate = responseDiv.querySelector('p:nth-child(4) > time').innerHTML;
-    if (waDelegate)
-        document.querySelector("#wa-delegate").innerHTML = waDelegate.innerHTML;
-    else
-        document.querySelector("#wa-delegate").innerHTML = 'None.';
-    document.querySelector("#last-wa-update").innerHTML = lastWaUpdate;
+    let strongs = responseDiv.querySelectorAll('strong');
+    for (let i = 0; i != strongs; i++) {
+        const strongParent = strongs[i].parentElement;
+        if (strongs[i].innerHTML == 'WA Delegate:') {
+            const waDelegate = strongParent.querySelector('a');
+            if (waDelegate)
+                document.querySelector("#wa-delegate").innerHTML = waDelegate.innerHTML;
+            else
+                document.querySelector("#wa-delegate").innerHTML = 'None';
+        }
+        else if (strongs[i].innerHTML == 'Last WA Update:') {
+            const lastWaUpdate = strongParent.querySelector('time');
+            document.querySelector('#last-wa-update').innerHTML = lastWaUpdate.innerHTML;
+            break;
+        }
+    }
 }
 
 async function checkCurrentRegion(e: MouseEvent): void

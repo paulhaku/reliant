@@ -456,6 +456,7 @@ function copyWin(e: MouseEvent): void
     document.body.removeChild(copyText);
 }
 
+// Update the list of switchers as soon as a new WA admit page is opened
 function onStorageChange(changes: object, areaName: string): void
 {
     for (let key in changes) {

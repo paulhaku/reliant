@@ -443,7 +443,17 @@ async function checkCurrentRegion(e: MouseEvent): void
 
 async function checkIfUpdated(e: MouseEvent): void
 {
-    didIUpdate.innerHTML = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
+    didIUpdate.innerHTML = '';
+    let responseDiv = document.createElement('div');
+    responseDiv.innerHTML = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
+    let lis = responseDiv.querySelectorAll('li');
+    // limit to max 5 happenings to save space
+    for (let i = 0; i != 5; i++) {
+        if (typeof lis[i] === 'undefined')
+            break;
+        else
+            didIUpdate.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+    }
 }
 
 function copyWin(e: MouseEvent): void

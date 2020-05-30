@@ -339,7 +339,10 @@ async function chasingButton(e: MouseEvent): void
             formData.set('region_name', moveRegion);
             formData.set('move_region', '1');
             let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
-            status.innerHTML = `Possibly moved to ${moveRegion}`;
+            if (response.indexOf('This request failed a security check.') !== -1)
+                status.innerHTML = `Failed to move to ${moveRegion}.`;
+            else
+                status.innerHTML = `Moved to ${moveRegion}`;
             e.target.value = 'Update Localid';
             e.target.setAttribute('data-moveregion', '');
         });

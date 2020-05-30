@@ -119,7 +119,7 @@ const nationsToEndorse: HTMLElement = document.querySelector("#nations-to-endors
 const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossier");
 const switchers: HTMLElement = document.querySelector("#switchers");
 const currentRegion: HTMLElement = document.querySelector("#current-region");
-const didIUpdate: HTmlElement = document.querySelector("#did-i-update");
+const didIUpdate: HTMLElement = document.querySelector("#did-i-update");
 
 /*
  * Helpers

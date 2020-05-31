@@ -524,7 +524,7 @@ function onStorageChange(changes: object, areaName: string): void
     for (let key in changes) {
         let storageChange = changes[key];
         if (key == "switchers") {
-            const newSwitchers: string[] = storageChange.newValue;
+            const newSwitchers: object = storageChange.newValue;
             resetSwitchers(newSwitchers);
             break;
         }

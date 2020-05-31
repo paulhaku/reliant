@@ -57,13 +57,7 @@ pageContent.innerHTML = `
         </div>
     </div>
     
-    <!-- Raider Happenings -->
-    <div id="raider-happenings-container">
-        <span class="header">Raider Happenings</span>
-        <ul class="information" id="raider-happenings">
-           
-        </ul>
-    </div>
+   
 </div>
 
 <div id="group3">
@@ -93,6 +87,14 @@ pageContent.innerHTML = `
         <span class="header">JP Happenings</span>
         <ul class="information" id="jp-happenings">
         
+        </ul>
+    </div>
+    
+    <!-- Raider Happenings -->
+    <div id="raider-happenings-container">
+        <span class="header">Raider Happenings</span>
+        <ul class="information" id="raider-happenings">
+           
         </ul>
     </div>
 </div>

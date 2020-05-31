@@ -3,10 +3,19 @@ document.head.innerHTML = '<title>Reliant</title><meta charset="utf-8">';
 const pageContent = document.createElement('div');
 pageContent.id = "content";
 pageContent.innerHTML = `
-<div id="group1">
-    <input type="button" class="ajaxbutton" id="update-localid" value="Update Localid">
-    <input type="button" class="ajaxbutton" id="update-wa-status" value="Update">
-    
+<div id="container">
+<div id="group-1">
+    <!-- Switchers -->
+    <div id="switchers-container">
+        <span class="header">Switchers Left</span>
+        <div class="information">
+            <ul id="switchers">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="group-2">
     <!-- Status -->
     <div id="status-container">
     <span id="status-header" class="header">Status</span>
@@ -14,27 +23,40 @@ pageContent.innerHTML = `
     <br>
     <span id="status" class="information">N/A</span>
     </div>
-
-
+    
     <!-- Current WA Nation -->
     <div id="current-wa-nation-container">
+    <div class="buttonblock">
+        <input type="button" class="ajaxbutton" id="update-localid" value="Update Localid">
+        <input type="button" class="ajaxbutton" id="update-wa-status" value="Update">
+    </div>
     <span id="current-wa-nation-header" class="header">Current WA Nation</span>
-    <br>
-    <input type="button" id="resign" value="Resign" class="ajaxbutton">
-    <input type="button" id="admit" value="Admit on Next Switcher" class="ajaxbutton">
-    <br>
+    <div class="buttonblock">
+        <input type="button" id="resign" value="Resign" class="ajaxbutton">
+        <input type="button" id="admit" value="Admit on Next Switcher" class="ajaxbutton">
+    </div>
     <span id="current-wa-nation" class="information">N/A</span>
+    </div>
+    
+    <!-- Did I Update? -->
+    <div id="did-i-update-container">
+        <span class="header">Did I Update?</span>
+        <input type="button" class="ajaxbutton" id="check-if-updated" value="Did I Update?">
+        <span class="information">
+            <ul id="did-i-update">
+            
+            </ul>
+        </span>
     </div>
 </div>
 
-<div id="group2">
+<div id="group-3">
     <!-- Endorsing -->
     <div id="endorse-container">
         <span id="endorse-header" class="header">Endorse</span>
-        <br>
-        <input type="button" id="refresh-endorse" value="Refresh" class="ajaxbutton">
-        <br>
-        <br>
+        <div class="buttonblock">
+            <input type="button" id="refresh-endorse" value="Refresh" class="ajaxbutton">
+        </div>
         <div class="information">
             <ul id="nations-to-endorse">
             </ul>
@@ -44,8 +66,9 @@ pageContent.innerHTML = `
     <!-- Dossier -->
     <div id="dossier-container">
         <span id="dossier-header" class="header">Dossier</span>
-        <br>
-        <input type="button" id="refresh-dossier" value="Refresh" class="ajaxbutton">
+        <div class="buttonblock">
+            <input type="button" id="refresh-dossier" value="Refresh" class="ajaxbutton">
+        </div>
         <div>
             <label for="raider-jp">Raider Jump Point</label>
             <input type="text" id="raider-jp">
@@ -56,11 +79,27 @@ pageContent.innerHTML = `
             </ul>
         </div>
     </div>
-    
-   
 </div>
 
-<div id="group3">
+<div id="group-4">
+    <!-- JP Happenings -->
+    <div id="jp-happenings-container">
+        <span class="header">JP Happenings</span>
+        <ul class="information" id="jp-happenings">
+        
+        </ul>
+    </div>
+    
+    <!-- Raider Happenings -->
+    <div id="raider-happenings-container">
+        <span class="header">Raider Happenings</span>
+        <ul class="information" id="raider-happenings">
+           
+        </ul>
+    </div>
+</div>
+
+<div id="group-5">
     <!-- Chasing -->
     <div id="chasing-container">
         <span id="chasing-header" class="header">Chasing</span>
@@ -81,48 +120,17 @@ pageContent.innerHTML = `
         <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
         <input type="button" id="copy-win" value="Copy Win">
     </div>
-    
-    <!-- JP Happenings -->
-    <div id="jp-happenings-container">
-        <span class="header">JP Happenings</span>
-        <ul class="information" id="jp-happenings">
-        
-        </ul>
-    </div>
-    
-    <!-- Raider Happenings -->
-    <div id="raider-happenings-container">
-        <span class="header">Raider Happenings</span>
-        <ul class="information" id="raider-happenings">
-           
-        </ul>
-    </div>
+</div>
 </div>
 
-<div id="group4">
-    <!-- Switchers -->
-    <div id="switchers-container">
-        <span class="header">Switchers Left</span>
-        <br>
-        <div class="information">
-            <ul id="switchers">
-            </ul>
-        </div>
-    </div>
-</div>
 
-<div id="group5">
-    <!-- Did I Update? -->
-    <div id="did-i-update-container">
-        <span class="header">Did I Update?</span>
-        <input type="button" class="ajaxbutton" id="check-if-updated" value="Did I Update?">
-        <span class="information">
-            <ul id="did-i-update">
-            
-            </ul>
-        </span>
-    </div>
-</div>
+
+
+
+
+
+
+
 `;
 
 document.body.appendChild(pageContent);

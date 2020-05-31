@@ -19,8 +19,6 @@ pageContent.innerHTML = `
     <!-- Status -->
     <div id="status-container">
     <span id="status-header" class="header">Status</span>
-    <br>
-    <br>
     <span id="status" class="information">N/A</span>
     </div>
     
@@ -103,7 +101,6 @@ pageContent.innerHTML = `
     <!-- Chasing -->
     <div id="chasing-container">
         <span id="chasing-header" class="header">Chasing</span>
-        <br>
         <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
         <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
     </div>

@@ -18,22 +18,22 @@ pageContent.innerHTML = `
 <div id="group-2">
     <!-- Status -->
     <div id="status-container">
-    <span id="status-header" class="header">Status</span>
-    <span id="status" class="information">N/A</span>
+        <span id="status-header" class="header">Status</span>
+        <span id="status" class="information">N/A</span>
     </div>
     
     <!-- Current WA Nation -->
     <div id="current-wa-nation-container">
-    <div class="buttonblock">
-        <input type="button" class="ajaxbutton" id="update-localid" value="Update Localid">
-        <input type="button" class="ajaxbutton" id="update-wa-status" value="Update">
-    </div>
-    <span id="current-wa-nation-header" class="header">Current WA Nation</span>
-    <div class="buttonblock">
-        <input type="button" id="resign" value="Resign" class="ajaxbutton">
-        <input type="button" id="admit" value="Admit on Next Switcher" class="ajaxbutton">
-    </div>
-    <span id="current-wa-nation" class="information">N/A</span>
+        <div class="buttonblock">
+            <input type="button" class="ajaxbutton" id="update-localid" value="Update Localid">
+            <input type="button" class="ajaxbutton" id="update-wa-status" value="Update">
+        </div>
+        <span id="current-wa-nation-header" class="header">Current WA Nation</span>
+        <div class="buttonblock">
+            <input type="button" id="resign" value="Resign" class="ajaxbutton">
+            <input type="button" id="admit" value="Admit on Next Switcher" class="ajaxbutton">
+        </div>
+        <span id="current-wa-nation" class="information">N/A</span>
     </div>
     
     <!-- Did I Update? -->
@@ -97,37 +97,35 @@ pageContent.innerHTML = `
     </div>
 </div>
 
-<div id="group-5">
-    <!-- Chasing -->
-    <div id="chasing-container">
-        <span id="chasing-header" class="header">Chasing</span>
-        <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
-        <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
-    </div>
-    
-    <!-- Current Region -->
-    <div id="current-region-container">
-        <span id="current-region-header" class="header">Current Region</span>
-        <span id="current-region" class="information">N/A</span>
-        <span class="subheader">WA Delegate</span>
-        <span class="information" id="wa-delegate">N/A</span>
-        <span class="subheader">Last WA Update</span>
-        <span class="information" id="last-wa-update">N/A</span>
-        <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
-        <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
-        <input type="button" id="copy-win" value="Copy Win">
+    <div id="group-5">
+        <!-- Chasing -->
+        <div id="chasing-container">
+            <span id="chasing-header" class="header">Chasing</span>
+            <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
+            <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
+        </div>
+        
+        <!-- Current Region -->
+        <div id="current-region-container">
+            <span id="current-region-header" class="header">Current Region</span>
+            <span id="current-region" class="information">N/A</span>
+            <span class="subheader">WA Delegate</span>
+            <span class="information" id="wa-delegate">N/A</span>
+            <span class="subheader">Last WA Update</span>
+            <span class="information" id="last-wa-update">N/A</span>
+            <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
+            <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
+            <input type="button" id="copy-win" value="Copy Win">
+        </div>
+        
+        <!-- Reports Container -->
+        <div id="reports-container">
+            <span class="header">Reports</span>
+            <span id="reports" class="information">
+            </span>
+        </div>
     </div>
 </div>
-</div>
-
-
-
-
-
-
-
-
-
 `;
 
 document.body.appendChild(pageContent);

@@ -221,6 +221,18 @@ chrome.storage.local.get("viewregionkey", (result) =>
     };
 });
 
+chrome.storage.local.get("didiupdatekey", (result) =>
+{
+    const didIUpdateKey = result.didiupdatekey || 'U';
+    keys[didIUpdateKey] = () =>
+    {
+        if (urlParameters['reliant'] === 'main')
+            document.querySelector('#check-if-updated').click();
+        else
+            window.location.href = "/page=ajax2/a=reports/view=self/filter=change";
+    };
+});
+
 /*
  * Miscellaneous
  */

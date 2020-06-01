@@ -55,10 +55,8 @@ const pageContent: string = `
                     <div class="buttonblock">
                         <input type="button" id="refresh-endorse" value="Refresh" class="ajaxbutton">
                     </div>
-                    <div class="information">
-                        <ul id="nations-to-endorse">
-                        </ul>
-                    </div>
+                    <ul class="information" id="nations-to-endorse">
+                    </ul>
                 </div>
                 <!-- Dossier -->
                 <div id="dossier-container">
@@ -71,10 +69,8 @@ const pageContent: string = `
                         <input type="text" id="raider-jp">
                         <input type="button" id="set-raider-jp" value="Set">
                     </div>
-                    <div class="information">
-                        <ul id="nations-to-dossier">
-                        </ul>
-                    </div>
+                    <ul class="information" id="nations-to-dossier">
+                    </ul>
                 </div>
             </div>
             <div id="group-4">

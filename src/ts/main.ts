@@ -98,7 +98,8 @@ chrome.storage.local.get('movekey', (result) =>
 
 chrome.storage.local.get('jpkey', (result) =>
 {
-    chrome.storage.local.get('jumppoint', (jpresult) => {
+    chrome.storage.local.get('jumppoint', (jpresult) =>
+    {
         const jpKey = result.jpkey || 'V';
         const jumpPoint = jpresult.jumppoint || 'artificial_solar_system';
         keys[jpKey] = () =>
@@ -110,8 +111,17 @@ chrome.storage.local.get('jpkey', (result) =>
                 document.querySelector('#move-to-jp').click();
             else
                 window.location.href = `/template-overall=none/region=${jumpPoint}`;
-        }
+        };
     });
+});
+
+chrome.storage.local.get('mainpagekey', (result) =>
+{
+    const mainPageKey = result.mainpagekey || ' ';
+    keys[mainPageKey] = () =>
+    {
+        window.location.href = '/template-overall=none/page=blank/reliant=main';
+    }
 });
 
 /*

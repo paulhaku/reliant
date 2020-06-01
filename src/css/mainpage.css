@@ -84,7 +84,7 @@
     grid-column: 2 / 2;
     grid-row: 4 / 4;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 15% 25% 60%;
     grid-template-rows: 100%;
 }
 
@@ -97,6 +97,12 @@
 #current-region-container {
     display: inline-block;
     grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#reports-container {
+    display: inline-block;
+    grid-column: 3 / 3;
     grid-row: 1 / 1;
 }
 

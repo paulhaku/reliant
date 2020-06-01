@@ -179,6 +179,23 @@ chrome.storage.local.get("dossiernationkey", (result) =>
     };
 });
 
+chrome.storage.local.get("endorsekey", (result) => {
+    const endorseKey = result.endorsekey || 'Z';
+    keys[endorseKey] = () => {
+        const endorseButton = document.querySelector("button[class=\"endorse button icon wa\"]");
+        if (endorseButton)
+            endorseButton.click();
+        else if (urlParameters['reliant'] === 'main') {
+            let refreshButton = document.querySelector('#refresh-endorse');
+            let endorseButton = document.querySelector('.endorse[data-clicked="0"]');
+            if (!endorseButton)
+                refreshButton.click();
+            else
+                endorseButton.click();
+        }
+    };
+});
+
 /*
  * Miscellaneous
  */

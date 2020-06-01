@@ -275,6 +275,7 @@ function refreshEndorse(e: MouseEvent): void
                     function onEndorseClick(e: MouseEvent)
                     {
                         chrome.storage.local.get('localid', async (localidresult) => {
+                            e.target.setAttribute('data-clicked', '1');
                             const localId = localidresult.localid;
                             let formData = new FormData();
                             formData.set('nation', nationName);
@@ -290,7 +291,8 @@ function refreshEndorse(e: MouseEvent): void
 
                     let endorseButton: Element = document.createElement('input');
                     endorseButton.setAttribute('type', 'button');
-                    endorseButton.setAttribute('class', 'ajaxbutton');
+                    endorseButton.setAttribute('data-clicked', '0');
+                    endorseButton.setAttribute('class', 'ajaxbutton endorse');
                     endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
                     endorseButton.addEventListener('click', onEndorseClick);
                     let endorseLi = document.createElement('li');
@@ -350,6 +352,7 @@ function refreshDossier(e: MouseEvent): void
                     let dossierButton = document.createElement('input');
                     dossierButton.setAttribute('type', 'button');
                     dossierButton.setAttribute('class', 'ajaxbutton dossier');
+                    // so our key doesn't click it more than once
                     dossierButton.setAttribute('data-clicked', '0');
                     dossierButton.setAttribute('value', `Dossier ${pretty(nationName)}`);
                     dossierButton.addEventListener('click', onDossierClick);

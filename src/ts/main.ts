@@ -269,6 +269,18 @@ chrome.storage.local.get("worldactivitykey", (result) =>
     };
 });
 
+chrome.storage.local.get("refreshkey", (result) =>
+{
+    const refreshKey = result.refreshkey || 'C';
+    keys[refreshKey] = () =>
+    {
+        if (urlParameters["reliant"] === 'main')
+            document.querySelector("#update-region-status").click();
+        else
+            location.reload();
+    };
+});
+
 /*
  * Miscellaneous
  */

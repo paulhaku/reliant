@@ -247,7 +247,6 @@ function refreshEndorse(e: MouseEvent): void
         const jumpPoint = result.jumppoint;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
         'GET');
-        const itemRegex: RegExp = new RegExp('(nation|region)=([A-Za-z0-9_-]+)');
         const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
         // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
@@ -259,9 +258,7 @@ function refreshEndorse(e: MouseEvent): void
             // update the jp happenings at the same time so we don't have to make an extra query (max 10)
             if (happeningsAdded <= 10) {
                 lis[i].querySelectorAll('a').forEach((node) => {
-                    let itemMatch = itemRegex.exec(node.href);
-                    // fix the link
-                    node.href = `/template-overall=none/${itemMatch[1]}=${itemMatch[2]}`;
+                    node.href = node.href.replace('page=blank/', '');
                 });
                 jpHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                 happeningsAdded++;
@@ -313,7 +310,6 @@ function refreshDossier(e: MouseEvent): void
         const raiderJp = result.raiderjp;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
         'GET');
-        const itemRegex: RegExp = new RegExp('(nation|region)=([A-Za-z0-9_-]+)');
         const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
         // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
@@ -325,9 +321,7 @@ function refreshDossier(e: MouseEvent): void
             // update the jp happenings at the same time so we don't have to make an extra query (max 10)
             if (happeningsAdded <= 10) {
                 lis[i].querySelectorAll('a').forEach((node) => {
-                    let itemMatch = itemRegex.exec(node.href);
-                    // fix the link
-                    node.href = `/template-overall=none/${itemMatch[1]}=${itemMatch[2]}`;
+                    node.href = node.href.replace('page=blank/', '');
                 });
                 raiderHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                 happeningsAdded++;

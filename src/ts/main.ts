@@ -52,7 +52,6 @@ function getChk(page: string): void
 }
 
 const urlParameters: object = getUrlParameters(document.URL);
-
 if (urlParameters["page"] !== "blank") {
     getLocalId();
     getChk();
@@ -64,12 +63,16 @@ if (urlParameters["page"] !== "blank") {
 
 function keyPress(e: KeyboardEvent): void
 {
+    console.log(e.key);
     const textboxSelected: HTMLElement = document.querySelector('input:focus, textarea:focus');
     if (e.ctrlKey || e.altKey || e.shiftKey)
         return;
     else if (textboxSelected)
         return;
+    // ignore caps lock
     const pressedKey: string = e.key.toUpperCase();
+    if (pressedKey in keys)
+        keys[pressedKey]();
 }
 
 document.addEventListener('keyup', keyPress);
@@ -88,8 +91,8 @@ chrome.storage.local.get('movekey', (result) =>
         const moveButton = document.querySelector('button[name=move_region]');
         if (moveButton)
             moveButton.click();
-        else if (urlParameters['page'] === 'reports')
-            document.querySelector('li > a:nth-of-type(3)').click();
+        else if (urlParameters['reliant'] == 'main')
+            document.querySelector('#chasing-button').click();
     };
 });
 

@@ -539,6 +539,7 @@ document.querySelector("#update-region-status").addEventListener('click', update
 document.querySelector("#check-current-region").addEventListener('click', checkCurrentRegion);
 document.querySelector("#check-if-updated").addEventListener('click', checkIfUpdated);
 document.querySelector("#copy-win").addEventListener('click', copyWin);
+document.addEventListener('keyup', keyPress);
 chrome.storage.onChanged.addListener(onStorageChange);
 
 /*

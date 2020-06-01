@@ -190,6 +190,9 @@ chrome.storage.local.get("endorsekey", (result) =>
         else if (urlParameters['reliant'] === 'main') {
             let refreshButton = document.querySelector('#refresh-endorse');
             let endorseButton = document.querySelector('.endorse[data-clicked="0"]');
+            const lastWAUpdate = document.querySelector("#last-wa-update");
+            if (lastWAUpdate.innerHTML === 'Seconds ago')
+                document.querySelector("#copy-win").click();
             if (!endorseButton)
                 refreshButton.click();
             else

@@ -128,8 +128,20 @@ chrome.storage.local.get("resignkey", (result) => {
     const resignKey = result.resignkey || "'";
     keys[resignKey] = () =>
     {
-        if (urlParameters["page"] === "join_WA")
-            document.querySelector("button[class=\"button primary icon approve big\"").click();
+        chrome.storage.local.get('switchstate', (switchstateresult) =>
+        {
+            const currentSwitchState = switchstateresult.switchstate;
+            if (urlParameters["page"] === "join_WA")
+                document.querySelector("button[class=\"button primary icon approve big\"").click();
+            else if (urlParameters['reliant'] === 'main') {
+                if (currentSwitchState === '0')
+                    document.querySelector('#resign').click();
+                else if (currentSwitchState === '1')
+                    document.querySelector('#admit').click();
+                else if (currentSwitchState === '2')
+                    document.querySelector('#update-localid').click();
+            }
+        });
     };
 });
 

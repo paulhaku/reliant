@@ -526,7 +526,7 @@ async function checkIfUpdated(e: MouseEvent): void
     responseDiv.innerHTML = await makeAjaxQuery('/page=ajax2/a=reports/view=self/filter=change', 'GET');
     let lis = responseDiv.querySelectorAll('li');
     // limit to max 5 happenings to save space
-    for (let i = 0; i != 5; i++) {
+    for (let i = 0; i != 3; i++) {
         if (typeof lis[i] === 'undefined')
             break;
         else

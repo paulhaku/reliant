@@ -114,6 +114,20 @@ const pageContent: string = `
                     </ul>
                 </div>
             </div>
+            <div id="group-6">
+                <!-- Current Region Happenings -->
+                <div id="current-region-happenings-container">
+                    <span class="header">Region Happenings</span>
+                    <ul class="information" id="region-happenings">
+                    </ul>
+                </div>
+                <!-- World Happenings-->
+                <div id="world-happenings-container">
+                    <span class="header">World Happenings</span>
+                    <ul class="information" id="world-happenings">
+                    </ul>
+                </div>
+            </div>
         </div>
     </body>
 </html>
@@ -135,6 +149,7 @@ const switchers: HTMLElement = document.querySelector("#switchers");
 const currentRegion: HTMLElement = document.querySelector("#current-region");
 const didIUpdate: HTMLElement = document.querySelector("#did-i-update");
 const reports: HTMLElement = document.querySelector('#reports');
+const regionHappenings: HTMLElement = document.querySelector("#region-happenings");
 
 /*
  * Helpers
@@ -469,6 +484,17 @@ async function updateRegionStatus(e: MouseEvent): void
     let response = await makeAjaxQuery(`/template-overall=none/region=${currentRegion.innerHTML}`, 'GET');
     let responseDiv = document.createElement('div');
     responseDiv.innerHTML = response;
+    // update the region happenings at the same time to not make an extra query
+    let regionHappeningsLis = responseDiv.querySelectorAll('ul > li');
+    console.log(regionHappeningsLis);
+    for (let i = 0; i != regionHappeningsLis.length; i++) {
+        let anodes = regionHappeningsLis[i].querySelectorAll('a');
+        // fix link
+        anodes.forEach((node) => {
+            node.href = node.href.replace('page=blank/', '');
+        });
+        regionHappenings.innerHTML += `<li>${regionHappeningsLis[i].innerHTML}</li>`;
+    }
     let strongs = responseDiv.querySelectorAll('strong');
     for (let i = 0; i != strongs; i++) {
         const strongParent = strongs[i].parentElement;

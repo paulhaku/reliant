@@ -501,6 +501,8 @@ async function endorseDelegate(e: MouseEvent): void
     chrome.storage.local.get('localid', async (localidresult) =>
     {
         const nationName = document.querySelector("#delegate-nation").value;
+        if (nationName === 'N/A')
+            return;
         const localId = localidresult.localid;
         let formData = new FormData();
         formData.set('nation', nationName);

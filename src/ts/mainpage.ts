@@ -486,6 +486,7 @@ async function updateRegionStatus(e: MouseEvent): void
     responseDiv.innerHTML = response;
     // update the region happenings at the same time to not make an extra query
     let regionHappeningsLis = responseDiv.querySelectorAll('ul > li');
+    regionHappenings.innerHTML = '';
     console.log(regionHappeningsLis);
     for (let i = 0; i != regionHappeningsLis.length; i++) {
         let anodes = regionHappeningsLis[i].querySelectorAll('a');

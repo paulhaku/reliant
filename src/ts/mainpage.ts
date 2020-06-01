@@ -473,12 +473,15 @@ async function updateRegionStatus(e: MouseEvent): void
     for (let i = 0; i != strongs; i++) {
         const strongParent = strongs[i].parentElement;
         if (strongs[i].innerHTML == 'WA Delegate:' || strongs[i].innerHTML == 'WA Delegate') {
-            document.querySelector("#delegate-nation").value = nationRegex.exec(strongParent.querySelector('a').href)[1];
             const waDelegate = strongParent.querySelector('a');
-            if (waDelegate)
+            if (waDelegate) {
                 document.querySelector("#wa-delegate").innerHTML = waDelegate.innerHTML;
-            else
+                document.querySelector("#delegate-nation").value = nationRegex.exec(strongParent.querySelector('a').href)[1];
+            }
+            else {
                 document.querySelector("#wa-delegate").innerHTML = 'None';
+                document.querySelector("#delegate-nation").value = 'N/A';
+            }
         }
         else if (strongs[i].innerHTML == 'Last WA Update:') {
             const lastWaUpdate = strongParent.querySelector('time');

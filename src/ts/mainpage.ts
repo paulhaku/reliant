@@ -113,8 +113,8 @@ const pageContent: string = `
                 <!-- Reports Container -->
                 <div id="reports-container">
                     <span class="header">Reports</span>
-                    <div id="reports" class="information">
-                    </div>
+                    <ul id="reports" class="information">
+                    </ul>
                 </div>
             </div>
         </div>
@@ -137,6 +137,7 @@ const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossie
 const switchers: HTMLElement = document.querySelector("#switchers");
 const currentRegion: HTMLElement = document.querySelector("#current-region");
 const didIUpdate: HTMLElement = document.querySelector("#did-i-update");
+const reports: HTMLElement = document.querySelector('#reports');
 
 /*
  * Helpers
@@ -414,6 +415,15 @@ async function chasingButton(e: MouseEvent): void
         // only so we can use queryselector on the response DOM rather than using regex matching
         let responseDiv = document.createElement('div');
         responseDiv.innerHTML = response;
+        let lis = responseDiv.querySelectorAll('li');
+        // add the reports items to the page so we don't have to make a second query for it
+        lis.forEach((node) => {
+            // fix link
+            node.querySelectorAll('a').forEach((anode) => {
+                anode.href = anode.href.replace('page=blank/', '');
+            });
+            reports.innerHTML += `<li>${node.innerHTML}</li>`;
+        });
         let moveRegion = responseDiv.querySelector('.rlink:nth-of-type(3)');
         if (!moveRegion)
             return;

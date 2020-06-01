@@ -124,6 +124,15 @@ chrome.storage.local.get('mainpagekey', (result) =>
     }
 });
 
+chrome.storage.local.get("resignkey", (result) => {
+    const resignKey = result.resignkey || "'";
+    keys[resignKey] = () =>
+    {
+        if (urlParameters["page"] === "join_WA")
+            document.querySelector("button[class=\"button primary icon approve big\"").click();
+    };
+});
+
 /*
  * Miscellaneous
  */

@@ -1,5 +1,3 @@
-// document.head.innerHTML = '<title>Reliant</title><meta charset="utf-8">';
-
 const pageContent: string = `
 <!DOCTYPE html>
 <html lang="en">

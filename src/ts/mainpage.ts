@@ -11,6 +11,7 @@ const pageContent: string = `
                 <!-- Switchers -->
                 <div id="switchers-container">
                     <span class="header">Switchers Left</span>
+                    <span class="subheader" id="num-switchers">0</span>
                     <div class="information">
                         <ul id="switchers">
                         </ul>
@@ -515,6 +516,7 @@ function onStorageChange(changes: object, areaName: string): void
         let storageChange = changes[key];
         if (key == "switchers") {
             const newSwitchers: object = storageChange.newValue;
+            document.querySelector("#num-switchers").innerHTML = Object.keys(newSwitchers).length;
             resetSwitchers(newSwitchers);
             break;
         }
@@ -546,5 +548,6 @@ chrome.storage.onChanged.addListener(onStorageChange);
 
 chrome.storage.local.get("switchers", (result) =>
 {
+    document.querySelector("#num-switchers").innerHTML = Object.keys(result.switchers).length;
     resetSwitchers(result.switchers);
 });

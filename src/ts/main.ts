@@ -179,9 +179,11 @@ chrome.storage.local.get("dossiernationkey", (result) =>
     };
 });
 
-chrome.storage.local.get("endorsekey", (result) => {
+chrome.storage.local.get("endorsekey", (result) =>
+{
     const endorseKey = result.endorsekey || 'Z';
-    keys[endorseKey] = () => {
+    keys[endorseKey] = () =>
+    {
         const endorseButton = document.querySelector("button[class=\"endorse button icon wa\"]");
         if (endorseButton)
             endorseButton.click();
@@ -193,6 +195,15 @@ chrome.storage.local.get("endorsekey", (result) => {
             else
                 endorseButton.click();
         }
+    };
+});
+
+chrome.storage.local.get("gcrkey", (result) =>
+{
+    const gcrKey = result.gcrkey || 'G';
+    keys[gcrKey] = () =>
+    {
+        window.location.href = "/page=ajax2/a=reports/view=world/filter=change";
     };
 });
 

@@ -33,8 +33,8 @@ pageContent.innerHTML = `
 <input type="radio" name="key-to-change" value="refreshkey">
 </p>
 <p>
-<label for="reportskey">Reports Key</label>
-<input type="radio" name="key-to-change" value="reportskey">
+<label for="reportskey">Main Page Key</label>
+<input type="radio" name="key-to-change" value="mainpagekey">
 </p>
 <p>
 <label for="resignkey">Resign Key</label>

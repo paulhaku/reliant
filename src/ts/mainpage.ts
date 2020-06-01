@@ -124,6 +124,7 @@ const pageContent: string = `
                 <!-- World Happenings-->
                 <div id="world-happenings-container">
                     <span class="header">World Happenings</span>
+                    <input type="button" class="ajaxbutton" id="update-world-happenings" value="Update">
                     <ul class="information" id="world-happenings">
                     </ul>
                 </div>
@@ -150,6 +151,7 @@ const currentRegion: HTMLElement = document.querySelector("#current-region");
 const didIUpdate: HTMLElement = document.querySelector("#did-i-update");
 const reports: HTMLElement = document.querySelector('#reports');
 const regionHappenings: HTMLElement = document.querySelector("#region-happenings");
+const worldHappenings: HTMLElement = document.querySelector("#world-happenings");
 
 /*
  * Helpers
@@ -562,6 +564,21 @@ async function checkIfUpdated(e: MouseEvent): void
     }
 }
 
+async function updateWorldHappenings(e: MouseEvent): void
+{
+    let response: string = await makeAjaxQuery('/page=ajax2/a=reports/view=world/filter=move+member+endo', 'GET');
+    let responseElement: DocumentFragment = document.createRange().createContextualFragment(response);
+    let lis = responseElement.querySelectorAll('li');
+    // max 10
+    for (let i = 0; i != 10; i++) {
+        let liAnchors = lis[i].querySelectorAll('a');
+        // fix link
+        for (let j = 0; j != liAnchors.length; j++)
+            liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+        worldHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+    }
+}
+
 function copyWin(e: MouseEvent): void
 {
     // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
@@ -605,6 +622,7 @@ document.querySelector("#check-current-region").addEventListener('click', checkC
 document.querySelector("#check-if-updated").addEventListener('click', checkIfUpdated);
 document.querySelector("#copy-win").addEventListener('click', copyWin);
 document.querySelector('#endorse-delegate').addEventListener('click', endorseDelegate);
+document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
 document.addEventListener('keyup', keyPress);
 chrome.storage.onChanged.addListener(onStorageChange);
 

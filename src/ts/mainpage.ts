@@ -239,6 +239,8 @@ function admitWA(e: MouseEvent): void
 {
     chrome.storage.local.get('switchers', async (result) => {
         // storedswitchers is an object of nation:appid pairs
+        document.querySelector("#chasing-button").value = 'Refresh';
+        document.querySelector('#move-to-jp').value = 'Move to JP';
         let storedSwitchers = result.switchers;
         let switcherNames = Object.keys(storedSwitchers);
         let selectedSwitcher = switcherNames[0];

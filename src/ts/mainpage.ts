@@ -165,20 +165,19 @@ function resetSwitchers(switcherList: string[]): void
 
 function makeAjaxQuery(url: string, method: string, data: object): string
 {
+    let ajaxButtons = document.querySelectorAll('.ajaxbutton');
     return new Promise((resolve, reject) => {
         function onLoadStart(e: Event): void
         {
             // for adhering to the simultaneity rule
-            document.querySelectorAll('.ajaxbutton').forEach(node => {
-                node.disabled = true;
-            });
+            for (let i = 0; i != ajaxButtons.length; i++)
+                ajaxButtons[i].disabled = true;
         }
 
         async function onLoadEnd(e: Event): void
         {
-            document.querySelectorAll('.ajaxbutton').forEach(node => {
-                node.disabled = false;
-            });
+            for (let i = 0; i != ajaxButtons.length; i++)
+                ajaxButtons[i].disabled = false;
             resolve(xhr.response);
         }
 
@@ -278,9 +277,10 @@ function refreshEndorse(e: MouseEvent): void
         for (let i = 0; i != lis.length; i++) {
             // update the jp happenings at the same time so we don't have to make an extra query (max 10)
             if (happeningsAdded <= 10) {
-                lis[i].querySelectorAll('a').forEach((node) => {
-                    node.href = node.href.replace('page=blank/', '');
-                });
+                let liAnchors = lis[i].querySelectorAll('a');
+                // fix links
+                for (let j = 0; j != liAnchors.length; j++)
+                    liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
                 jpHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                 happeningsAdded++;
             }
@@ -340,11 +340,12 @@ function refreshDossier(e: MouseEvent): void
         let resigned: string[] = [];
         let happeningsAdded: number = 0;
         for (let i = 0; i != lis.length; i++) {
-            // update the jp happenings at the same time so we don't have to make an extra query (max 10)
+            // update the raider jp happenings at the same time so we don't have to make an extra query (max 10)
             if (happeningsAdded <= 10) {
-                lis[i].querySelectorAll('a').forEach((node) => {
-                    node.href = node.href.replace('page=blank/', '');
-                });
+                let liAnchors = lis[i].querySelectorAll('a');
+                // fix link
+                for (let j = 0; j != liAnchors.length; j++)
+                    liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
                 raiderHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                 happeningsAdded++;
             }
@@ -430,13 +431,14 @@ async function chasingButton(e: MouseEvent): void
         responseDiv.innerHTML = response;
         let lis = responseDiv.querySelectorAll('li');
         // add the reports items to the page so we don't have to make a second query for it
-        lis.forEach((node) => {
+        reports.innerHTML = '';
+        for (let i = 0; i != lis.length; i++) {
+            let liAnchors = lis[i].querySelectorAll('a');
             // fix link
-            node.querySelectorAll('a').forEach((anode) => {
-                anode.href = anode.href.replace('page=blank/', '');
-            });
-            reports.innerHTML += `<li>${node.innerHTML}</li>`;
-        });
+            for (let j = 0; j != liAnchors.length; j++)
+                liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+            reports.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+        }
         let moveRegion = responseDiv.querySelector('.rlink:nth-of-type(3)');
         if (!moveRegion)
             return;
@@ -491,9 +493,8 @@ async function updateRegionStatus(e: MouseEvent): void
     for (let i = 0; i != regionHappeningsLis.length; i++) {
         let anodes = regionHappeningsLis[i].querySelectorAll('a');
         // fix link
-        anodes.forEach((node) => {
-            node.href = node.href.replace('page=blank/', '');
-        });
+        for (let j = 0; j != anodes.length; j++)
+            anodes[j].href = anodes[j].href.replace('page=blank/', '');
         regionHappenings.innerHTML += `<li>${regionHappeningsLis[i].innerHTML}</li>`;
     }
     let strongs = responseDiv.querySelectorAll('strong');

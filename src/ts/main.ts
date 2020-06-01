@@ -252,9 +252,20 @@ chrome.storage.local.get("delegatekey", (result) =>
             document.execCommand('copy');
             document.body.removeChild(copyText);
         }
-        else if (urlParameters['reliant'] === 'main') {
+        else if (urlParameters['reliant'] === 'main')
             document.querySelector('#endorse-delegate').click();
-        }
+    };
+});
+
+chrome.storage.local.get("worldactivitykey", (result) =>
+{
+    const worldActivityKey = result.worldactivitykey || 'F';
+    keys[worldActivityKey] = () =>
+    {
+        if (urlParameters['reliant'] !== 'main')
+            window.location.href = "/page=activity/view=world/filter=move+member+endo";
+        else
+            document.querySelector('#update-world-happenings').click();
     };
 });
 

@@ -169,8 +169,11 @@ chrome.storage.local.get("dossiernationkey", (result) =>
         if (dossierButton)
             dossierButton.click();
         else if (urlParameters['reliant'] === 'main') {
+            let refreshButton = document.querySelector('#refresh-dossier');
             let dossierButton = document.querySelector('.dossier[data-clicked="0"]');
-            if (dossierButton)
+            if (!dossierButton)
+                refreshButton.click();
+            else
                 dossierButton.click();
         }
     };

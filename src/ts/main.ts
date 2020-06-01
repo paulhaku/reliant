@@ -63,7 +63,6 @@ if (urlParameters["page"] !== "blank") {
 
 function keyPress(e: KeyboardEvent): void
 {
-    console.log(e.key);
     const textboxSelected: HTMLElement = document.querySelector('input:focus, textarea:focus');
     if (e.ctrlKey || e.altKey || e.shiftKey)
         return;
@@ -124,7 +123,8 @@ chrome.storage.local.get('mainpagekey', (result) =>
     }
 });
 
-chrome.storage.local.get("resignkey", (result) => {
+chrome.storage.local.get("resignkey", (result) =>
+{
     const resignKey = result.resignkey || "'";
     keys[resignKey] = () =>
     {
@@ -134,14 +134,45 @@ chrome.storage.local.get("resignkey", (result) => {
             if (urlParameters["page"] === "join_WA")
                 document.querySelector("button[class=\"button primary icon approve big\"").click();
             else if (urlParameters['reliant'] === 'main') {
+                // In the WA with a valid localid
                 if (currentSwitchState === '0')
                     document.querySelector('#resign').click();
+                // Not in the WA, waiting to admit on a new switcher
                 else if (currentSwitchState === '1')
                     document.querySelector('#admit').click();
+                // Admitted on a new switcher, waiting to update localid
                 else if (currentSwitchState === '2')
                     document.querySelector('#update-localid').click();
             }
         });
+    };
+});
+
+chrome.storage.local.get("dossierkey", (result) =>
+{
+    const dossierKey = result.dossierkey || 'M';
+    keys[dossierKey] = () =>
+    {
+        if (urlParameters["page"] === "dossier")
+            document.querySelector("button[name=clear_dossier]").click();
+        else
+            window.location.href = "/template-overall=none/page=dossier";
+    };
+});
+
+chrome.storage.local.get("dossiernationkey", (result) =>
+{
+    const dossierNationKey = result.dossiernationkey || 'N';
+    keys[dossierNationKey] = () =>
+    {
+        const dossierButton = document.querySelector("button[value=add]");
+        if (dossierButton)
+            dossierButton.click();
+        else if (urlParameters['reliant'] === 'main') {
+            let dossierButton = document.querySelector('.dossier[data-clicked="0"]');
+            if (dossierButton)
+                dossierButton.click();
+        }
     };
 });
 

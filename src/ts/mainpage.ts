@@ -336,6 +336,7 @@ function refreshDossier(e: MouseEvent): void
                 if (resigned.indexOf(nationName) === -1) {
                     async function onDossierClick(e: MouseEvent): void
                     {
+                        e.target.setAttribute('data-clicked', '1');
                         let formData = new FormData();
                         formData.set('nation', nationName);
                         formData.set('action', 'add');
@@ -348,7 +349,8 @@ function refreshDossier(e: MouseEvent): void
 
                     let dossierButton = document.createElement('input');
                     dossierButton.setAttribute('type', 'button');
-                    dossierButton.setAttribute('class', 'ajaxbutton');
+                    dossierButton.setAttribute('class', 'ajaxbutton dossier');
+                    dossierButton.setAttribute('data-clicked', '0');
                     dossierButton.setAttribute('value', `Dossier ${pretty(nationName)}`);
                     dossierButton.addEventListener('click', onDossierClick);
                     let dossierLi = document.createElement('li');

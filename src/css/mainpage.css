@@ -16,6 +16,10 @@ input[type=button] {
     border: 0;
 }
 
+input[type=button]:disabled {
+    background-color: #141315;
+}
+
 input[type=text] {
     background-color: #625472;
     color: #fff;
@@ -23,6 +27,10 @@ input[type=text] {
 
 a {
     color: #646FB6;
+}
+
+#status {
+    color: #fff;
 }
 
 /*
@@ -115,7 +123,7 @@ a {
     grid-column: 2 / 2;
     grid-row: 4 / 4;
     display: grid;
-    grid-template-columns: 15% 25% 60%;
+    grid-template-columns: 10% 30% 60%;
     grid-template-rows: 100%;
 }
 

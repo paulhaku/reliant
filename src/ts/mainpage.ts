@@ -103,6 +103,8 @@ const pageContent: string = `
                     <span class="information" id="last-wa-update">N/A</span>
                     <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
                     <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
+                    <input type="hidden" id="delegate-nation" value="N/A">
+                    <input type="button" class="ajaxbutton" id="endorse-delegate" value="Endorse Delegate">
                     <input type="button" id="copy-win" value="Copy Win">
                 </div>
                 <!-- Reports Container -->
@@ -463,6 +465,7 @@ async function updateRegionStatus(e: MouseEvent): void
 {
     if (currentRegion.innerHTML == 'N/A')
         return;
+    const nationRegex: RegExp = new RegExp('nation=([A-Za-z0-9_-]+)');
     let response = await makeAjaxQuery(`/template-overall=none/region=${currentRegion.innerHTML}`, 'GET');
     let responseDiv = document.createElement('div');
     responseDiv.innerHTML = response;
@@ -470,6 +473,7 @@ async function updateRegionStatus(e: MouseEvent): void
     for (let i = 0; i != strongs; i++) {
         const strongParent = strongs[i].parentElement;
         if (strongs[i].innerHTML == 'WA Delegate:' || strongs[i].innerHTML == 'WA Delegate') {
+            document.querySelector("#delegate-nation").value = nationRegex.exec(strongParent.querySelector('a').href)[1];
             const waDelegate = strongParent.querySelector('a');
             if (waDelegate)
                 document.querySelector("#wa-delegate").innerHTML = waDelegate.innerHTML;
@@ -490,6 +494,24 @@ async function checkCurrentRegion(e: MouseEvent): void
     let responseElement = document.createRange().createContextualFragment(response);
     let regionHref = responseElement.querySelector('#panelregionbar > a').href;
     currentRegion.innerHTML = new RegExp('region=([A-Za-z0-9_]+)').exec(regionHref)[1];
+}
+
+async function endorseDelegate(e: MouseEvent): void
+{
+    chrome.storage.local.get('localid', async (localidresult) =>
+    {
+        const nationName = document.querySelector("#delegate-nation").value;
+        const localId = localidresult.localid;
+        let formData = new FormData();
+        formData.set('nation', nationName);
+        formData.set('localid', localId);
+        formData.set('action', 'endorse');
+        let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
+        if (endorseResponse.indexOf('Failed security check.') !== -1)
+            status.innerHTML = `Failed to endorse ${nationName}.`;
+        else
+            status.innerHTML = `Endorsed ${nationName}.`;
+    });
 }
 
 async function checkIfUpdated(e: MouseEvent): void
@@ -549,6 +571,7 @@ document.querySelector("#update-region-status").addEventListener('click', update
 document.querySelector("#check-current-region").addEventListener('click', checkCurrentRegion);
 document.querySelector("#check-if-updated").addEventListener('click', checkIfUpdated);
 document.querySelector("#copy-win").addEventListener('click', copyWin);
+document.querySelector('#endorse-delegate').addEventListener('click', endorseDelegate);
 document.addEventListener('keyup', keyPress);
 chrome.storage.onChanged.addListener(onStorageChange);
 

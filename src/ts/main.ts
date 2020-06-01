@@ -117,10 +117,10 @@ if (settingsParent) {
     settingsParent.insertBefore(settingsDiv, settingsParent.firstChild);
     document.querySelector('#reliant-settings').addEventListener('click', (e: MouseEvent) =>
     {
-        window.location.href = '/page=blank/reliant_settings';
+        window.location.href = '/page=blank/reliant=settings';
     });
     document.querySelector('#reliant-main').addEventListener('click', (e: MouseEvent) =>
     {
-        window.location.href = '/template-overall=none/page=blank/reliant';
+        window.location.href = '/template-overall=none/page=blank/reliant=main';
     });
 }

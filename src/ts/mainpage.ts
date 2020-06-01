@@ -42,10 +42,10 @@ const pageContent: string = `
                 <div id="did-i-update-container">
                     <span class="header">Did I Update?</span>
                     <input type="button" class="ajaxbutton" id="check-if-updated" value="Did I Update?">
-                    <span class="information">
+                    <div class="information">
                         <ul id="did-i-update">
                         </ul>
-                    </span>
+                    </div>
                 </div>
             </div>
             <div id="group-3">
@@ -113,8 +113,8 @@ const pageContent: string = `
                 <!-- Reports Container -->
                 <div id="reports-container">
                     <span class="header">Reports</span>
-                    <span id="reports" class="information">
-                    </span>
+                    <div id="reports" class="information">
+                    </div>
                 </div>
             </div>
         </div>

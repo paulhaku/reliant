@@ -91,9 +91,27 @@ chrome.storage.local.get('movekey', (result) =>
         const moveButton = document.querySelector('button[name=move_region]');
         if (moveButton)
             moveButton.click();
-        else if (urlParameters['reliant'] == 'main')
+        else if (urlParameters['reliant'] === 'main')
             document.querySelector('#chasing-button').click();
     };
+});
+
+chrome.storage.local.get('jpkey', (result) =>
+{
+    chrome.storage.local.get('jumppoint', (jpresult) => {
+        const jpKey = result.jpkey || 'V';
+        const jumpPoint = jpresult.jumppoint || 'artificial_solar_system';
+        keys[jpKey] = () =>
+        {
+            const moveButton = document.querySelector('button[name=move_region]');
+            if (urlParameters['region'] === jumpPoint)
+                moveButton.click();
+            else if (urlParameters['reliant'] === 'main')
+                document.querySelector('#move-to-jp').click();
+            else
+                window.location.href = `/template-overall=none/region=${jumpPoint}`;
+        }
+    });
 });
 
 /*

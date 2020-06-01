@@ -233,6 +233,31 @@ chrome.storage.local.get("didiupdatekey", (result) =>
     };
 });
 
+chrome.storage.local.get("delegatekey", (result) =>
+{
+    const delegateKey = result.delegatekey || 'A';
+    keys[delegateKey] = () =>
+    {
+        if (urlParameters["region"]) {
+            document.querySelector("p:nth-child(2) > .nlink").click();
+            return;
+        }
+        // Copy Nation Link
+        else if (urlParameters["page"] === "un") {
+            let nationLink = 'https://www.nationstates.net/nation=' + document.getElementById("loggedin").getAttribute("data-nname");
+            const copyText = document.createElement('textarea');
+            copyText.value = nationLink;
+            document.body.appendChild(copyText);
+            copyText.select();
+            document.execCommand('copy');
+            document.body.removeChild(copyText);
+        }
+        else if (urlParameters['reliant'] === 'main') {
+            document.querySelector('#endorse-delegate').click();
+        }
+    };
+});
+
 /*
  * Miscellaneous
  */

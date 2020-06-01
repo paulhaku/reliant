@@ -88,7 +88,9 @@ const pageContent: string = `
                 <!-- Chasing -->
                 <div id="chasing-container">
                     <span id="chasing-header" class="header">Chasing</span>
+                    <span class="subheader">JP</span>
                     <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
+                    <span class="subheader">Chase</span>
                     <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
                 </div>
                 <!-- Current Region -->

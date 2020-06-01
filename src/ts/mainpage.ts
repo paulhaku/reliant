@@ -142,16 +142,16 @@ document.close();
  * Dynamic Information
  */
 
-const status: HTMLElement = document.querySelector("#status");
-const currentWANation: HTMLElement = document.querySelector("#current-wa-nation");
-const nationsToEndorse: HTMLElement = document.querySelector("#nations-to-endorse");
-const nationsToDossier: HTMLElement = document.querySelector("#nations-to-dossier");
-const switchers: HTMLElement = document.querySelector("#switchers");
-const currentRegion: HTMLElement = document.querySelector("#current-region");
-const didIUpdate: HTMLElement = document.querySelector("#did-i-update");
+const status: HTMLElement = document.querySelector('#status');
+const currentWANation: HTMLElement = document.querySelector('#current-wa-nation');
+const nationsToEndorse: HTMLElement = document.querySelector('#nations-to-endorse');
+const nationsToDossier: HTMLElement = document.querySelector('#nations-to-dossier');
+const switchers: HTMLElement = document.querySelector('#switchers');
+const currentRegion: HTMLElement = document.querySelector('#current-region');
+const didIUpdate: HTMLElement = document.querySelector('#did-i-update');
 const reports: HTMLElement = document.querySelector('#reports');
-const regionHappenings: HTMLElement = document.querySelector("#region-happenings");
-const worldHappenings: HTMLElement = document.querySelector("#world-happenings");
+const regionHappenings: HTMLElement = document.querySelector('#region-happenings');
+const worldHappenings: HTMLElement = document.querySelector('#world-happenings');
 
 /*
  * Helpers
@@ -168,7 +168,8 @@ function resetSwitchers(switcherList: string[]): void
 function makeAjaxQuery(url: string, method: string, data: object): string
 {
     let ajaxButtons = document.querySelectorAll('.ajaxbutton');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) =>
+    {
         function onLoadStart(e: Event): void
         {
             // for adhering to the simultaneity rule
@@ -184,10 +185,10 @@ function makeAjaxQuery(url: string, method: string, data: object): string
         }
 
         let xhr = new XMLHttpRequest();
-        xhr.addEventListener("loadstart", onLoadStart);
-        xhr.addEventListener("loadend", onLoadEnd);
+        xhr.addEventListener('loadstart', onLoadStart);
+        xhr.addEventListener('loadend', onLoadEnd);
         xhr.open(method, url);
-        xhr.responseType = "text";
+        xhr.responseType = 'text';
         if (data !== undefined)
             xhr.send(data);
         else
@@ -219,12 +220,13 @@ async function manualChkUpdate(e: MouseEvent): void
 
 function resignWA(e: MouseEvent): void
 {
-    chrome.storage.local.get('chk', async (result) => {
+    chrome.storage.local.get('chk', async (result) =>
+    {
         const chk = result.chk;
         let formData = new FormData();
         formData.set('action', 'leave_UN');
         formData.set('chk', chk);
-        const response = await makeAjaxQuery("/page=UN_status", "POST", formData);
+        const response = await makeAjaxQuery('/page=UN_status', 'POST', formData);
         if (response.indexOf('You inform the World Assembly that') !== -1) {
             currentWANation.innerHTML = 'N/A';
             const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
@@ -237,10 +239,11 @@ function resignWA(e: MouseEvent): void
 
 function admitWA(e: MouseEvent): void
 {
-    chrome.storage.local.get('switchers', async (result) => {
+    chrome.storage.local.get('switchers', async (result) =>
+    {
         // storedswitchers is an object of nation:appid pairs
         // reset chasing buttons
-        document.querySelector("#chasing-button").value = 'Refresh';
+        document.querySelector('#chasing-button').value = 'Refresh';
         document.querySelector('#move-to-jp').value = 'Move to JP';
         // reset region status stuff
         currentRegion.innerHTML = 'N/A';
@@ -252,8 +255,8 @@ function admitWA(e: MouseEvent): void
         let formData = new FormData();
         formData.set('nation', selectedSwitcher);
         formData.set('appid', storedSwitchers[selectedSwitcher]);
-        let response = await makeAjaxQuery("/cgi-bin/join_un.cgi", "POST", formData);
-        if (response.indexOf("Welcome to the World Assembly, new member") !== -1) {
+        let response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
+        if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
             currentWANation.innerHTML = pretty(selectedSwitcher);
             status.innerHTML = `Admitted to the WA on ${selectedSwitcher}.`;
             // Update Chk
@@ -263,19 +266,20 @@ function admitWA(e: MouseEvent): void
         else
             status.innerHTML = `Error admitting to the WA on ${selectedSwitcher}.`;
         delete storedSwitchers[selectedSwitcher];
-        chrome.storage.local.set({"switchers": storedSwitchers});
+        chrome.storage.local.set({'switchers': storedSwitchers});
     });
 }
 
 function refreshEndorse(e: MouseEvent): void
 {
-    const jpHappenings = document.querySelector("#jp-happenings");
+    const jpHappenings = document.querySelector('#jp-happenings');
     nationsToEndorse.innerHTML = '';
     jpHappenings.innerHTML = '';
-    chrome.storage.local.get('jumppoint', async (result) => {
+    chrome.storage.local.get('jumppoint', async (result) =>
+    {
         const jumpPoint = result.jumppoint;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
-        'GET');
+            'GET');
         const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
         // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
@@ -302,7 +306,8 @@ function refreshEndorse(e: MouseEvent): void
                 if (resigned.indexOf(nationName) === -1) {
                     function onEndorseClick(e: MouseEvent)
                     {
-                        chrome.storage.local.get('localid', async (localidresult) => {
+                        chrome.storage.local.get('localid', async (localidresult) =>
+                        {
                             e.target.setAttribute('data-clicked', '1');
                             const localId = localidresult.localid;
                             let formData = new FormData();
@@ -334,13 +339,14 @@ function refreshEndorse(e: MouseEvent): void
 
 function refreshDossier(e: MouseEvent): void
 {
-    const raiderHappenings = document.querySelector("#raider-happenings");
+    const raiderHappenings = document.querySelector('#raider-happenings');
     raiderHappenings.innerHTML = '';
     nationsToDossier.innerHTML = '';
-    chrome.storage.local.get('raiderjp', async (result) => {
+    chrome.storage.local.get('raiderjp', async (result) =>
+    {
         const raiderJp = result.raiderjp;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
-        'GET');
+            'GET');
         const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
         // only so we can use queryselector on the response DOM rather than using regex matching
         let div = document.createElement('div');
@@ -396,15 +402,17 @@ function refreshDossier(e: MouseEvent): void
 
 function setRaiderJP(e: MouseEvent): void
 {
-    const newRaiderJP = canonicalize(document.querySelector("#raider-jp").value);
-    chrome.storage.local.set({"raiderjp": newRaiderJP});
+    const newRaiderJP = canonicalize(document.querySelector('#raider-jp').value);
+    chrome.storage.local.set({'raiderjp': newRaiderJP});
 }
 
 function moveToJP(e: MouseEvent): void
 {
     if (e.target.value == 'Move to JP') {
-        chrome.storage.local.get('localid', (localidresult) => {
-            chrome.storage.local.get('jumppoint', async (jumppointresult) => {
+        chrome.storage.local.get('localid', (localidresult) =>
+        {
+            chrome.storage.local.get('jumppoint', async (jumppointresult) =>
+            {
                 const localId = localidresult.localid;
                 const moveRegion = jumppointresult.jumppoint;
                 let formData = new FormData();
@@ -432,8 +440,8 @@ async function chasingButton(e: MouseEvent): void
 {
     // jump points and such
     const doNotMove = ['devide_by_zero', 'artificial_solar_system', 'trieltics', '3_guys', 'frozen_circle', 'switz',
-    'plum_island', 'no_nope_and_nay', 'vienna', 'crystal_falls', 'birb'];
-    if (e.target.value == "Refresh") {
+        'plum_island', 'no_nope_and_nay', 'vienna', 'crystal_falls', 'birb'];
+    if (e.target.value == 'Refresh') {
         let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
         // only so we can use queryselector on the response DOM rather than using regex matching
         let responseDiv = document.createElement('div');
@@ -463,7 +471,8 @@ async function chasingButton(e: MouseEvent): void
         }
     }
     else if (e.target.getAttribute('data-moveregion')) {
-        chrome.storage.local.get('localid', async (result) => {
+        chrome.storage.local.get('localid', async (result) =>
+        {
             const localId = result.localid;
             const moveRegion = e.target.getAttribute('data-moveregion');
             let formData = new FormData();
@@ -512,12 +521,12 @@ async function updateRegionStatus(e: MouseEvent): void
         if (strongs[i].innerHTML == 'WA Delegate:' || strongs[i].innerHTML == 'WA Delegate') {
             const waDelegate = strongParent.querySelector('a');
             if (waDelegate) {
-                document.querySelector("#wa-delegate").innerHTML = waDelegate.innerHTML;
-                document.querySelector("#delegate-nation").value = nationRegex.exec(strongParent.querySelector('a').href)[1];
+                document.querySelector('#wa-delegate').innerHTML = waDelegate.innerHTML;
+                document.querySelector('#delegate-nation').value = nationRegex.exec(strongParent.querySelector('a').href)[1];
             }
             else {
-                document.querySelector("#wa-delegate").innerHTML = 'None';
-                document.querySelector("#delegate-nation").value = 'N/A';
+                document.querySelector('#wa-delegate').innerHTML = 'None';
+                document.querySelector('#delegate-nation').value = 'N/A';
             }
         }
         else if (strongs[i].innerHTML == 'Last WA Update:') {
@@ -540,7 +549,7 @@ async function endorseDelegate(e: MouseEvent): void
 {
     chrome.storage.local.get('localid', async (localidresult) =>
     {
-        const nationName = document.querySelector("#delegate-nation").value;
+        const nationName = document.querySelector('#delegate-nation').value;
         if (nationName === 'N/A')
             return;
         const localId = localidresult.localid;
@@ -603,9 +612,9 @@ function onStorageChange(changes: object, areaName: string): void
 {
     for (let key in changes) {
         let storageChange = changes[key];
-        if (key == "switchers") {
+        if (key == 'switchers') {
             const newSwitchers: object = storageChange.newValue;
-            document.querySelector("#num-switchers").innerHTML = Object.keys(newSwitchers).length;
+            document.querySelector('#num-switchers').innerHTML = Object.keys(newSwitchers).length;
             resetSwitchers(newSwitchers);
             break;
         }
@@ -616,19 +625,19 @@ function onStorageChange(changes: object, areaName: string): void
  * Event Listeners
  */
 
-document.querySelector("#resign").addEventListener("click", resignWA);
-document.querySelector("#admit").addEventListener("click", admitWA);
-document.querySelector("#refresh-endorse").addEventListener("click", refreshEndorse);
-document.querySelector("#refresh-dossier").addEventListener("click", refreshDossier);
-document.querySelector("#set-raider-jp").addEventListener("click", setRaiderJP);
-document.querySelector("#move-to-jp").addEventListener("click", moveToJP);
-document.querySelector("#chasing-button").addEventListener("click", chasingButton);
-document.querySelector("#update-localid").addEventListener('click', manualLocalIdUpdate);
-document.querySelector("#update-wa-status").addEventListener('click', manualChkUpdate);
-document.querySelector("#update-region-status").addEventListener('click', updateRegionStatus);
-document.querySelector("#check-current-region").addEventListener('click', checkCurrentRegion);
-document.querySelector("#check-if-updated").addEventListener('click', checkIfUpdated);
-document.querySelector("#copy-win").addEventListener('click', copyWin);
+document.querySelector('#resign').addEventListener('click', resignWA);
+document.querySelector('#admit').addEventListener('click', admitWA);
+document.querySelector('#refresh-endorse').addEventListener('click', refreshEndorse);
+document.querySelector('#refresh-dossier').addEventListener('click', refreshDossier);
+document.querySelector('#set-raider-jp').addEventListener('click', setRaiderJP);
+document.querySelector('#move-to-jp').addEventListener('click', moveToJP);
+document.querySelector('#chasing-button').addEventListener('click', chasingButton);
+document.querySelector('#update-localid').addEventListener('click', manualLocalIdUpdate);
+document.querySelector('#update-wa-status').addEventListener('click', manualChkUpdate);
+document.querySelector('#update-region-status').addEventListener('click', updateRegionStatus);
+document.querySelector('#check-current-region').addEventListener('click', checkCurrentRegion);
+document.querySelector('#check-if-updated').addEventListener('click', checkIfUpdated);
+document.querySelector('#copy-win').addEventListener('click', copyWin);
 document.querySelector('#endorse-delegate').addEventListener('click', endorseDelegate);
 document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
 document.addEventListener('keyup', keyPress);
@@ -638,8 +647,8 @@ chrome.storage.onChanged.addListener(onStorageChange);
  * Initialization
  */
 
-chrome.storage.local.get("switchers", (result) =>
+chrome.storage.local.get('switchers', (result) =>
 {
-    document.querySelector("#num-switchers").innerHTML = Object.keys(result.switchers).length;
+    document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length;
     resetSwitchers(result.switchers);
 });

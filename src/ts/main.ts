@@ -25,7 +25,7 @@ function pretty(str: string): string
 
 function getLocalId(page: string): void
 {
-    const localId = document.querySelector("input[name=localid]");
+    const localId = document.querySelector('input[name=localid]');
     if (localId)
         chrome.storage.local.set({'localid': localId.value});
     else if (page) {
@@ -39,7 +39,7 @@ function getLocalId(page: string): void
 
 function getChk(page: string): void
 {
-    const chk = document.querySelector("input[name=chk]");
+    const chk = document.querySelector('input[name=chk]');
     if (chk)
         chrome.storage.local.set({'chk': chk.value});
     else if (page) {
@@ -52,7 +52,7 @@ function getChk(page: string): void
 }
 
 const urlParameters: object = getUrlParameters(document.URL);
-if (urlParameters["page"] !== "blank") {
+if (urlParameters['page'] !== 'blank') {
     getLocalId();
     getChk();
 }
@@ -120,19 +120,19 @@ chrome.storage.local.get('mainpagekey', (result) =>
     keys[mainPageKey] = () =>
     {
         window.location.href = '/template-overall=none/page=blank/reliant=main';
-    }
+    };
 });
 
-chrome.storage.local.get("resignkey", (result) =>
+chrome.storage.local.get('resignkey', (result) =>
 {
-    const resignKey = result.resignkey || "'";
+    const resignKey = result.resignkey || '\'';
     keys[resignKey] = () =>
     {
         chrome.storage.local.get('switchstate', (switchstateresult) =>
         {
             const currentSwitchState = switchstateresult.switchstate;
-            if (urlParameters["page"] === "join_WA")
-                document.querySelector("button[class=\"button primary icon approve big\"").click();
+            if (urlParameters['page'] === 'join_WA')
+                document.querySelector('button[class="button primary icon approve big"').click();
             else if (urlParameters['reliant'] === 'main') {
                 // In the WA with a valid localid
                 if (currentSwitchState === '0')
@@ -148,24 +148,24 @@ chrome.storage.local.get("resignkey", (result) =>
     };
 });
 
-chrome.storage.local.get("dossierkey", (result) =>
+chrome.storage.local.get('dossierkey', (result) =>
 {
     const dossierKey = result.dossierkey || 'M';
     keys[dossierKey] = () =>
     {
-        if (urlParameters["page"] === "dossier")
-            document.querySelector("button[name=clear_dossier]").click();
+        if (urlParameters['page'] === 'dossier')
+            document.querySelector('button[name=clear_dossier]').click();
         else
-            window.location.href = "/template-overall=none/page=dossier";
+            window.location.href = '/template-overall=none/page=dossier';
     };
 });
 
-chrome.storage.local.get("dossiernationkey", (result) =>
+chrome.storage.local.get('dossiernationkey', (result) =>
 {
     const dossierNationKey = result.dossiernationkey || 'N';
     keys[dossierNationKey] = () =>
     {
-        const dossierButton = document.querySelector("button[value=add]");
+        const dossierButton = document.querySelector('button[value=add]');
         if (dossierButton)
             dossierButton.click();
         else if (urlParameters['reliant'] === 'main') {
@@ -179,20 +179,20 @@ chrome.storage.local.get("dossiernationkey", (result) =>
     };
 });
 
-chrome.storage.local.get("endorsekey", (result) =>
+chrome.storage.local.get('endorsekey', (result) =>
 {
     const endorseKey = result.endorsekey || 'Z';
     keys[endorseKey] = () =>
     {
-        const endorseButton = document.querySelector("button[class=\"endorse button icon wa\"]");
+        const endorseButton = document.querySelector('button[class="endorse button icon wa"]');
         if (endorseButton)
             endorseButton.click();
         else if (urlParameters['reliant'] === 'main') {
             let refreshButton = document.querySelector('#refresh-endorse');
             let endorseButton = document.querySelector('.endorse[data-clicked="0"]');
-            const lastWAUpdate = document.querySelector("#last-wa-update");
+            const lastWAUpdate = document.querySelector('#last-wa-update');
             if (lastWAUpdate.innerHTML === 'Seconds ago')
-                document.querySelector("#copy-win").click();
+                document.querySelector('#copy-win').click();
             if (!endorseButton)
                 refreshButton.click();
             else
@@ -201,30 +201,30 @@ chrome.storage.local.get("endorsekey", (result) =>
     };
 });
 
-chrome.storage.local.get("gcrkey", (result) =>
+chrome.storage.local.get('gcrkey', (result) =>
 {
     const gcrKey = result.gcrkey || 'G';
     keys[gcrKey] = () =>
     {
-        window.location.href = "/page=ajax2/a=reports/view=world/filter=change";
+        window.location.href = '/page=ajax2/a=reports/view=world/filter=change';
     };
 });
 
 // probably won't be used much
-chrome.storage.local.get("viewregionkey", (result) =>
+chrome.storage.local.get('viewregionkey', (result) =>
 {
     const viewRegionKey = result.viewregionkey || 'D';
     keys[viewRegionKey] = () =>
     {
-        const regionButton = document.querySelector(".paneltext:first-of-type");
+        const regionButton = document.querySelector('.paneltext:first-of-type');
         if (regionButton)
             regionButton.click();
-        else if (urlParameters["page"] === "change_region")
-            document.querySelector(".info > a").click();
+        else if (urlParameters['page'] === 'change_region')
+            document.querySelector('.info > a').click();
     };
 });
 
-chrome.storage.local.get("didiupdatekey", (result) =>
+chrome.storage.local.get('didiupdatekey', (result) =>
 {
     const didIUpdateKey = result.didiupdatekey || 'U';
     keys[didIUpdateKey] = () =>
@@ -232,22 +232,23 @@ chrome.storage.local.get("didiupdatekey", (result) =>
         if (urlParameters['reliant'] === 'main')
             document.querySelector('#check-if-updated').click();
         else
-            window.location.href = "/page=ajax2/a=reports/view=self/filter=change";
+            window.location.href = '/page=ajax2/a=reports/view=self/filter=change';
     };
 });
 
-chrome.storage.local.get("delegatekey", (result) =>
+chrome.storage.local.get('delegatekey', (result) =>
 {
     const delegateKey = result.delegatekey || 'A';
     keys[delegateKey] = () =>
     {
-        if (urlParameters["region"]) {
-            document.querySelector("p:nth-child(2) > .nlink").click();
+        if (urlParameters['region']) {
+            document.querySelector('p:nth-child(2) > .nlink').click();
             return;
         }
         // Copy Nation Link
-        else if (urlParameters["page"] === "un") {
-            let nationLink = 'https://www.nationstates.net/nation=' + document.getElementById("loggedin").getAttribute("data-nname");
+        else if (urlParameters['page'] === 'un') {
+            let nationLink = 'https://www.nationstates.net/nation=' + document.getElementById('loggedin')
+                    .getAttribute('data-nname');
             const copyText = document.createElement('textarea');
             copyText.value = nationLink;
             document.body.appendChild(copyText);
@@ -260,25 +261,25 @@ chrome.storage.local.get("delegatekey", (result) =>
     };
 });
 
-chrome.storage.local.get("worldactivitykey", (result) =>
+chrome.storage.local.get('worldactivitykey', (result) =>
 {
     const worldActivityKey = result.worldactivitykey || 'F';
     keys[worldActivityKey] = () =>
     {
         if (urlParameters['reliant'] !== 'main')
-            window.location.href = "/page=activity/view=world/filter=move+member+endo";
+            window.location.href = '/page=activity/view=world/filter=move+member+endo';
         else
             document.querySelector('#update-world-happenings').click();
     };
 });
 
-chrome.storage.local.get("refreshkey", (result) =>
+chrome.storage.local.get('refreshkey', (result) =>
 {
     const refreshKey = result.refreshkey || 'C';
     keys[refreshKey] = () =>
     {
-        if (urlParameters["reliant"] === 'main')
-            document.querySelector("#update-region-status").click();
+        if (urlParameters['reliant'] === 'main')
+            document.querySelector('#update-region-status').click();
         else
             location.reload();
     };

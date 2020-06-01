@@ -1,4 +1,4 @@
-const pageContent: HTMLElement = document.querySelector("#content");
+const pageContent: HTMLElement = document.querySelector('#content');
 pageContent.innerHTML = `
 <h1>Reliant Settings</h1>
 <form>
@@ -105,9 +105,9 @@ pageContent.innerHTML = `
  * Event Listeners
  */
 
-document.querySelector("#set-key").addEventListener("click", setKey);
-document.querySelector("#set-jump-point").addEventListener("click", setJumpPoint);
-document.querySelector("#set-ro-name").addEventListener("click", setRoName);
+document.querySelector('#set-key').addEventListener('click', setKey);
+document.querySelector('#set-jump-point').addEventListener('click', setJumpPoint);
+document.querySelector('#set-ro-name').addEventListener('click', setRoName);
 
 /*
  * Handlers
@@ -116,26 +116,26 @@ document.querySelector("#set-ro-name").addEventListener("click", setRoName);
 function setKey(e: MouseEvent): void
 {
     let keyToSet: string;
-    const key: string = document.querySelector("#new-key").value.toUpperCase();
-    const radioButtons: NodeList = document.querySelector("#keys").querySelectorAll("input[type=radio]");
+    const key: string = document.querySelector('#new-key').value.toUpperCase();
+    const radioButtons: NodeList = document.querySelector('#keys').querySelectorAll('input[type=radio]');
     for (let i = 0; i != radioButtons.length; i++) {
         if (radioButtons[i].checked) {
             keyToSet = radioButtons[i].value;
             break;
         }
     }
-    document.querySelector("#new-key").value = "";
+    document.querySelector('#new-key').value = '';
     chrome.storage.local.set({[keyToSet]: key});
 }
 
 function setJumpPoint(e: MouseEvent): void
 {
-    const newJumpPoint: string = canonicalize(document.querySelector("#new-jump-point").value);
-    chrome.storage.local.set({"jumppoint": newJumpPoint});
+    const newJumpPoint: string = canonicalize(document.querySelector('#new-jump-point').value);
+    chrome.storage.local.set({'jumppoint': newJumpPoint});
 }
 
 function setRoName(e: MouseEvent): void
 {
-    const newRoName: string = document.querySelector("#new-ro-name").value;
-    chrome.storage.local.set({"roname": newRoName});
+    const newRoName: string = document.querySelector('#new-ro-name').value;
+    chrome.storage.local.set({'roname': newRoName});
 }

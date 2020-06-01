@@ -566,6 +566,7 @@ async function checkIfUpdated(e: MouseEvent): void
 
 async function updateWorldHappenings(e: MouseEvent): void
 {
+    worldHappenings.innerHTML = '';
     let response: string = await makeAjaxQuery('/page=ajax2/a=reports/view=world/filter=move+member+endo', 'GET');
     let responseElement: DocumentFragment = document.createRange().createContextualFragment(response);
     let lis = responseElement.querySelectorAll('li');

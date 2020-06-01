@@ -207,6 +207,20 @@ chrome.storage.local.get("gcrkey", (result) =>
     };
 });
 
+// probably won't be used much
+chrome.storage.local.get("viewregionkey", (result) =>
+{
+    const viewRegionKey = result.viewregionkey || 'D';
+    keys[viewRegionKey] = () =>
+    {
+        const regionButton = document.querySelector(".paneltext:first-of-type");
+        if (regionButton)
+            regionButton.click();
+        else if (urlParameters["page"] === "change_region")
+            document.querySelector(".info > a").click();
+    };
+});
+
 /*
  * Miscellaneous
  */

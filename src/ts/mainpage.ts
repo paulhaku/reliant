@@ -271,7 +271,6 @@ function refreshEndorse(e: MouseEvent): void
                 if (resigned.indexOf(nationName) === -1) {
                     function onEndorseClick(e: MouseEvent)
                     {
-                        console.log('doing endorse click');
                         chrome.storage.local.get('localid', async (localidresult) => {
                             const localId = localidresult.localid;
                             let formData = new FormData();

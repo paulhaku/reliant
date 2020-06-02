@@ -5,7 +5,8 @@
 body {
     font-family: Verdana, sans-serif;
     background-color: #1F202D;
-    color: #29659C;
+    /*color: #29659C;*/
+    color: #fff;
 }
 
 input[type=button] {
@@ -43,44 +44,44 @@ a {
 
 #container {
     display: grid;
-    grid-template-columns: 15% 85%;
-    grid-template-rows: auto auto auto auto;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto auto auto;
     width: 100%;
 }
 
-#group-1 {
-    grid-column: 1 / 1;
-    grid-row: 1 / 4;
-}
-
 #group-2 {
-    grid-column: 2 / 2;
+    grid-column: 1 / 1;
     grid-row: 1 / 1;
     display: grid;
-    grid-template-columns: 20% 25% 55%;
+    grid-template-columns: 10% 10% 25% 55%;
     grid-template-rows: 100%;
+}
+
+#switchers-container {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
 }
 
 #status-container {
     display: inline-block;
-    grid-column: 1 / 1;
+    grid-column: 2 / 2;
     grid-row: 1 / 1;
 }
 
 #current-wa-nation-container {
     display: inline-block;
-    grid-column: 2 / 2;
+    grid-column: 3 / 3;
     grid-row: 1 / 1;
 }
 
 #did-i-update-container {
     display: inline-block;
-    grid-column: 3 / 3;
+    grid-column: 4 / 4;
     grid-row: 1 / 1;
 }
 
 #group-3 {
-    grid-column: 2 / 2;
+    grid-column: 1 / 1;
     grid-row: 2 / 2;
     display: grid;
     grid-template-columns: 50% 50%;
@@ -100,7 +101,7 @@ a {
 }
 
 #group-4 {
-    grid-column: 2 / 2;
+    grid-column: 1 / 1;
     grid-row: 3 / 3;
     display: grid;
     grid-template-columns: 50% 50%;
@@ -120,7 +121,7 @@ a {
 }
 
 #group-5 {
-    grid-column: 2 / 2;
+    grid-column: 1 / 1;
     grid-row: 4 / 4;
     display: grid;
     grid-template-columns: 10% 30% 60%;
@@ -142,6 +143,30 @@ a {
 #reports-container {
     display: inline-block;
     grid-column: 3 / 3;
+    grid-row: 1 / 1;
+}
+
+#group-6 {
+    grid-column: 1 / 1;
+    grid-row: 5 / 5;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
+}
+
+#current-region-happenings-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+#world-happenings-header {
+    display: inline-block;
+}
+
+#world-happenings-container {
+    display: inline-block;
+    grid-column: 2 / 2;
     grid-row: 1 / 1;
 }
 

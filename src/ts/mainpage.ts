@@ -10,8 +10,8 @@ const pageContent: string = `
             <div id="group-2">
                 <!-- Switchers -->
                 <div id="switchers-container">
-                    <span class="subheader">Switchers Left</span>
-                    <span class="subheader" id="num-switchers">0</span>
+                    <span class="header">Switchers Left</span>
+                    <span class="information" id="num-switchers">0</span>
                 </div>
                 <!-- Status -->
                 <div id="status-container">

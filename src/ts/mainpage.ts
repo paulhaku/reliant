@@ -7,18 +7,12 @@ const pageContent: string = `
     </head>
     <body>
         <div id="container">
-            <div id="group-1">
+            <div id="group-2">
                 <!-- Switchers -->
                 <div id="switchers-container">
-                    <span class="header">Switchers Left</span>
+                    <span class="subheader">Switchers Left</span>
                     <span class="subheader" id="num-switchers">0</span>
-                    <div class="information">
-                        <ul id="switchers">
-                        </ul>
-                    </div>
                 </div>
-            </div>
-            <div id="group-2">
                 <!-- Status -->
                 <div id="status-container">
                     <span id="status-header" class="header">Status</span>
@@ -123,7 +117,7 @@ const pageContent: string = `
                 </div>
                 <!-- World Happenings-->
                 <div id="world-happenings-container">
-                    <span class="header">World Happenings</span>
+                    <span class="header" id="world-happenings-header">World Happenings</span>
                     <input type="button" class="ajaxbutton" id="update-world-happenings" value="Update">
                     <ul class="information" id="world-happenings">
                     </ul>
@@ -615,7 +609,7 @@ function onStorageChange(changes: object, areaName: string): void
         if (key == 'switchers') {
             const newSwitchers: object = storageChange.newValue;
             document.querySelector('#num-switchers').innerHTML = Object.keys(newSwitchers).length;
-            resetSwitchers(newSwitchers);
+            // resetSwitchers(newSwitchers);
             break;
         }
     }
@@ -650,5 +644,5 @@ chrome.storage.onChanged.addListener(onStorageChange);
 chrome.storage.local.get('switchers', (result) =>
 {
     document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length;
-    resetSwitchers(result.switchers);
+    // resetSwitchers(result.switchers);
 });

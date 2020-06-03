@@ -154,14 +154,6 @@ const worldHappenings: HTMLElement = document.querySelector('#world-happenings')
  * Helpers
  */
 
-function resetSwitchers(switcherList: string[]): void
-{
-    const toAdd = Object.keys(switcherList);
-    switchers.innerHTML = '';
-    for (let i = 0; i != toAdd.length; i++)
-        switchers.innerHTML += `<li>${toAdd[i]}</li>`;
-}
-
 function makeAjaxQuery(url: string, method: string, data: object): string
 {
     let ajaxButtons = document.querySelectorAll('.ajaxbutton');
@@ -614,7 +606,6 @@ function onStorageChange(changes: object, areaName: string): void
         if (key == 'switchers') {
             const newSwitchers: object = storageChange.newValue;
             document.querySelector('#num-switchers').innerHTML = Object.keys(newSwitchers).length;
-            // resetSwitchers(newSwitchers);
             break;
         }
     }
@@ -656,5 +647,4 @@ chrome.storage.onChanged.addListener(onStorageChange);
 chrome.storage.local.get('switchers', (result) =>
 {
     document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length;
-    // resetSwitchers(result.switchers);
 });

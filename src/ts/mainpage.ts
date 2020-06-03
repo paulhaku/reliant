@@ -434,7 +434,7 @@ async function chasingButton(e: MouseEvent): void
 {
     // jump points and such
     const doNotMove = ['devide_by_zero', 'artificial_solar_system', 'trieltics', '3_guys', 'frozen_circle', 'switz',
-        'plum_island', 'no_nope_and_nay', 'vienna', 'crystal_falls', 'birb'];
+        'plum_island', 'no_nope_and_nay', 'vienna', 'crystal_falls', 'birb', 'the_allied_nations_of_egalaria'];
     if (e.target.value == 'Refresh') {
         let response = await makeAjaxQuery('/template-overall=none/page=reports', 'GET');
         // only so we can use queryselector on the response DOM rather than using regex matching

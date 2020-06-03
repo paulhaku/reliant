@@ -12,6 +12,9 @@ const pageContent: string = `
                 <div id="switchers-container">
                     <span class="header">Switchers Left</span>
                     <span class="information" id="num-switchers">0</span>
+                    <div class="buttonblock">
+                        <input type="button" id="clear-switchers" value="Clear Switchers">
+                    </div>
                 </div>
                 <!-- Status -->
                 <div id="status-container">
@@ -617,6 +620,12 @@ function onStorageChange(changes: object, areaName: string): void
     }
 }
 
+function clearSwitcherList(e: MouseEvent): void
+{
+    chrome.storage.local.set({'switchers': {}});
+    status.innerHTML = 'Cleared stored switchers.';
+}
+
 /*
  * Event Listeners
  */
@@ -636,6 +645,7 @@ document.querySelector('#check-if-updated').addEventListener('click', checkIfUpd
 document.querySelector('#copy-win').addEventListener('click', copyWin);
 document.querySelector('#endorse-delegate').addEventListener('click', endorseDelegate);
 document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
+document.querySelector('#clear-switchers').addEventListener('click', clearSwitcherList);
 document.addEventListener('keyup', keyPress);
 chrome.storage.onChanged.addListener(onStorageChange);
 

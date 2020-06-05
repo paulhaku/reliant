@@ -290,6 +290,9 @@ function refreshEndorse(e: MouseEvent): void
             }
             const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
             const nationName = nationNameMatch[1];
+            // don't allow us to endorse ourself
+            if (canonicalize(nationName) === canonicalize(currentWANation.innerHTML))
+                resigned.push(nationName);
             // Don't include nations that probably aren't in the WA
             if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                 resigned.push(nationName);

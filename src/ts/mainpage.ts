@@ -247,6 +247,7 @@ function admitWA(e: MouseEvent): void
         nationsToEndorse.innerHTML = '';
         nationsToDossier.innerHTML = '';
         nationsDossiered = [];
+        nationsEndorsed = [];
 
         let storedSwitchers = result.switchers;
         let switcherNames = Object.keys(storedSwitchers);
@@ -301,6 +302,9 @@ function refreshEndorse(e: MouseEvent): void
             // don't allow us to endorse ourself
             if (canonicalize(nationName) === canonicalize(currentWANation.innerHTML))
                 resigned.push(nationName);
+            // don't allow us to endorse the same nation more than once per switch
+            if (nationsEndorsed.indexOf(nationName) !== -1)
+                resigned.push(nationName);
             // Don't include nations that probably aren't in the WA
             if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                 resigned.push(nationName);
@@ -319,8 +323,10 @@ function refreshEndorse(e: MouseEvent): void
                             let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
                             if (endorseResponse.indexOf('Failed security check.') !== -1)
                                 status.innerHTML = `Failed to endorse ${nationName}.`;
-                            else
+                            else {
                                 status.innerHTML = `Endorsed ${nationName}.`;
+                                nationsEndorsed.push(nationName);
+                            }
                         });
                     }
 

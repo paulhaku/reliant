@@ -151,6 +151,13 @@ const regionHappenings: HTMLElement = document.querySelector('#region-happenings
 const worldHappenings: HTMLElement = document.querySelector('#world-happenings');
 
 /*
+ * Things to keep track of
+ */
+
+let nationsDossiered: string[] = [];
+let nationsEndorsed: string[] = [];
+
+/*
  * Helpers
  */
 
@@ -239,6 +246,7 @@ function admitWA(e: MouseEvent): void
         document.querySelector('#last-wa-update').innerHTML = 'N/A';
         nationsToEndorse.innerHTML = '';
         nationsToDossier.innerHTML = '';
+        nationsDossiered = [];
 
         let storedSwitchers = result.switchers;
         let switcherNames = Object.keys(storedSwitchers);
@@ -360,6 +368,9 @@ function refreshDossier(e: MouseEvent): void
             }
             const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
             const nationName = nationNameMatch[1];
+            // don't let us dossier the same nation twice
+            if (nationsDossiered.indexOf(nationName) !== -1)
+                resigned.push(nationName);
             // Don't include nations that probably aren't in the WA
             if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                 resigned.push(nationName);
@@ -372,8 +383,10 @@ function refreshDossier(e: MouseEvent): void
                         formData.set('nation', nationName);
                         formData.set('action', 'add');
                         let dossierResponse = await makeAjaxQuery('/page=dossier', 'POST', formData);
-                        if (dossierResponse.indexOf('has been added to your Dossier.' !== -1))
+                        if (dossierResponse.indexOf('has been added to your Dossier.' !== -1)) {
                             status.innerHTML = `Dossiered ${nationName}`;
+                            nationsDossiered.push(nationName);
+                        }
                         else
                             status.innerHTML = `Failed to dossier ${nationName}.`;
                     }

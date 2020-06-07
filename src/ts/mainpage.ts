@@ -135,6 +135,9 @@ document.open();
 document.write(pageContent);
 document.close();
 
+// testing
+let inQuery = false;
+
 /*
  * Dynamic Information
  */
@@ -168,15 +171,19 @@ function makeAjaxQuery(url: string, method: string, data: object): string
     {
         function onLoadStart(e: Event): void
         {
+            if (inQuery)
+                xhr.abort();
             // for adhering to the simultaneity rule
             for (let i = 0; i != ajaxButtons.length; i++)
                 ajaxButtons[i].disabled = true;
+            inQuery = true;
         }
 
         async function onLoadEnd(e: Event): void
         {
             for (let i = 0; i != ajaxButtons.length; i++)
                 ajaxButtons[i].disabled = false;
+            inQuery = false;
             resolve(xhr.response);
         }
 

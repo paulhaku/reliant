@@ -17,9 +17,25 @@ pageContent.innerHTML = `
 <textarea id="switchers"></textarea>
 <input class="button" type="button" id="set-switchers" value="Set">
 </fieldset>
-<fieldset>
+<fieldset id="max-happenings">
 <legend>Max Happenings Count</legend>
-<p>The number of happenings in each section will not exceed this number.</p>
+<p>The number of happenings in these sections will not exceed this number. Used for saving screen space.</p>
+<p>
+<label>Endorse</label>
+<input type="radio" name="max-happenings-section" value="endorsehappeningscount">
+</p>
+<p>
+<label>Dossier</label>
+<input type="radio" name="max-happenings-section" value="dossierhappeningscount">
+</p>
+<p>
+<label>Region</label>
+<input type="radio" name="max-happenings-section" value="regionhappeningscount">
+</p>
+<p>
+<label>World</label>
+<input type="radio" name="max-happenings-section" value="worldhappeningscount">
+</p>
 <input type="number" id="max-happenings-count" min="1" max="20">
 <input class="button" type="button" id="set-max-happenings" value="Set">
 </fieldset>
@@ -150,5 +166,13 @@ function setRoName(e: MouseEvent): void
 function setMaxHappeningsCount(e: MouseEvent): void
 {
     const maxHappeningsCount = document.querySelector('#max-happenings-count').value;
-    chrome.storage.local.set({'maxhappeningscount': maxHappeningsCount})
+    const radioButtons = document.querySelector('#max-happenings').querySelectorAll('input[type=radio]');
+    let happeningSetting: string;
+    for (let i = 0; i != radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            happeningSetting = radioButtons[i].value;
+            break;
+        }
+    }
+    chrome.storage.local.set({[happeningSetting]: maxHappeningsCount});
 }

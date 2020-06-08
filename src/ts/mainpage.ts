@@ -282,8 +282,9 @@ function refreshEndorse(e: MouseEvent): void
     const jpHappenings = document.querySelector('#jp-happenings');
     nationsToEndorse.innerHTML = '';
     jpHappenings.innerHTML = '';
-    chrome.storage.local.get('jumppoint', async (result) =>
+    chrome.storage.local.get(['jumppoint', 'maxhappeningscount'], async (result) =>
     {
+        const maxHappeningsCount = Number(result.maxhappeningscount) || 10;
         const jumpPoint = result.jumppoint || 'artificial_solar_system';
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
             'GET');
@@ -295,8 +296,8 @@ function refreshEndorse(e: MouseEvent): void
         let resigned: string[] = [];
         let happeningsAdded: number = 0;
         for (let i = 0; i != lis.length; i++) {
-            // update the jp happenings at the same time so we don't have to make an extra query (max 10)
-            if (happeningsAdded <= 10) {
+            // update the jp happenings at the same time so we don't have to make an extra query
+            if (happeningsAdded < maxHappeningsCount) {
                 let liAnchors = lis[i].querySelectorAll('a');
                 // fix links
                 for (let j = 0; j != liAnchors.length; j++)
@@ -358,8 +359,9 @@ function refreshDossier(e: MouseEvent): void
     const raiderHappenings = document.querySelector('#raider-happenings');
     raiderHappenings.innerHTML = '';
     nationsToDossier.innerHTML = '';
-    chrome.storage.local.get('raiderjp', async (result) =>
+    chrome.storage.local.get(['raiderjp', 'maxhappeningscount'], async (result) =>
     {
+        const maxHappeningsCount = Number(result.maxhappeningscount) || 10;
         const raiderJp = result.raiderjp;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
             'GET');
@@ -372,7 +374,7 @@ function refreshDossier(e: MouseEvent): void
         let happeningsAdded: number = 0;
         for (let i = 0; i != lis.length; i++) {
             // update the raider jp happenings at the same time so we don't have to make an extra query (max 10)
-            if (happeningsAdded <= 10) {
+            if (happeningsAdded < maxHappeningsCount) {
                 let liAnchors = lis[i].querySelectorAll('a');
                 // fix link
                 for (let j = 0; j != liAnchors.length; j++)
@@ -677,5 +679,10 @@ chrome.storage.onChanged.addListener(onStorageChange);
 
 chrome.storage.local.get('switchers', (result) =>
 {
-    document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length;
+    try {
+        document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length;
+    } catch(e) {
+        // no wa links in storage, do nothing
+        if (e instanceof TypeError) {}
+    }
 });

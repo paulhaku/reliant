@@ -17,6 +17,12 @@ pageContent.innerHTML = `
 <textarea id="switchers"></textarea>
 <input class="button" type="button" id="set-switchers" value="Set">
 </fieldset>
+<fieldset>
+<legend>Max Happenings Count</legend>
+<p>The number of happenings in each section will not exceed this number.</p>
+<input type="number" id="max-happenings-count" min="1" max="20">
+<input class="button" type="button" id="set-max-happenings" value="Set">
+</fieldset>
 <fieldset id="keys">
 <legend>Change Keys</legend>
 <p id="current-key"></p>
@@ -138,4 +144,10 @@ function setRoName(e: MouseEvent): void
 {
     const newRoName: string = document.querySelector('#new-ro-name').value;
     chrome.storage.local.set({'roname': newRoName});
+}
+
+function setMaxHappeningsCount(e: MouseEvent): void
+{
+    const maxHappeningsCount = document.querySelector('#max-happenings-count').value;
+    chrome.storage.local.set({'maxhappeningscount': maxHappeningsCount})
 }

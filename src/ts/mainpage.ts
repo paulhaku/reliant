@@ -486,6 +486,9 @@ async function chasingButton(e: MouseEvent): void
         let moveRegionValue = canonicalize(moveRegion.innerHTML);
         if (doNotMove.indexOf(moveRegionValue) !== -1)
             return;
+        // don't allow us to move to the same region
+        if (moveRegionValue === currentRegion.innerHTML)
+            return;
         let moveRegionParent = moveRegion.parentElement;
         if (moveRegionParent.innerHTML.indexOf('relocated from') === -1)
             return;

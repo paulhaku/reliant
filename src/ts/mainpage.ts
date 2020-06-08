@@ -333,6 +333,7 @@ function refreshEndorse(e: MouseEvent): void
                             else {
                                 status.innerHTML = `Endorsed ${nationName}.`;
                                 nationsEndorsed.push(nationName);
+                                e.target.parentElement.removeChild(e.target);
                             }
                         });
                     }
@@ -399,6 +400,7 @@ function refreshDossier(e: MouseEvent): void
                         if (dossierResponse.indexOf('has been added to your Dossier.' !== -1)) {
                             status.innerHTML = `Dossiered ${nationName}`;
                             nationsDossiered.push(nationName);
+                            e.target.parentElement.removeChild(e.target);
                         }
                         else
                             status.innerHTML = `Failed to dossier ${nationName}.`;

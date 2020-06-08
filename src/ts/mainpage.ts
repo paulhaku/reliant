@@ -282,9 +282,9 @@ function refreshEndorse(e: MouseEvent): void
     const jpHappenings = document.querySelector('#jp-happenings');
     nationsToEndorse.innerHTML = '';
     jpHappenings.innerHTML = '';
-    chrome.storage.local.get(['jumppoint', 'maxhappeningscount'], async (result) =>
+    chrome.storage.local.get(['jumppoint', 'endorsehappeningscount'], async (result) =>
     {
-        const maxHappeningsCount = Number(result.maxhappeningscount) || 10;
+        const maxHappeningsCount = Number(result.endorsehappeningscount) || 10;
         const jumpPoint = result.jumppoint || 'artificial_solar_system';
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
             'GET');
@@ -359,9 +359,9 @@ function refreshDossier(e: MouseEvent): void
     const raiderHappenings = document.querySelector('#raider-happenings');
     raiderHappenings.innerHTML = '';
     nationsToDossier.innerHTML = '';
-    chrome.storage.local.get(['raiderjp', 'maxhappeningscount'], async (result) =>
+    chrome.storage.local.get(['raiderjp', 'dossierhappeningscount'], async (result) =>
     {
-        const maxHappeningsCount = Number(result.maxhappeningscount) || 10;
+        const maxHappeningsCount = Number(result.dossierhappeningscount) || 10;
         const raiderJp = result.raiderjp;
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
             'GET');

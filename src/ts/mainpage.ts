@@ -284,7 +284,7 @@ function refreshEndorse(e: MouseEvent): void
     jpHappenings.innerHTML = '';
     chrome.storage.local.get('jumppoint', async (result) =>
     {
-        const jumpPoint = result.jumppoint;
+        const jumpPoint = result.jumppoint || 'artificial_solar_system';
         let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
             'GET');
         const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');

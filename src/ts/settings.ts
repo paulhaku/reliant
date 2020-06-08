@@ -114,6 +114,7 @@ pageContent.innerHTML = `
 document.querySelector('#set-key').addEventListener('click', setKey);
 document.querySelector('#set-jump-point').addEventListener('click', setJumpPoint);
 document.querySelector('#set-ro-name').addEventListener('click', setRoName);
+document.querySelector('#set-max-happenings').addEventListener('click', setMaxHappeningsCount);
 
 /*
  * Handlers

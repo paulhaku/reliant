@@ -493,7 +493,7 @@ async function chasingButton(e: MouseEvent): void
         if (moveRegionParent.innerHTML.indexOf('relocated from') === -1)
             return;
         else {
-            e.target.value = `Move to ${moveRegionValue}`;
+            e.target.value = `Move!`;
             e.target.setAttribute('data-moveregion', moveRegionValue);
         }
     }

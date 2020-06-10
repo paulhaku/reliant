@@ -285,6 +285,15 @@ chrome.storage.local.get('refreshkey', (result) =>
     };
 });
 
+chrome.storage.local.get('settingskey', (result) =>
+{
+    const settingsKey = result.settingskey || '0';
+    keys[settingsKey] = () =>
+    {
+        window.location.href = '/page=blank/reliant=settings';
+    };
+});
+
 /*
  * Miscellaneous
  */

@@ -118,6 +118,10 @@ pageContent.innerHTML = `
 <label for="detagkey">Detag Key</label>
 <input type="radio" name="key-to-change" value="detagkey">
 </p>
+<p>
+<label>Settings Key</label>
+<input type="radio" name="key-to-change" value="settingskey">
+</p>
 <input type="text" id="new-key" maxlength="1">
 <input class="button" type="button" id="set-key" value="Set">
 </fieldset>

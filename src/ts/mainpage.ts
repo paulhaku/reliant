@@ -532,16 +532,20 @@ async function updateRegionStatus(e: MouseEvent): void
     let responseDiv = document.createElement('div');
     responseDiv.innerHTML = response;
     // update the region happenings at the same time to not make an extra query
-    let regionHappeningsLis = responseDiv.querySelectorAll('ul > li');
-    regionHappenings.innerHTML = '';
-    console.log(regionHappeningsLis);
-    for (let i = 0; i != regionHappeningsLis.length; i++) {
-        let anodes = regionHappeningsLis[i].querySelectorAll('a');
-        // fix link
-        for (let j = 0; j != anodes.length; j++)
-            anodes[j].href = anodes[j].href.replace('page=blank/', '');
-        regionHappenings.innerHTML += `<li>${regionHappeningsLis[i].innerHTML}</li>`;
-    }
+    chrome.storage.local.get('regionhappeningscount', (result) =>
+    {
+        let regionHappeningsCount: number = Number(result.regionhappeningscount) || 10;
+        let regionHappeningsLis = responseDiv.querySelectorAll('ul > li');
+        regionHappenings.innerHTML = '';
+        console.log(regionHappeningsLis);
+        for (let i = 0; i != regionHappeningsCount; i++) {
+            let anodes = regionHappeningsLis[i].querySelectorAll('a');
+            // fix link
+            for (let j = 0; j != anodes.length; j++)
+                anodes[j].href = anodes[j].href.replace('page=blank/', '');
+            regionHappenings.innerHTML += `<li>${regionHappeningsLis[i].innerHTML}</li>`;
+        }
+    });
     let strongs = responseDiv.querySelectorAll('strong');
     for (let i = 0; i != strongs; i++) {
         const strongParent = strongs[i].parentElement;

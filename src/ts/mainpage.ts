@@ -618,13 +618,17 @@ async function updateWorldHappenings(e: MouseEvent): void
     let responseElement: DocumentFragment = document.createRange().createContextualFragment(response);
     let lis = responseElement.querySelectorAll('li');
     // max 10
-    for (let i = 0; i != 10; i++) {
-        let liAnchors = lis[i].querySelectorAll('a');
-        // fix link
-        for (let j = 0; j != liAnchors.length; j++)
-            liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
-        worldHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
-    }
+    chrome.storage.local.get('worldhappeningscount', (result) =>
+    {
+        let maxHappeningsCount = Number(result.worldhappeningscount) || 10;
+        for (let i = 0; i < maxHappeningsCount; i++) {
+            let liAnchors = lis[i].querySelectorAll('a');
+            // fix link
+            for (let j = 0; j != liAnchors.length; j++)
+                liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+            worldHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+        }
+    });
 }
 
 function copyWin(e: MouseEvent): void

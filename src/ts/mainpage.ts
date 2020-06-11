@@ -16,11 +16,6 @@ const pageContent: string = `
                         <input type="button" id="clear-switchers" value="Clear Switchers">
                     </div>
                 </div>
-                <!-- Status -->
-                <div id="status-container">
-                    <span id="status-header" class="header">Status</span>
-                    <span id="status" class="information">N/A</span>
-                </div>
                 <!-- Current WA Nation -->
                 <div id="current-wa-nation-container">
                     <div class="buttonblock">
@@ -34,14 +29,46 @@ const pageContent: string = `
                     </div>
                     <span id="current-wa-nation" class="information">N/A</span>
                 </div>
-                <!-- Did I Update? -->
-                <div id="did-i-update-container">
-                    <span class="header">Did I Update?</span>
-                    <input type="button" class="ajaxbutton" id="check-if-updated" value="Did I Update?">
-                    <div class="information">
-                        <ul id="did-i-update">
-                        </ul>
-                    </div>
+                <!-- Status -->
+                <div id="status-container">
+                    <span id="status-header" class="header">Status</span>
+                    <span id="status" class="information">N/A</span>
+                </div>
+                <!-- Current Region -->
+                <div id="current-region-container">
+                    <span id="current-region-header" class="header">Current Region</span>
+                    <span id="current-region" class="information">N/A</span>
+                    <span class="subheader">WA Delegate</span>
+                    <span class="information" id="wa-delegate">N/A</span>
+                    <span class="subheader">Last WA Update</span>
+                    <span class="information" id="last-wa-update">N/A</span>
+                    <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
+                    <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
+                    <input type="hidden" id="delegate-nation" value="N/A">
+                    <input type="button" class="ajaxbutton" id="endorse-delegate" value="Endorse Delegate">
+                    <input type="button" id="copy-win" value="Copy Win">
+                </div>
+                <!-- Current Region Happenings -->
+                <div id="current-region-happenings-container">
+                    <span class="header">Region Happenings</span>
+                    <ul class="information" id="region-happenings">
+                    </ul>
+                </div>
+            </div>
+            <div id="group-5">
+                <!-- Chasing -->
+                <div id="chasing-container">
+                    <span id="chasing-header" class="header">Chasing</span>
+                    <span class="subheader">JP</span>
+                    <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
+                    <span class="subheader">Chase</span>
+                    <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
+                </div>
+                <!-- Reports Container -->
+                <div id="reports-container">
+                    <span class="header">Reports</span>
+                    <ul id="reports" class="information">
+                    </ul>
                 </div>
             </div>
             <div id="group-3">
@@ -81,42 +108,15 @@ const pageContent: string = `
                     </ul>
                 </div>
             </div>
-            <div id="group-5">
-                <!-- Chasing -->
-                <div id="chasing-container">
-                    <span id="chasing-header" class="header">Chasing</span>
-                    <span class="subheader">JP</span>
-                    <input type="button" id="move-to-jp" value="Move to JP" class="ajaxbutton">
-                    <span class="subheader">Chase</span>
-                    <input type="button" id="chasing-button" value="Refresh" class="ajaxbutton">
-                </div>
-                <!-- Current Region -->
-                <div id="current-region-container">
-                    <span id="current-region-header" class="header">Current Region</span>
-                    <span id="current-region" class="information">N/A</span>
-                    <span class="subheader">WA Delegate</span>
-                    <span class="information" id="wa-delegate">N/A</span>
-                    <span class="subheader">Last WA Update</span>
-                    <span class="information" id="last-wa-update">N/A</span>
-                    <input type="button" class="ajaxbutton" id="update-region-status" value="Update">
-                    <input type="button" class="ajaxbutton" id="check-current-region" value="Check Current Region">
-                    <input type="hidden" id="delegate-nation" value="N/A">
-                    <input type="button" class="ajaxbutton" id="endorse-delegate" value="Endorse Delegate">
-                    <input type="button" id="copy-win" value="Copy Win">
-                </div>
-                <!-- Reports Container -->
-                <div id="reports-container">
-                    <span class="header">Reports</span>
-                    <ul id="reports" class="information">
-                    </ul>
-                </div>
-            </div>
             <div id="group-6">
-                <!-- Current Region Happenings -->
-                <div id="current-region-happenings-container">
-                    <span class="header">Region Happenings</span>
-                    <ul class="information" id="region-happenings">
-                    </ul>
+                <!-- Did I Update? -->
+                <div id="did-i-update-container">
+                    <span class="header">Did I Update?</span>
+                    <input type="button" class="ajaxbutton" id="check-if-updated" value="Did I Update?">
+                    <div class="information">
+                        <ul id="did-i-update">
+                        </ul>
+                    </div>
                 </div>
                 <!-- World Happenings-->
                 <div id="world-happenings-container">

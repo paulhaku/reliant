@@ -53,7 +53,7 @@ a {
     grid-column: 1 / 1;
     grid-row: 1 / 1;
     display: grid;
-    grid-template-columns: 10% 10% 25% 55%;
+    grid-template-columns: 10% 20% 10% 20% 40%;
     grid-template-rows: 100%;
 }
 
@@ -62,27 +62,33 @@ a {
     grid-row: 1 / 1;
 }
 
-#status-container {
+#current-wa-nation-container {
     display: inline-block;
     grid-column: 2 / 2;
     grid-row: 1 / 1;
 }
 
-#current-wa-nation-container {
+#status-container {
     display: inline-block;
     grid-column: 3 / 3;
     grid-row: 1 / 1;
 }
 
-#did-i-update-container {
+#current-region-container {
     display: inline-block;
     grid-column: 4 / 4;
     grid-row: 1 / 1;
 }
 
+#current-region-happenings-container {
+    display: inline-block;
+    grid-column: 5 / 5;
+    grid-row: 1 / 1;
+}
+
 #group-3 {
     grid-column: 1 / 1;
-    grid-row: 2 / 2;
+    grid-row: 3 / 3;
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 100%;
@@ -102,7 +108,7 @@ a {
 
 #group-4 {
     grid-column: 1 / 1;
-    grid-row: 3 / 3;
+    grid-row: 4 / 4;
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 100%;
@@ -122,9 +128,9 @@ a {
 
 #group-5 {
     grid-column: 1 / 1;
-    grid-row: 4 / 4;
+    grid-row: 2 / 2;
     display: grid;
-    grid-template-columns: 10% 30% 60%;
+    grid-template-columns: 10% 90%;
     grid-template-rows: 100%;
 }
 
@@ -134,15 +140,9 @@ a {
     grid-row: 1 / 1;
 }
 
-#current-region-container {
-    display: inline-block;
-    grid-column: 2 / 2;
-    grid-row: 1 / 1;
-}
-
 #reports-container {
     display: inline-block;
-    grid-column: 3 / 3;
+    grid-column: 2 / 2;
     grid-row: 1 / 1;
 }
 
@@ -154,7 +154,7 @@ a {
     grid-template-rows: 100%;
 }
 
-#current-region-happenings-container {
+#did-i-update-container {
     display: inline-block;
     grid-column: 1 / 1;
     grid-row: 1 / 1;

@@ -13,7 +13,11 @@ pageContent.innerHTML = `
 <input class="button" type="button" id="set-ro-name" value="Set">
 </fieldset>
 <fieldset>
-<legend>Switchers</legend>
+<legend>Prepping</legend>
+<p><strong>Password</strong></p>
+<input type="text" id="my-password">
+<input class="button" type="button" id="set-password" value="Set">
+<p><strong>Switchers</strong></p>
 <textarea id="switchers"></textarea>
 <input class="button" type="button" id="set-switchers" value="Set">
 </fieldset>
@@ -135,6 +139,8 @@ document.querySelector('#set-key').addEventListener('click', setKey);
 document.querySelector('#set-jump-point').addEventListener('click', setJumpPoint);
 document.querySelector('#set-ro-name').addEventListener('click', setRoName);
 document.querySelector('#set-max-happenings').addEventListener('click', setMaxHappeningsCount);
+document.querySelector('#set-switchers').addEventListener('click', setSwitchers);
+document.querySelector('#set-password').addEventListener('click', setPassword);
 
 /*
  * Handlers
@@ -179,4 +185,18 @@ function setMaxHappeningsCount(e: MouseEvent): void
         }
     }
     chrome.storage.local.set({[happeningSetting]: maxHappeningsCount});
+}
+
+function setSwitchers(e: MouseEvent): void
+{
+    let switchers: string[] = document.querySelector('#switchers').value.split('\n');
+    for (let i = 0; i != switchers.length; i++)
+        switchers[i] = canonicalize(switchers[i]);
+    chrome.storage.local.set({'prepswitchers': switchers});
+}
+
+function setPassword(e: MouseEvent): void
+{
+    const password = document.querySelector('#my-password').value;
+    chrome.storage.local.set({'password': password});
 }

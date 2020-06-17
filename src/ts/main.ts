@@ -331,6 +331,18 @@ chrome.storage.local.get('settingskey', (result) =>
     };
 });
 
+chrome.storage.local.get('prepkey', (result) =>
+{
+    const prepKey = result.prepkey || 'P';
+    keys[prepKey] = () =>
+    {
+        if (urlParameters['reliant'] === 'prep')
+            document.querySelector('#prep-button').click();
+        else
+            window.location.href = '/template-overall=none/page=blank/reliant=prep';
+    };
+});
+
 /*
  * Miscellaneous
  */

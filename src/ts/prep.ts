@@ -109,6 +109,8 @@ function prepButton(e: MouseEvent): void
             chrome.storage.local.get('password', async (result) =>
             {
                 const nextNation = switchers[switchers.indexOf(document.querySelector('#current-switcher').innerHTML) + 1];
+                document.querySelector('#current-switcher-number').innerHTML =
+                    switchers.indexOf(document.querySelector('#current-switcher').innerHTML) + 1;
                 document.querySelector('#current-switcher').innerHTML = nextNation;
                 let response = await makeAjaxQuery(`/page=un?nation=${nextNation}&password=${result.password}&logging_in=1`,
                 'GET');

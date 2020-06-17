@@ -135,9 +135,6 @@ document.open();
 document.write(pageContent);
 document.close();
 
-// testing
-let inQuery = false;
-
 /*
  * Dynamic Information
  */
@@ -163,41 +160,6 @@ let nationsEndorsed: string[] = [];
 /*
  * Helpers
  */
-
-function makeAjaxQuery(url: string, method: string, data: object): string
-{
-    let ajaxButtons = document.querySelectorAll('.ajaxbutton');
-    return new Promise((resolve, reject) =>
-    {
-        function onLoadStart(e: Event): void
-        {
-            if (inQuery)
-                xhr.abort();
-            // for adhering to the simultaneity rule
-            for (let i = 0; i != ajaxButtons.length; i++)
-                ajaxButtons[i].disabled = true;
-            inQuery = true;
-        }
-
-        async function onLoadEnd(e: Event): void
-        {
-            for (let i = 0; i != ajaxButtons.length; i++)
-                ajaxButtons[i].disabled = false;
-            inQuery = false;
-            resolve(xhr.response);
-        }
-
-        let xhr = new XMLHttpRequest();
-        xhr.addEventListener('loadstart', onLoadStart);
-        xhr.addEventListener('loadend', onLoadEnd);
-        xhr.open(method, url);
-        xhr.responseType = 'text';
-        if (data !== undefined)
-            xhr.send(data);
-        else
-            xhr.send();
-    });
-}
 
 async function manualLocalIdUpdate(e: MouseEvent): void
 {

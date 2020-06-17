@@ -1,0 +1,42 @@
+{
+  "manifest_version": 2,
+  "name": "Reliant",
+  "version": "0.1",
+  "description": "Ease of defending in NationStates military gameplay.",
+  "permissions": ["activeTab", "https://*.nationstates.net/*", "storage", "https://*.nationstates.net/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.nationstates.net/*"],
+      "exclude_matches": ["https://forum.nationstates.net/*"],
+      "run_at": "document_end",
+      "js": ["js/main.js"]
+    },
+    {
+      "matches": ["https://www.nationstates.net/page=blank/reliant=settings"],
+      "run_at": "document_end",
+      "js": ["js/settings.js"]
+    },
+    {
+      "matches": ["https://www.nationstates.net/template-overall=none/page=blank/reliant=main"],
+      "run_at": "document_end",
+      "js": ["js/mainpage.js"],
+      "css": ["css/mainpage.css"]
+    },
+    {
+      "matches": ["https://www.nationstates.net/page=join_WA?*"],
+      "run_at": "document_end",
+      "js": ["js/joinwa.js"]
+    },
+    {
+      "matches": ["https://www.nationstates.net/page=ajax2*"],
+      "run_at": "document_end",
+      "js": ["js/ajax2.js"]
+    },
+    {
+      "matches": ["https://www.nationstates.net/template-overall=none/page=blank/reliant=prep"],
+      "run_at": "document_end",
+      "js": ["js/prep.js"],
+      "css": ["css/prep.css"]
+    }
+  ]
+}

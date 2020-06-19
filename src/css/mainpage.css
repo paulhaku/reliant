@@ -32,6 +32,7 @@ a {
 
 #status {
     color: #fff;
+    word-wrap: break-word;
 }
 
 /*

@@ -53,7 +53,7 @@ function getChk(page: string): void
 
 let inQuery = false;
 
-function makeAjaxQuery(url: string, method: string, data: object): string
+function makeAjaxQuery(url: string, method: string, data?: object): string
 {
     let ajaxButtons = document.querySelectorAll('.ajaxbutton');
     return new Promise((resolve, reject) =>

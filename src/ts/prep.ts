@@ -138,5 +138,5 @@ let switchers: string[];
 chrome.storage.local.get('prepswitchers', (result) =>
 {
     switchers = result.prepswitchers;
-    document.querySelector('#max-switchers').innerHTML = switchers.length;
+    document.querySelector('#max-switchers').innerHTML = switchers.length as string;
 });

@@ -139,16 +139,16 @@ document.close();
  * Dynamic Information
  */
 
-const status: HTMLElement = document.querySelector('#status');
-const currentWANation: HTMLElement = document.querySelector('#current-wa-nation');
-const nationsToEndorse: HTMLElement = document.querySelector('#nations-to-endorse');
-const nationsToDossier: HTMLElement = document.querySelector('#nations-to-dossier');
-const switchers: HTMLElement = document.querySelector('#switchers');
-const currentRegion: HTMLElement = document.querySelector('#current-region');
-const didIUpdate: HTMLElement = document.querySelector('#did-i-update');
-const reports: HTMLElement = document.querySelector('#reports');
-const regionHappenings: HTMLElement = document.querySelector('#region-happenings');
-const worldHappenings: HTMLElement = document.querySelector('#world-happenings');
+const status: Element = document.querySelector('#status');
+const currentWANation: Element = document.querySelector('#current-wa-nation');
+const nationsToEndorse: Element = document.querySelector('#nations-to-endorse');
+const nationsToDossier: Element = document.querySelector('#nations-to-dossier');
+const switchers: Element = document.querySelector('#switchers');
+const currentRegion: Element = document.querySelector('#current-region');
+const didIUpdate: Element = document.querySelector('#did-i-update');
+const reports: Element = document.querySelector('#reports');
+const regionHappenings: Element = document.querySelector('#region-happenings');
+const worldHappenings: Element = document.querySelector('#world-happenings');
 
 /*
  * Things to keep track of
@@ -612,7 +612,7 @@ function onStorageChange(changes: object, areaName: string): void
         let storageChange = changes[key];
         if (key == 'switchers') {
             const newSwitchers: object = storageChange.newValue;
-            document.querySelector('#num-switchers').innerHTML = Object.keys(newSwitchers).length;
+            document.querySelector('#num-switchers').innerHTML = Object.keys(newSwitchers).length as string;
             break;
         }
     }
@@ -654,7 +654,7 @@ chrome.storage.onChanged.addListener(onStorageChange);
 chrome.storage.local.get('switchers', (result) =>
 {
     try {
-        document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length;
+        document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length as string;
     } catch(e) {
         // no wa links in storage, do nothing
         if (e instanceof TypeError) {}

@@ -1,4 +1,14 @@
 /*
+ * Types
+ */
+
+interface Switcher
+{
+    name: string;
+    appid: string;
+}
+
+/*
  * Helpers
  */
 

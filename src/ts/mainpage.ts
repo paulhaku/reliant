@@ -218,23 +218,23 @@ function admitWA(e: MouseEvent): void
         nationsDossiered = [];
         nationsEndorsed = [];
 
-        let storedSwitchers = result.switchers;
-        let switcherNames = Object.keys(storedSwitchers);
-        let selectedSwitcher = switcherNames[0];
+        let storedSwitchers: Switcher[] = result.switchers;
+        if (typeof storedSwitchers === 'undefined')
+            status.innerHTML = 'No switchers stored.';
         let formData = new FormData();
-        formData.set('nation', selectedSwitcher);
-        formData.set('appid', storedSwitchers[selectedSwitcher]);
+        formData.set('nation', storedSwitchers[0].name);
+        formData.set('appid', storedSwitchers[0].appid);
         let response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
         if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
-            currentWANation.innerHTML = pretty(selectedSwitcher);
-            status.innerHTML = `Admitted to the WA on ${selectedSwitcher}.`;
+            currentWANation.innerHTML = pretty(storedSwitchers[0].name);
+            status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
             // Update Chk
             getChk(response);
             chrome.storage.local.set({'switchstate': '2'});
         }
         else
-            status.innerHTML = `Error admitting to the WA on ${selectedSwitcher}.`;
-        delete storedSwitchers[selectedSwitcher];
+            status.innerHTML = `Error admitting to the WA on ${storedSwitchers[0].name}.`;
+        storedSwitchers.shift();
         chrome.storage.local.set({'switchers': storedSwitchers});
     });
 }
@@ -500,7 +500,6 @@ async function updateRegionStatus(e: MouseEvent): void
         let regionHappeningsCount: number = Number(result.regionhappeningscount) || 10;
         let regionHappeningsLis = responseDiv.querySelectorAll('ul > li');
         regionHappenings.innerHTML = '';
-        console.log(regionHappeningsLis);
         for (let i = 0; i != regionHappeningsCount; i++) {
             let anodes = regionHappeningsLis[i].querySelectorAll('a');
             // fix link
@@ -611,8 +610,8 @@ function onStorageChange(changes: object, areaName: string): void
     for (let key in changes) {
         let storageChange = changes[key];
         if (key == 'switchers') {
-            const newSwitchers: object = storageChange.newValue;
-            document.querySelector('#num-switchers').innerHTML = Object.keys(newSwitchers).length as string;
+            const newSwitchers: Switcher[] = storageChange.newValue;
+            document.querySelector('#num-switchers').innerHTML = newSwitchers.length as string;
             break;
         }
     }
@@ -654,7 +653,7 @@ chrome.storage.onChanged.addListener(onStorageChange);
 chrome.storage.local.get('switchers', (result) =>
 {
     try {
-        document.querySelector('#num-switchers').innerHTML = Object.keys(result.switchers).length as string;
+        document.querySelector('#num-switchers').innerHTML = result.switchers.length as string;
     } catch(e) {
         // no wa links in storage, do nothing
         if (e instanceof TypeError) {}

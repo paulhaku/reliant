@@ -1,22 +1,24 @@
-function addSwitcher(switcher: string, appid: string): void
+function addSwitcher(newSwitcher: Switcher): void
 {
     chrome.storage.local.get('switchers', (result) =>
     {
-        let switchers: object;
-        if (result.switchers !== undefined)
+        let switchers: Switcher[] = [];
+        if (typeof result.switchers !== 'undefined')
             switchers = result.switchers;
-        else
-            switchers = {};
-        if (switcher in switchers)
-            return;
-        else
-            switchers[switcher] = appid;
-        chrome.storage.local.set({'switchers': switchers});
+        if (switchers.indexOf(newSwitcher) === -1) {
+            switchers.push(newSwitcher);
+            console.log(switchers);
+            chrome.storage.local.set({'switchers': switchers});
+        }
     });
 }
 
 if (urlParameters['page'] === 'join_WA') {
     const switcherRegex: RegExp = new RegExp(`nation=([A-Za-z0-9_]+?)&appid=([0-9]+)`, 'g');
     const match = switcherRegex.exec(document.URL);
-    addSwitcher(match[1], match[2]);
+    const newSwitcher: Switcher = {
+        name: match[1],
+        appid: match[2]
+    };
+    addSwitcher(newSwitcher);
 }

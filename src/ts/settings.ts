@@ -3,6 +3,10 @@ pageContent.innerHTML = `
 <h1>Reliant Settings</h1>
 <form>
 <fieldset>
+<legend>Clear Stored World Assembly Applications</legend>
+<input class="button" type="button" id="clear-wa-apps" value="Clear WA Apps">
+</fieldset>
+<fieldset>
 <legend>Jump Point</legend>
 <input type="text" id="new-jump-point">
 <input class="button" type="button" id="set-jump-point" value="Set">
@@ -141,6 +145,7 @@ document.querySelector('#set-ro-name').addEventListener('click', setRoName);
 document.querySelector('#set-max-happenings').addEventListener('click', setMaxHappeningsCount);
 document.querySelector('#set-switchers').addEventListener('click', setSwitchers);
 document.querySelector('#set-password').addEventListener('click', setPassword);
+document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWaApplications);
 
 /*
  * Handlers
@@ -199,4 +204,9 @@ function setPassword(e: MouseEvent): void
 {
     const password = document.querySelector('#my-password').value;
     chrome.storage.local.set({'password': password});
+}
+
+function clearStoredWaApplications(e: MouseEvent): void
+{
+    chrome.storage.local.set({'switchers': []});
 }

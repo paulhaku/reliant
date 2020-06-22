@@ -5,7 +5,7 @@ function addSwitcher(newSwitcher: Switcher): void
         let switchers: Switcher[] = [];
         if (typeof result.switchers !== 'undefined')
             switchers = result.switchers;
-        if (switchers.indexOf(newSwitcher) === -1) {
+        if (!(switchers.some(switcher => switcher.name === newSwitcher.name))) {
             switchers.push(newSwitcher);
             console.log(switchers);
             chrome.storage.local.set({'switchers': switchers});

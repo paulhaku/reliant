@@ -133,7 +133,10 @@ pageContent.innerHTML = `
 <input type="text" id="new-key" maxlength="1">
 <input class="button" type="button" id="set-key" value="Set">
 </fieldset>
-</form>`;
+</form>
+<h2>Current Switcher Set</h2>
+<p id="current-switcher-set"></p>
+`;
 
 /*
  * Event Listeners
@@ -210,3 +213,11 @@ function clearStoredWaApplications(e: MouseEvent): void
 {
     chrome.storage.local.set({'switchers': []});
 }
+
+chrome.storage.local.get('prepswitchers', (result) =>
+{
+    const currentSwitcherSet = document.querySelector('#current-switcher-set');
+    const prepSwitchers: string[] = result.prepswitchers;
+    for (let i = 0; i != prepSwitchers.length; i++)
+        currentSwitcherSet.innerHTML += `${prepSwitchers[i]}<br>`;
+});

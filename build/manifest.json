@@ -39,7 +39,8 @@
       "css": ["css/prep.css"]
     },
     {
-      "matches": ["https://www.nationstates.net/region=*"],
+      "matches": ["https://www.nationstates.net/region=*", "https://www.nationstates.net/*/region=*",
+      "https://www.nationstates.net/region=*/*"],
       "run_at": "document_end",
       "js": ["js/region.js"]
     }

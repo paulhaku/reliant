@@ -245,6 +245,14 @@ chrome.storage.local.get('endorsekey', (result) =>
             else
                 endorseButton.click();
         }
+        else if (urlParameters['region']) {
+            let endorseButton = document.querySelector('.endorse[data-clicked="0"]');
+            let refreshButton = document.querySelector('#refresh-endorse');
+            if (!endorseButton)
+                refreshButton.click();
+            else
+                endorseButton.click();
+        }
     };
 });
 

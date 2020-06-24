@@ -33,7 +33,7 @@ function pretty(str: string): string
     + txt.substr(1).toLowerCase());
 }
 
-function getLocalId(page: string): void
+function getLocalId(page?: string): void
 {
     const localId = document.querySelector('input[name=localid]');
     if (localId)
@@ -47,7 +47,7 @@ function getLocalId(page: string): void
         return;
 }
 
-function getChk(page: string): void
+function getChk(page?: string): void
 {
     const chk = document.querySelector('input[name=chk]');
     if (chk)
@@ -63,7 +63,7 @@ function getChk(page: string): void
 
 let inQuery = false;
 
-function makeAjaxQuery(url: string, method: string, data?: object): string
+function makeAjaxQuery(url: string, method: string, data?: object): Promise<string>
 {
     let ajaxButtons = document.querySelectorAll('.ajaxbutton');
     return new Promise((resolve, reject) =>

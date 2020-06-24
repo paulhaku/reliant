@@ -20,14 +20,22 @@ actionButton.setAttribute('value', 'Refresh');
 
 detaggingDiv.appendChild(regionStatus);
 detaggingDiv.appendChild(actionButton);
-detaggingDiv.setAttribute('style', 'position: fixed; right: 0px; bottom: 0px;');
+detaggingDiv.setAttribute
+('style', 'background-color: #1F202D; color: #fff; position: fixed; right: 0px; bottom: 0px;');
+
+let endorseList: Element;
+
 if (!(urlParameters['template-overall'])) {
     document.querySelector('#content').appendChild(detaggingDiv);
     const sidePanel: Element = document.querySelector('#panel');
+    sidePanel.innerHTML += '<p id="endorse-status">Awaiting localid update.</p>';
+    sidePanel.innerHTML += '<input class="ajaxbutton" type="button" value="Refresh" id="refresh-endorse">';
+    sidePanel.innerHTML += '<input class="ajaxbutton" type="button" value="Update Localid" id="update-localid">';
     sidePanel.innerHTML += '<ul id="endorse-list"></ul>';
+    endorseList = document.querySelector('#endorse-list');
+    document.querySelector('#refresh-endorse').addEventListener('click', refreshEndorseList);
+    document.querySelector('#update-localid').addEventListener('click', manualLocalIdUpdate);
 }
-
-const endorseList: Element = document.querySelector('#endorse-list');
 
 /*
  * Event Handlers
@@ -37,11 +45,12 @@ async function moveToRegion(e: MouseEvent): Promise<void>
 {
     e.preventDefault();
     const localId: string = document.querySelector('input[name=localid]').getAttribute('value');
+    chrome.storage.local.set({'localid': localId});
     let formData: FormData = new FormData();
     formData.set('localid', localId);
     formData.set('region_name', currentRegionName);
     formData.set('move_region', '1');
-    let response: string = await makeAjaxQuery('/page=change_region', 'POST', formData);
+    await makeAjaxQuery('/page=change_region', 'POST', formData);
     moveButton.parentElement.removeChild(moveButton);
     changeRegionForm.innerHTML += `
     <p class="smalltext"><a href="page=change_region">Tired of life in ${pretty(currentRegionName)}?</a>
@@ -131,12 +140,81 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             let formData = new FormData();
             formData.set('nation', switchers[0].name);
             formData.set('appid', switchers[0].appid);
-            const response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST' formData);
-            if (response.indexOf('Welcome to the World Assembly, new member') !== -1)
+            const response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
+            if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 regionStatus.innerHTML = `Admitted to the WA on ${switchers[0].name}`;
+                getChk(response);
+            }
+            else
+                regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}`;
             switchers.shift();
+            chrome.storage.local.set({'switchers': switchers});
         });
     }
+}
+
+async function refreshEndorseList(e: MouseEvent): Promise<void>
+{
+    const currentNation: string = document.querySelector('#loggedin').getAttribute('data-nname');
+    let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${currentRegionName}/filter=move+member+endo`,
+        'GET');
+    const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');
+    // only so we can use queryselector on the response DOM rather than using regex matching
+    let responseElement = document.createRange().createContextualFragment(response);
+    let lis = responseElement.querySelectorAll('li');
+    let resigned: string[] = [];
+    for (let i = 0; i != lis.length; i++) {
+        const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
+        const nationName = nationNameMatch[1];
+        // don't allow us to endorse ourself
+        if (canonicalize(nationName) === canonicalize(currentNation))
+            resigned.push(nationName);
+        // Don't include nations that probably aren't in the WA
+        if (lis[i].innerHTML.indexOf('resigned from') !== -1)
+            resigned.push(nationName);
+        else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
+            if (resigned.indexOf(nationName) === -1) {
+                function onEndorseClick(e: MouseEvent)
+                {
+                    chrome.storage.local.get('localid', async (localidresult) =>
+                    {
+                        e.target.setAttribute('data-clicked', '1');
+                        const localId = localidresult.localid;
+                        let formData = new FormData();
+                        formData.set('nation', nationName);
+                        formData.set('localid', localId);
+                        formData.set('action', 'endorse');
+                        let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
+                        if (endorseResponse.indexOf('Failed security check.') !== -1)
+                            document.querySelector('#endorse-status')
+                                .innerHTML = `Failed to endorse ${nationName}.`;
+                        else {
+                            document.querySelector('#endorse-status').innerHTML = `Endorsed ${nationName}.`;
+                            e.target.parentElement.removeChild(e.target);
+                        }
+                    });
+                }
+
+                let endorseButton: Element = document.createElement('input');
+                endorseButton.setAttribute('type', 'button');
+                endorseButton.setAttribute('data-clicked', '0');
+                endorseButton.setAttribute('class', 'ajaxbutton endorse');
+                endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
+                endorseButton.addEventListener('click', onEndorseClick);
+                let endorseLi = document.createElement('li');
+                endorseLi.appendChild(endorseButton);
+                endorseList.appendChild(endorseLi);
+            }
+        }
+    }
+}
+
+async function manualLocalIdUpdate(e: MouseEvent): Promise<void>
+{
+    console.log('manually updating localid');
+    let response = await makeAjaxQuery('/region=rwby', 'GET');
+    getLocalId(response);
+    document.querySelector('#endorse-status').innerHTML = 'Updated localid.';
 }
 
 /*

@@ -52,12 +52,14 @@ async function moveToRegion(e: MouseEvent): Promise<void>
     formData.set('localid', localId);
     formData.set('region_name', currentRegionName);
     formData.set('move_region', '1');
-    await makeAjaxQuery('/page=change_region', 'POST', formData);
-    moveButton.parentElement.removeChild(moveButton);
-    changeRegionForm.innerHTML += `
-    <p class="smalltext"><a href="page=change_region">Tired of life in ${pretty(currentRegionName)}?</a>
-    </p>
-    `;
+    const response = await makeAjaxQuery('/page=change_region', 'POST', formData);
+    if (response.indexOf('is now located') !== -1) {
+        moveButton.parentElement.removeChild(moveButton);
+        changeRegionForm.innerHTML += `
+        <p class="smalltext"><a href="page=change_region">Tired of life in ${pretty(currentRegionName)}?</a>
+        </p>
+        `;
+    }
 }
 
 async function actionButtonClick(e: MouseEvent): Promise<void>

@@ -82,7 +82,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         const response = await makeAjaxQuery(`/region=${currentRegionName}`, 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
         let updateTime = responseElement.querySelector('time').innerHTML;
-        let strongs: NodeList = document.querySelectorAll('strong');
+        let strongs: NodeList = responseElement.querySelectorAll('strong');
         let waDelegate: string;
         if (strongs[0].parentElement.querySelector('a')) {
             waDelegate = delegateRegex.exec(strongs[0]
@@ -91,7 +91,6 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
         else
             waDelegate = '0';
-        updateTime = 'Seconds ago';
         if (updateTime === 'Seconds ago') {
             document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
             chrome.storage.local.get('currentwa', (result) =>

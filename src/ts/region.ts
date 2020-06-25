@@ -24,6 +24,7 @@ detaggingDiv.setAttribute
 ('style', 'background-color: #1F202D; color: #fff; position: fixed; right: 0px; bottom: 0px;');
 
 let endorseList: Element;
+let regionalOfficersToDismiss: string[] = [];
 
 if (!(urlParameters['template-overall'])) {
     document.querySelector('#content').appendChild(detaggingDiv);
@@ -64,6 +65,18 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
     const value: string = e.target.value;
     if (value === 'Refresh') {
         const delegateRegex: RegExp = new RegExp('nation=(.+)');
+        let officerBoxes = document.querySelectorAll('.officerbox');
+        regionalOfficersToDismiss = [];
+        for (let i = 0; i != officerBoxes.length; i++) {
+            let quietLink = officerBoxes[i].querySelector('.quietlink');
+            if (quietLink.innerHTML.indexOf('Founder') !== -1)
+                continue;
+            else if (quietLink.innerHTML.indexOf('WA Delegate') !== -1)
+                continue;
+            let officerName = delegateRegex.exec(officerBoxes[i].querySelector('.nlink')
+                .getAttribute('href'))[1];
+            regionalOfficersToDismiss.push(officerName);
+        }
         const response = await makeAjaxQuery(`/region=${currentRegionName}`, 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
         const updateTime = responseElement.querySelector('time').innerHTML;
@@ -82,7 +95,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             {
                 if (result.currentwa === waDelegate) {
                     regionStatus.innerHTML = 'Updated! You <b>are</b> the delegate.';
-                    actionButton.setAttribute('value', 'Appoint Self as RO');
+                    actionButton.setAttribute('value', 'Dismiss RO');
                 }
                 else {
                     regionStatus.innerHTML = 'Updated! You are <b>not</b> the delegate.';
@@ -90,6 +103,23 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 }
             });
         }
+    }
+    else if (value === 'Dismiss RO') {
+        chrome.storage.local.get('chk', (result) =>
+        {
+            if (regionalOfficersToDismiss.length === 0) {
+                actionButton.setAttribute('value', 'Appoint Self as RO');
+                return;
+            }
+            const chk: string = result.chk;
+            let formData = new FormData();
+            formData.set('nation', regionalOfficersToDismiss[0]);
+            formData.set('page', 'region_control');
+            formData.set('region', currentRegionName);
+            formData.set('chk', chk);
+            formData.set('abolishofficer', '1');
+            regionalOfficersToDismiss.shift();
+        });
     }
     else if (value === 'Appoint Self as RO') {
         chrome.storage.local.get(['chk', 'roname', 'currentwa'], async (result) =>
@@ -114,7 +144,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             const responseElement = document.createRange().createContextualFragment(response);
             const responseInfo = responseElement.querySelector('.info') || responseElement.querySelector('.error');
             if (responseInfo.innerHTML.indexOf('with authority') !== -1)
-                regionStatus.innerHTML = 'Successfully appointed as RO.';
+                regionStatus.innerHTML = 'Successfully self appointed as RO.';
             else
                 regionStatus.innerHTML = 'Failed to appoint self as RO.';
             actionButton.setAttribute('value', 'Resign From the WA');

@@ -139,8 +139,13 @@ chrome.storage.local.get('movekey', (result) =>
             moveButton.click();
         else if (urlParameters['reliant'] === 'main')
             document.querySelector('#chasing-button').click();
-        else if (urlParameters['region'])
-            document.querySelector('#action-button').click();
+        else if (urlParameters['region']) {
+            const updateLocalIdButton = document.querySelector('.updatelocalid[data-clicked="0"]');
+            if (updateLocalIdButton)
+                updateLocalIdButton.click();
+            else
+                document.querySelector('#action-button').click();
+        }
     };
 });
 

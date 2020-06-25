@@ -30,7 +30,8 @@ if (!(urlParameters['template-overall'])) {
     const sidePanel: Element = document.querySelector('#panel');
     sidePanel.innerHTML += '<p id="endorse-status">Awaiting localid update.</p>';
     sidePanel.innerHTML += '<input class="ajaxbutton" type="button" value="Refresh" id="refresh-endorse">';
-    sidePanel.innerHTML += '<input class="ajaxbutton" type="button" value="Update Localid" id="update-localid">';
+    sidePanel.innerHTML +=
+        '<input class="ajaxbutton updatelocalid" type="button" value="Update Localid" data-clicked="0" id="update-localid">';
     sidePanel.innerHTML += '<ul id="endorse-list"></ul>';
     endorseList = document.querySelector('#endorse-list');
     document.querySelector('#refresh-endorse').addEventListener('click', refreshEndorseList);
@@ -114,6 +115,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 regionStatus.innerHTML = 'Successfully appointed as RO.';
             else
                 regionStatus.innerHTML = 'Failed to appoint self as RO.';
+            actionButton.setAttribute('value', 'Resign From the WA');
         });
     }
     else if (value === 'Resign From the WA') {
@@ -211,6 +213,7 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
 
 async function manualLocalIdUpdate(e: MouseEvent): Promise<void>
 {
+    document.querySelector('#update-localid').setAttribute('data-clicked', '1');
     console.log('manually updating localid');
     let response = await makeAjaxQuery('/region=rwby', 'GET');
     getLocalId(response);

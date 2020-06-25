@@ -62,6 +62,8 @@ async function moveToRegion(e: MouseEvent): Promise<void>
     }
 }
 
+let secondRefreshAfterUpdate = false;
+
 async function actionButtonClick(e: MouseEvent): Promise<void>
 {
     const value: string = e.target.value;
@@ -84,6 +86,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         let updateTime = responseElement.querySelector('time').innerHTML;
         let strongs: NodeList = responseElement.querySelectorAll('strong');
         let waDelegate: string;
+        console.log(strongs);
         if (strongs[0].parentElement.querySelector('a')) {
             waDelegate = delegateRegex.exec(strongs[0]
                 .parentElement.querySelector('a').getAttribute('href'))[1];
@@ -92,20 +95,23 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         else
             waDelegate = '0';
         if (updateTime === 'Seconds ago') {
-            document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
-            chrome.storage.local.get('currentwa', (result) =>
-            {
-                console.log(result.currentwa);
-                console.log(waDelegate);
-                if (canonicalize(result.currentwa) === canonicalize(waDelegate)) {
-                    regionStatus.innerHTML = 'Updated! You <b>are</b> the delegate.';
-                    actionButton.setAttribute('value', 'Dismiss RO');
-                }
-                else {
-                    regionStatus.innerHTML = 'Updated! You are <b>not</b> the delegate.';
-                    actionButton.setAttribute('value', 'Resign From the WA');
-                }
-            });
+            if (secondRefreshAfterUpdate) {
+                document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
+                chrome.storage.local.get('currentwa', (result) =>
+                {
+                    console.log(result.currentwa);
+                    console.log(waDelegate);
+                    if (canonicalize(result.currentwa) === canonicalize(waDelegate)) {
+                        regionStatus.innerHTML = 'Updated! You <b>are</b> the delegate.';
+                        actionButton.setAttribute('value', 'Dismiss RO');
+                    }
+                    else {
+                        regionStatus.innerHTML = 'Updated! You are <b>not</b> the delegate.';
+                        actionButton.setAttribute('value', 'Resign From the WA');
+                    }
+                });
+            }
+            secondRefreshAfterUpdate = true;
         }
     }
     else if (value === 'Dismiss RO') {

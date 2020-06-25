@@ -72,10 +72,12 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         if (strongs[0].parentElement.querySelector('a')) {
             waDelegate = delegateRegex.exec(strongs[0]
                 .parentElement.querySelector('a').getAttribute('href'))[1];
+            document.querySelectorAll('strong')[0].parentElement.innerHTML = strongs[0].parentElement.innerHTML;
         }
         else
             waDelegate = '0';
         if (updateTime === 'Seconds ago') {
+            document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
             chrome.storage.local.get('currentwa', (result) =>
             {
                 if (result.currentwa === waDelegate) {
@@ -90,9 +92,9 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
     }
     else if (value === 'Appoint Self as RO') {
-        chrome.storage.local.get(['chk', 'roname'], async (result) =>
+        chrome.storage.local.get(['chk', 'roname', 'currentwa'], async (result) =>
         {
-            const currentNation = document.querySelector('#loggedin').getAttribute('data-nname');
+            const currentNation = result.currentwa;
             const chk: string = result.chk;
             const roName: string = result.roname;
             let formData = new FormData();
@@ -151,6 +153,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}`;
             switchers.shift();
             chrome.storage.local.set({'switchers': switchers});
+            chrome.storage.local.set({'currentwa': switchers[0].name});
         });
     }
 }

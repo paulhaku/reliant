@@ -195,6 +195,7 @@ function resignWA(e: MouseEvent): void
             const match = nationNameRegex.exec(response);
             status.innerHTML = `Resigned from the WA on ${match[1]}`;
             chrome.storage.local.set({'switchstate': '1'});
+            chrome.storage.local.set({'currentwa': ''});
         }
     });
 }
@@ -225,6 +226,7 @@ function admitWA(e: MouseEvent): void
         if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
             currentWANation.innerHTML = pretty(storedSwitchers[0].name);
             status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
+            chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
             // Update Chk
             getChk(response);
             chrome.storage.local.set({'switchstate': '2'});

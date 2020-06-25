@@ -81,7 +81,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
         const response = await makeAjaxQuery(`/region=${currentRegionName}`, 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
-        const updateTime = responseElement.querySelector('time').innerHTML;
+        let updateTime = responseElement.querySelector('time').innerHTML;
         let strongs: NodeList = document.querySelectorAll('strong');
         let waDelegate: string;
         if (strongs[0].parentElement.querySelector('a')) {
@@ -91,11 +91,14 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
         else
             waDelegate = '0';
+        updateTime = 'Seconds ago';
         if (updateTime === 'Seconds ago') {
             document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
             chrome.storage.local.get('currentwa', (result) =>
             {
-                if (result.currentwa === waDelegate) {
+                console.log(result.currentwa);
+                console.log(waDelegate);
+                if (canonicalize(result.currentwa) === canonicalize(waDelegate)) {
                     regionStatus.innerHTML = 'Updated! You <b>are</b> the delegate.';
                     actionButton.setAttribute('value', 'Dismiss RO');
                 }
@@ -162,11 +165,11 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             formData.set('chk', chk);
             const response = await makeAjaxQuery('/page=UN_status', 'POST', formData);
             if (response.indexOf('You inform the World Assembly that') !== -1) {
-                currentWANation.innerHTML = 'N/A';
                 const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
                 const match = nationNameRegex.exec(response);
                 regionStatus.innerHTML = `Resigned from the WA on ${match[1]}`;
                 actionButton.setAttribute('value', 'Admit on Next Switcher');
+                chrome.storage.local.set({'currentwa': ''});
             }
         });
     }
@@ -180,13 +183,14 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             const response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 regionStatus.innerHTML = `Admitted to the WA on ${switchers[0].name}`;
+                chrome.storage.local.set({'currentwa': switchers[0].name});
                 getChk(response);
             }
             else
                 regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}`;
             switchers.shift();
             chrome.storage.local.set({'switchers': switchers});
-            chrome.storage.local.set({'currentwa': switchers[0].name});
+            actionButton.setAttribute('disabled', '');
         });
     }
 }

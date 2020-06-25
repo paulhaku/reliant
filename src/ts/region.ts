@@ -105,7 +105,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
     }
     else if (value === 'Dismiss RO') {
-        chrome.storage.local.get('chk', (result) =>
+        chrome.storage.local.get('chk', async (result) =>
         {
             if (regionalOfficersToDismiss.length === 0) {
                 actionButton.setAttribute('value', 'Appoint Self as RO');
@@ -118,6 +118,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             formData.set('region', currentRegionName);
             formData.set('chk', chk);
             formData.set('abolishofficer', '1');
+            await makeAjaxQuery(`/page=region_control/region=${currentRegionName}`, 'POST', formData);
             regionalOfficersToDismiss.shift();
         });
     }

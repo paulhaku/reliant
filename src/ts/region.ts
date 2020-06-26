@@ -82,7 +82,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 .getAttribute('href'))[1];
             regionalOfficersToDismiss.push(officerName);
         }
-        const response = await makeAjaxQuery(`/region=${currentRegionName}`, 'GET');
+        const response = await makeAjaxQuery(`/template-overall=none/region=${currentRegionName}`, 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
         let updateTime = responseElement.querySelector('time').innerHTML;
         let strongs: NodeList = responseElement.querySelectorAll('strong');

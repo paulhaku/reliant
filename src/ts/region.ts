@@ -47,7 +47,6 @@ async function moveToRegion(e: MouseEvent): Promise<void>
 {
     e.preventDefault();
     const localId: string = document.querySelector('input[name=localid]').getAttribute('value');
-    chrome.storage.local.set({'localid': localId});
     let formData: FormData = new FormData();
     formData.set('localid', localId);
     formData.set('region_name', currentRegionName);
@@ -63,6 +62,7 @@ async function moveToRegion(e: MouseEvent): Promise<void>
 }
 
 let secondRefreshAfterUpdate = false;
+let secondRoAttempt = false;
 let nationsEndorsed: string[] = [];
 
 async function actionButtonClick(e: MouseEvent): Promise<void>
@@ -157,8 +157,14 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             const responseInfo = responseElement.querySelector('.info') || responseElement.querySelector('.error');
             if (responseInfo.innerHTML.indexOf('with authority') !== -1)
                 regionStatus.innerHTML = 'Successfully self appointed as RO.';
-            else
+            else {
                 regionStatus.innerHTML = 'Failed to appoint self as RO.';
+                if (!secondRoAttempt) {
+                    console.log(response);
+                    return;
+                }
+                secondRoAttempt = true;
+            }
             actionButton.setAttribute('value', 'Resign From the WA');
         });
     }
@@ -203,6 +209,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
 
 async function refreshEndorseList(e: MouseEvent): Promise<void>
 {
+    endorseList.innerHTML = '';
     const currentNation: string = document.querySelector('#loggedin').getAttribute('data-nname');
     let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${currentRegionName}/filter=move+member+endo`,
         'GET');
@@ -236,9 +243,10 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
                         formData.set('localid', localId);
                         formData.set('action', 'endorse');
                         let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
-                        if (endorseResponse.indexOf('Failed security check.') !== -1)
-                            document.querySelector('#endorse-status')
-                                .innerHTML = `Failed to endorse ${nationName}.`;
+                        if (endorseResponse.indexOf('Failed security check.') !== -1) {
+                            document.querySelector('#endorse-status').innerHTML = `Failed to endorse ${nationName}.`;
+                            console.log(endorseResponse);
+                        }
                         else {
                             document.querySelector('#endorse-status').innerHTML = `Endorsed ${nationName}.`;
                             nationsEndorsed.push(nationName);
@@ -264,9 +272,10 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
 async function manualLocalIdUpdate(e: MouseEvent): Promise<void>
 {
     document.querySelector('#update-localid').setAttribute('data-clicked', '1');
-    console.log('manually updating localid');
-    let response = await makeAjaxQuery('/region=rwby', 'GET');
-    getLocalId(response);
+    const response = await makeAjaxQuery('/region=rwby', 'GET');
+    const responseElement = document.createRange().createContextualFragment(response);
+    const localId = responseElement.querySelector('input[name=localid]').getAttribute('value');
+    chrome.storage.local.set({'localid': localId});
     document.querySelector('#endorse-status').innerHTML = 'Updated localid.';
 }
 

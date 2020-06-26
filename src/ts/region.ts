@@ -196,7 +196,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 regionStatus.innerHTML = `Admitted to the WA on ${switchers[0].name}`;
                 chrome.storage.local.set({'currentwa': switchers[0].name});
-                getChk(response);
+                updateChk(response);
             }
             else
                 regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}`;
@@ -277,6 +277,14 @@ async function manualLocalIdUpdate(e: MouseEvent): Promise<void>
     const localId = responseElement.querySelector('input[name=localid]').getAttribute('value');
     chrome.storage.local.set({'localid': localId});
     document.querySelector('#endorse-status').innerHTML = 'Updated localid.';
+}
+
+function updateChk(page: string): void
+{
+    const pageElement = document.createRange().createContextualFragment(page);
+    const chk = pageElement.querySelector('input[name=chk]');
+    if (chk)
+        chrome.storage.local.set({'chk': chk.getAttribute('value')});
 }
 
 /*

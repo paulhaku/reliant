@@ -63,6 +63,7 @@ async function moveToRegion(e: MouseEvent): Promise<void>
 }
 
 let secondRefreshAfterUpdate = false;
+let nationsEndorsed: string[] = [];
 
 async function actionButtonClick(e: MouseEvent): Promise<void>
 {
@@ -94,7 +95,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
         else
             waDelegate = '0';
-        if (updateTime === 'Seconds ago') {
+        if (updateTime.indexOf('hour') === -1) {
             if (secondRefreshAfterUpdate) {
                 document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
                 chrome.storage.local.get('currentwa', (result) =>
@@ -219,6 +220,9 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
         // Don't include nations that probably aren't in the WA
         if (lis[i].innerHTML.indexOf('resigned from') !== -1)
             resigned.push(nationName);
+        // don't let us endorse the same nation twice
+        else if (nationsEndorsed.indexOf(nationName) !== -1)
+            resigned.push(nationName);
         else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
             if (resigned.indexOf(nationName) === -1) {
                 function onEndorseClick(e: MouseEvent)
@@ -237,6 +241,7 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
                                 .innerHTML = `Failed to endorse ${nationName}.`;
                         else {
                             document.querySelector('#endorse-status').innerHTML = `Endorsed ${nationName}.`;
+                            nationsEndorsed.push(nationName);
                             e.target.parentElement.removeChild(e.target);
                         }
                     });

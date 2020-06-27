@@ -112,13 +112,6 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 break;
             }
         }
-        if (strongs[0].parentElement.querySelector('a')) {
-            waDelegate = delegateRegex.exec(strongs[0]
-                .parentElement.querySelector('a').getAttribute('href'))[1];
-            document.querySelectorAll('strong')[0].parentElement.innerHTML = strongs[0].parentElement.innerHTML;
-        }
-        else
-            waDelegate = '0';
         console.log(regionalOfficersToDismiss);
         console.log(waDelegate);
         console.log(updateTime);

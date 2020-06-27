@@ -85,7 +85,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         const delegateRegex: RegExp = new RegExp('nation=(.+)');
         let officerBoxes = document.querySelectorAll('.officerbox');
         regionalOfficersToDismiss = [];
-        for (let i = 0; i != officerBoxes.length; i++) {
+        for (let i = 0; i !== officerBoxes.length; i++) {
             let quietLink = officerBoxes[i].querySelector('.quietlink');
             if (quietLink.innerHTML.indexOf('Founder') !== -1)
                 continue;
@@ -97,10 +97,21 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
         const response = await makeAjaxQuery(`/template-overall=none/region=${currentRegionName}`, 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
-        let updateTime = responseElement.querySelector('time').innerHTML;
+        let updateTime: string;
         let strongs: NodeList = responseElement.querySelectorAll('strong');
         let waDelegate: string;
-        console.log(strongs);
+        for (let i = 0; i != strongs.length; i++) {
+            if (strongs[i].innerHTML === 'WA Delegate:') {
+                if (strongs[i].parentElement.querySelector('a'))
+                    waDelegate = delegateRegex.exec(strongs[i].parentElement.querySelector('a').getAttribute('href'))[1];
+                else
+                    waDelegate = '0';
+            }
+            else if (strongs[i].innerHTML === 'Last WA Update:') {
+                updateTime = strongs[i].parentElement.querySelector('time').innerHTML;
+                break;
+            }
+        }
         if (strongs[0].parentElement.querySelector('a')) {
             waDelegate = delegateRegex.exec(strongs[0]
                 .parentElement.querySelector('a').getAttribute('href'))[1];
@@ -108,6 +119,9 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         }
         else
             waDelegate = '0';
+        console.log(regionalOfficersToDismiss);
+        console.log(waDelegate);
+        console.log(updateTime);
         if (updateTime.indexOf('hour') === -1) {
             if (secondRefreshAfterUpdate) {
                 document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;

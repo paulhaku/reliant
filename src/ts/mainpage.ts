@@ -160,7 +160,6 @@ let nationsEndorsed: string[] = [];
 
 async function manualLocalIdUpdate(e: MouseEvent): void
 {
-    chrome.storage.local.set({'switchstate': '0'});
     console.log('manually updating localid');
     let response = await makeAjaxQuery('/region=rwby', 'GET');
     getLocalId(response);
@@ -194,7 +193,6 @@ function resignWA(e: MouseEvent): void
             const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
             const match = nationNameRegex.exec(response);
             status.innerHTML = `Resigned from the WA on ${match[1]}`;
-            chrome.storage.local.set({'switchstate': '1'});
             chrome.storage.local.set({'currentwa': ''});
         }
     });
@@ -229,7 +227,6 @@ function admitWA(e: MouseEvent): void
             chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
             // Update Chk
             getChk(response);
-            chrome.storage.local.set({'switchstate': '2'});
         }
         else
             status.innerHTML = `Error admitting to the WA on ${storedSwitchers[0].name}.`;

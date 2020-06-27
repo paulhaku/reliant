@@ -182,7 +182,7 @@ chrome.storage.local.get('resignkey', (result) =>
     const resignKey = result.resignkey || '\'';
     keys[resignKey] = () =>
     {
-        chrome.storage.local.get('switchstate', (switchstateresult) =>
+        /*chrome.storage.local.get('switchstate', (switchstateresult) =>
         {
             const currentSwitchState = switchstateresult.switchstate;
             if (urlParameters['page'] === 'join_WA')
@@ -198,7 +198,15 @@ chrome.storage.local.get('resignkey', (result) =>
                 else if (currentSwitchState === '2')
                     document.querySelector('#update-localid').click();
             }
-        });
+        });*/
+        if (urlParameters['page'] === 'join_WA')
+            document.querySelector('button[class="button primary icon approve big"').click();
+        else if (urlParameters['reliant'] === 'main') {
+            if (document.querySelector('#current-wa-nation').innerHTML === 'N/A')
+                document.querySelector('#admit').click();
+            else
+                document.querySelector('#resign').click();
+        }
     };
 });
 

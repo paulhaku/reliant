@@ -283,19 +283,27 @@ function refreshEndorse(e: MouseEvent): void
                     {
                         chrome.storage.local.get('localid', async (localidresult) =>
                         {
-                            e.target.setAttribute('data-clicked', '1');
-                            const localId = localidresult.localid;
-                            let formData = new FormData();
-                            formData.set('nation', nationName);
-                            formData.set('localid', localId);
-                            formData.set('action', 'endorse');
-                            let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
-                            if (endorseResponse.indexOf('Failed security check.') !== -1)
-                                status.innerHTML = `Failed to endorse ${nationName}.`;
+                            if (e.target.getAttribute('data-updatedlocalid') === '1') {
+                                const localId = localidresult.localid;
+                                let formData = new FormData();
+                                formData.set('nation', nationName);
+                                formData.set('localid', localId);
+                                formData.set('action', 'endorse');
+                                let endorseResponse = await makeAjaxQuery('/cgi-bin/endorse.cgi', 'POST', formData);
+                                if (endorseResponse.indexOf('Failed security check.') !== -1) {
+                                    status.innerHTML = `Failed to endorse ${nationName}.`;
+                                    e.target.setAttribute('data-updatedlocalid', '0');
+                                }
+                                else {
+                                    e.target.setAttribute('data-clicked', '1');
+                                    status.innerHTML = `Endorsed ${nationName}.`;
+                                    nationsEndorsed.push(nationName);
+                                    e.target.parentElement.removeChild(e.target);
+                                }
+                            }
                             else {
-                                status.innerHTML = `Endorsed ${nationName}.`;
-                                nationsEndorsed.push(nationName);
-                                e.target.parentElement.removeChild(e.target);
+                                document.querySelector('#update-localid').click();
+                                e.target.setAttribute('data-updatedlocalid', '1');
                             }
                         });
                     }
@@ -305,6 +313,8 @@ function refreshEndorse(e: MouseEvent): void
                     endorseButton.setAttribute('data-clicked', '0');
                     endorseButton.setAttribute('class', 'ajaxbutton endorse');
                     endorseButton.setAttribute('value', `Endorse ${pretty(nationName)}`);
+                    endorseButton.setAttribute('data-endorsenation', nationName);
+                    endorseButton.setAttribute('data-updatedlocalid', '1');
                     endorseButton.addEventListener('click', onEndorseClick);
                     let endorseLi = document.createElement('li');
                     endorseLi.appendChild(endorseButton);

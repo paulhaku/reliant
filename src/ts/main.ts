@@ -182,30 +182,15 @@ chrome.storage.local.get('resignkey', (result) =>
     const resignKey = result.resignkey || '\'';
     keys[resignKey] = () =>
     {
-        /*chrome.storage.local.get('switchstate', (switchstateresult) =>
-        {
-            const currentSwitchState = switchstateresult.switchstate;
-            if (urlParameters['page'] === 'join_WA')
-                document.querySelector('button[class="button primary icon approve big"').click();
-            else if (urlParameters['reliant'] === 'main') {
-                // In the WA with a valid localid
-                if (currentSwitchState === '0')
-                    document.querySelector('#resign').click();
-                // Not in the WA, waiting to admit on a new switcher
-                else if (currentSwitchState === '1')
-                    document.querySelector('#admit').click();
-                // Admitted on a new switcher, waiting to update localid
-                else if (currentSwitchState === '2')
-                    document.querySelector('#update-localid').click();
-            }
-        });*/
         if (urlParameters['page'] === 'join_WA')
             document.querySelector('button[class="button primary icon approve big"').click();
         else if (urlParameters['reliant'] === 'main') {
             if (document.querySelector('#current-wa-nation').innerHTML === 'N/A')
                 document.querySelector('#admit').click();
-            else
-                document.querySelector('#resign').click();
+            else {
+                if (document.querySelector('#status').innerHTML.indexOf('Admitted') === -1)
+                    document.querySelector('#resign').click();
+            }
         }
     };
 });

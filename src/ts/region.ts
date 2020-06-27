@@ -38,6 +38,19 @@ if (!(urlParameters['template-overall'])) {
     document.querySelector('#refresh-endorse').addEventListener('click', refreshEndorseList);
     document.querySelector('#update-localid').addEventListener('click', manualLocalIdUpdate);
 }
+else {
+    document.body.appendChild(detaggingDiv);
+    const topPanel: Element = document.createElement('div');
+    topPanel.innerHTML += '<p id="endorse-status">Awaiting localid update.</p>';
+    topPanel.innerHTML += '<input class="ajaxbutton" type="button" value="Refresh" id="refresh-endorse">';
+    topPanel.innerHTML +=
+        '<input class="ajaxbutton updatelocalid" type="button" value="Update Localid" data-clicked="0" id="update-localid">';
+    topPanel.innerHTML += '<ul id="endorse-list"></ul>';
+    document.body.insertBefore(topPanel, document.querySelector('h1').nextSibling);
+    endorseList = document.querySelector('#endorse-list');
+    document.querySelector('#refresh-endorse').addEventListener('click', refreshEndorseList);
+    document.querySelector('#update-localid').addEventListener('click', manualLocalIdUpdate);
+}
 
 /*
  * Event Handlers
@@ -210,7 +223,18 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
 async function refreshEndorseList(e: MouseEvent): Promise<void>
 {
     endorseList.innerHTML = '';
-    const currentNation: string = document.querySelector('#loggedin').getAttribute('data-nname');
+    let currentNation: string;
+    if (!(urlParameters['template-overall']))
+        currentNation = document.querySelector('#loggedin').getAttribute('data-nname');
+    else {
+        currentNation = await new Promise((resolve, reject) =>
+        {
+            chrome.storage.local.get('currentwa', (result) =>
+            {
+                resolve(result.currentwa);
+            });
+        });
+    }
     let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${currentRegionName}/filter=move+member+endo`,
         'GET');
     const nationNameRegex = new RegExp('nation=([A-Za-z0-9_-]+)');

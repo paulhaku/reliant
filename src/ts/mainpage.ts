@@ -515,7 +515,7 @@ async function updateRegionStatus(e: MouseEvent): void
         }
     });
     let strongs = responseDiv.querySelectorAll('strong');
-    for (let i = 0; i != strongs; i++) {
+    for (let i = 0; i !== strongs.length; i++) {
         const strongParent = strongs[i].parentElement;
         if (strongs[i].innerHTML == 'WA Delegate:' || strongs[i].innerHTML == 'WA Delegate') {
             const waDelegate = strongParent.querySelector('a');

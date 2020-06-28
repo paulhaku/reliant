@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Reliant",
-  "version": "0.3",
+  "version": "0.4",
   "description": "Ease of defending in NationStates military gameplay.",
   "permissions": ["activeTab", "https://*.nationstates.net/*", "storage", "https://*.nationstates.net/*"],
   "content_scripts": [

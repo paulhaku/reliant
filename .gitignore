@@ -2,3 +2,4 @@
 build/css/
 build/js/
 build/icons/
+node_modules/

@@ -275,8 +275,8 @@ chrome.storage.local.get('prepswitchers', (result) =>
         ]);
 
         document.querySelector('#currentmovekey').innerHTML = currentKeys[0] || 'X';
-        document.querySelector('#currentrefreshkey').innerHTML = currentKeys[1] || 'C';
-        document.querySelector('#currentjpkey').innerHTML = currentKeys[2] || 'V';
+        document.querySelector('#currentjpkey').innerHTML = currentKeys[1] || 'V';
+        document.querySelector('#currentrefreshkey').innerHTML = currentKeys[2] || 'C';
         document.querySelector('#currentmainpagekey').innerHTML = currentKeys[3] || 'Space';
         document.querySelector('#currentresignkey').innerHTML = currentKeys[4] || "'";
         document.querySelector('#currentdossierkey').innerHTML = currentKeys[5] || 'M';

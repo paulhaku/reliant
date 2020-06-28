@@ -21,7 +21,7 @@ function getUrlParameters(url: string): object
 {
     const reg: RegExp = new RegExp('\/([A-Za-z0-9-]+?)=([A-Za-z0-9_.+]+)', 'g');
     let params: object = {};
-    let match: Match;
+    let match: string[];
     while ((match = reg.exec(url)) !== null)
         params[match[1]] = match[2];
     return params;
@@ -35,7 +35,7 @@ function pretty(str: string): string
 
 function getLocalId(page?: string): void
 {
-    const localId = document.querySelector('input[name=localid]');
+    const localId: HTMLInputElement = document.querySelector('input[name=localid]');
     if (localId)
         chrome.storage.local.set({'localid': localId.value});
     else if (page) {
@@ -49,12 +49,12 @@ function getLocalId(page?: string): void
 
 function getChk(page?: string): void
 {
-    const chk = document.querySelector('input[name=chk]');
+    const chk: HTMLInputElement = document.querySelector('input[name=chk]');
     if (chk)
         chrome.storage.local.set({'chk': chk.value});
     else if (page) {
         const chkRegex: RegExp = new RegExp('<input type="hidden" name="chk" value="([A-Za-z0-9]+?)">');
-        const match = chkRegex.exec(page);
+        const match: string[] = chkRegex.exec(page);
         chrome.storage.local.set({'chk': match[1]});
     }
     else
@@ -63,9 +63,9 @@ function getChk(page?: string): void
 
 let inQuery = false;
 
-function makeAjaxQuery(url: string, method: string, data?: object): Promise<string>
+function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<string>
 {
-    let ajaxButtons = document.querySelectorAll('.ajaxbutton');
+    let ajaxButtons: NodeList = document.querySelectorAll('.ajaxbutton');
     return new Promise((resolve, reject) =>
     {
         function onLoadStart(e: Event): void
@@ -74,14 +74,14 @@ function makeAjaxQuery(url: string, method: string, data?: object): Promise<stri
                 xhr.abort();
             // for adhering to the simultaneity rule
             for (let i = 0; i != ajaxButtons.length; i++)
-                ajaxButtons[i].disabled = true;
+                (ajaxButtons[i] as HTMLInputElement).disabled = true;
             inQuery = true;
         }
 
-        async function onLoadEnd(e: Event): void
+        async function onLoadEnd(e: Event): Promise<void>
         {
             for (let i = 0; i != ajaxButtons.length; i++)
-                ajaxButtons[i].disabled = false;
+                (ajaxButtons[i] as HTMLInputElement).disabled = false;
             inQuery = false;
             resolve(xhr.response);
         }
@@ -134,17 +134,17 @@ chrome.storage.local.get('movekey', (result) =>
     const moveKey = result.movekey || 'X';
     keys[moveKey] = () =>
     {
-        const moveButton = document.querySelector('button[name=move_region]');
+        const moveButton: HTMLButtonElement = document.querySelector('button[name=move_region]');
         if (moveButton)
             moveButton.click();
         else if (urlParameters['reliant'] === 'main')
-            document.querySelector('#chasing-button').click();
+            (document.querySelector('#chasing-button') as HTMLInputElement).click();
         else if (urlParameters['region']) {
-            const updateLocalIdButton = document.querySelector('.updatelocalid[data-clicked="0"]');
+            const updateLocalIdButton: HTMLInputElement = document.querySelector('.updatelocalid[data-clicked="0"]');
             if (updateLocalIdButton)
                 updateLocalIdButton.click();
             else
-                document.querySelector('#action-button').click();
+                (document.querySelector('#action-button') as HTMLInputElement).click();
         }
     };
 });
@@ -157,11 +157,11 @@ chrome.storage.local.get('jpkey', (result) =>
         const jumpPoint = jpresult.jumppoint || 'artificial_solar_system';
         keys[jpKey] = () =>
         {
-            const moveButton = document.querySelector('button[name=move_region]');
+            const moveButton: HTMLButtonElement = document.querySelector('button[name=move_region]');
             if (urlParameters['region'] === jumpPoint)
                 moveButton.click();
             else if (urlParameters['reliant'] === 'main')
-                document.querySelector('#move-to-jp').click();
+                (document.querySelector('#move-to-jp') as HTMLInputElement).click();
             else
                 window.location.href = `/template-overall=none/region=${jumpPoint}`;
         };
@@ -183,13 +183,13 @@ chrome.storage.local.get('resignkey', (result) =>
     keys[resignKey] = () =>
     {
         if (urlParameters['page'] === 'join_WA')
-            document.querySelector('button[class="button primary icon approve big"').click();
+            (document.querySelector('button[class="button primary icon approve big"') as HTMLButtonElement).click();
         else if (urlParameters['reliant'] === 'main') {
             if (document.querySelector('#current-wa-nation').innerHTML === 'N/A')
-                document.querySelector('#admit').click();
+                (document.querySelector('#admit') as HTMLInputElement).click();
             else {
                 if (document.querySelector('#status').innerHTML.indexOf('Admitted') === -1)
-                    document.querySelector('#resign').click();
+                    (document.querySelector('#resign') as HTMLInputElement).click();
             }
         }
     };
@@ -201,7 +201,7 @@ chrome.storage.local.get('dossierkey', (result) =>
     keys[dossierKey] = () =>
     {
         if (urlParameters['page'] === 'dossier')
-            document.querySelector('button[name=clear_dossier]').click();
+            (document.querySelector('button[name=clear_dossier]') as HTMLButtonElement).click();
         else
             window.location.href = '/template-overall=none/page=dossier';
     };
@@ -212,12 +212,12 @@ chrome.storage.local.get('dossiernationkey', (result) =>
     const dossierNationKey = result.dossiernationkey || 'N';
     keys[dossierNationKey] = () =>
     {
-        const dossierButton = document.querySelector('button[value=add]');
+        const dossierButton: HTMLButtonElement = document.querySelector('button[value=add]');
         if (dossierButton)
             dossierButton.click();
         else if (urlParameters['reliant'] === 'main') {
-            let refreshButton = document.querySelector('#refresh-dossier');
-            let dossierButton = document.querySelector('.dossier[data-clicked="0"]');
+            let refreshButton: HTMLInputElement = document.querySelector('#refresh-dossier');
+            let dossierButton: HTMLInputElement = document.querySelector('.dossier[data-clicked="0"]');
             if (!dossierButton)
                 refreshButton.click();
             else
@@ -231,23 +231,23 @@ chrome.storage.local.get('endorsekey', (result) =>
     const endorseKey = result.endorsekey || 'Z';
     keys[endorseKey] = () =>
     {
-        const endorseButton = document.querySelector('button[class="endorse button icon wa"]');
+        const endorseButton: HTMLButtonElement = document.querySelector('button[class="endorse button icon wa"]');
         if (endorseButton)
             endorseButton.click();
         else if (urlParameters['reliant'] === 'main') {
-            let refreshButton = document.querySelector('#refresh-endorse');
-            let endorseButton = document.querySelector('.endorse[data-clicked="0"]');
+            let refreshButton: HTMLInputElement = document.querySelector('#refresh-endorse');
+            let endorseButton: HTMLInputElement = document.querySelector('.endorse[data-clicked="0"]');
             const lastWAUpdate = document.querySelector('#last-wa-update');
             if (lastWAUpdate.innerHTML === 'Seconds ago')
-                document.querySelector('#copy-win').click();
+                (document.querySelector('#copy-win') as HTMLInputElement).click();
             if (!endorseButton)
                 refreshButton.click();
             else
                 endorseButton.click();
         }
         else if (urlParameters['region']) {
-            let endorseButton = document.querySelector('.endorse[data-clicked="0"]');
-            let refreshButton = document.querySelector('#refresh-endorse');
+            let endorseButton: HTMLInputElement = document.querySelector('.endorse[data-clicked="0"]');
+            let refreshButton: HTMLInputElement = document.querySelector('#refresh-endorse');
             if (!endorseButton)
                 refreshButton.click();
             else
@@ -271,11 +271,11 @@ chrome.storage.local.get('viewregionkey', (result) =>
     const viewRegionKey = result.viewregionkey || 'D';
     keys[viewRegionKey] = () =>
     {
-        const regionButton = document.querySelector('.paneltext:first-of-type');
+        const regionButton: HTMLDivElement = document.querySelector('.paneltext:first-of-type');
         if (regionButton)
             regionButton.click();
         else if (urlParameters['page'] === 'change_region')
-            document.querySelector('.info > a').click();
+            (document.querySelector('.info > a') as HTMLAnchorElement).click();
     };
 });
 
@@ -285,7 +285,7 @@ chrome.storage.local.get('didiupdatekey', (result) =>
     keys[didIUpdateKey] = () =>
     {
         if (urlParameters['reliant'] === 'main')
-            document.querySelector('#check-if-updated').click();
+            (document.querySelector('#check-if-updated') as HTMLInputElement).click();
         else
             window.location.href = '/page=ajax2/a=reports/view=self/filter=change';
     };
@@ -297,7 +297,7 @@ chrome.storage.local.get('delegatekey', (result) =>
     keys[delegateKey] = () =>
     {
         if (urlParameters['region']) {
-            document.querySelector('p:nth-child(2) > .nlink').click();
+            (document.querySelector('p:nth-child(2) > .nlink') as HTMLAnchorElement).click();
             return;
         }
         // Copy Nation Link
@@ -312,7 +312,7 @@ chrome.storage.local.get('delegatekey', (result) =>
             document.body.removeChild(copyText);
         }
         else if (urlParameters['reliant'] === 'main')
-            document.querySelector('#endorse-delegate').click();
+            (document.querySelector('#endorse-delegate') as HTMLInputElement).click();
     };
 });
 
@@ -324,7 +324,7 @@ chrome.storage.local.get('worldactivitykey', (result) =>
         if (urlParameters['reliant'] !== 'main')
             window.location.href = '/page=activity/view=world/filter=move+member+endo';
         else
-            document.querySelector('#update-world-happenings').click();
+            (document.querySelector('#update-world-happenings') as HTMLInputElement).click();
     };
 });
 
@@ -334,7 +334,7 @@ chrome.storage.local.get('refreshkey', (result) =>
     keys[refreshKey] = () =>
     {
         if (urlParameters['reliant'] === 'main')
-            document.querySelector('#update-region-status').click();
+            (document.querySelector('#update-region-status') as HTMLInputElement).click();
         else
             location.reload();
     };
@@ -355,7 +355,7 @@ chrome.storage.local.get('prepkey', (result) =>
     keys[prepKey] = () =>
     {
         if (urlParameters['reliant'] === 'prep')
-            document.querySelector('#prep-button').click();
+            (document.querySelector('#prep-button') as HTMLInputElement).click();
         else
             window.location.href = '/template-overall=none/page=blank/reliant=prep';
     };

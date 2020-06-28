@@ -172,38 +172,38 @@ document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWa
 function setKey(e: MouseEvent): void
 {
     let keyToSet: string;
-    const key: string = document.querySelector('#new-key').value.toUpperCase();
+    const key: string = (document.querySelector('#new-key') as HTMLInputElement).value.toUpperCase();
     const radioButtons: NodeList = document.querySelector('#keys').querySelectorAll('input[type=radio]');
     for (let i = 0; i != radioButtons.length; i++) {
-        if (radioButtons[i].checked) {
-            keyToSet = radioButtons[i].value;
+        if ((radioButtons[i] as HTMLInputElement).checked) {
+            keyToSet = (radioButtons[i] as HTMLInputElement).value;
             break;
         }
     }
-    document.querySelector('#new-key').value = '';
+    (document.querySelector('#new-key') as HTMLInputElement).value = '';
     chrome.storage.local.set({[keyToSet]: key});
 }
 
 function setJumpPoint(e: MouseEvent): void
 {
-    const newJumpPoint: string = canonicalize(document.querySelector('#new-jump-point').value);
+    const newJumpPoint: string = canonicalize((document.querySelector('#new-jump-point') as HTMLInputElement).value);
     chrome.storage.local.set({'jumppoint': newJumpPoint});
 }
 
 function setRoName(e: MouseEvent): void
 {
-    const newRoName: string = document.querySelector('#new-ro-name').value;
+    const newRoName: string = (document.querySelector('#new-ro-name') as HTMLInputElement).value;
     chrome.storage.local.set({'roname': newRoName});
 }
 
 function setMaxHappeningsCount(e: MouseEvent): void
 {
-    const maxHappeningsCount = document.querySelector('#max-happenings-count').value;
+    const maxHappeningsCount = (document.querySelector('#max-happenings-count') as HTMLInputElement).value;
     const radioButtons = document.querySelector('#max-happenings').querySelectorAll('input[type=radio]');
     let happeningSetting: string;
     for (let i = 0; i != radioButtons.length; i++) {
-        if (radioButtons[i].checked) {
-            happeningSetting = radioButtons[i].value;
+        if ((radioButtons[i] as HTMLInputElement).checked) {
+            happeningSetting = (radioButtons[i] as HTMLInputElement).value;
             break;
         }
     }
@@ -212,7 +212,7 @@ function setMaxHappeningsCount(e: MouseEvent): void
 
 function setSwitchers(e: MouseEvent): void
 {
-    let switchers: string[] = document.querySelector('#switchers').value.split('\n');
+    let switchers: string[] = (document.querySelector('#switchers') as HTMLTextAreaElement).value.split('\n');
     for (let i = 0; i != switchers.length; i++)
         switchers[i] = canonicalize(switchers[i]);
     chrome.storage.local.set({'prepswitchers': switchers});
@@ -220,7 +220,7 @@ function setSwitchers(e: MouseEvent): void
 
 function setPassword(e: MouseEvent): void
 {
-    const password = document.querySelector('#my-password').value;
+    const password = (document.querySelector('#my-password') as HTMLInputElement).value;
     chrome.storage.local.set({'password': password});
 }
 

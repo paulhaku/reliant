@@ -6,10 +6,10 @@ if (moveButton) {
 }
 const currentRegionName: string = urlParameters['region'];
 
-const detaggingDiv: Element = document.createElement('div');
+const detaggingDiv: HTMLDivElement = document.createElement('div');
 
-const actionButton: Element = document.createElement('input');
-const regionStatus: Element = document.createElement('p');
+const actionButton: HTMLInputElement = document.createElement('input');
+const regionStatus: HTMLParagraphElement = document.createElement('p');
 regionStatus.innerHTML = 'Awaiting region update.';
 
 actionButton.setAttribute('type', 'button');
@@ -23,7 +23,7 @@ detaggingDiv.appendChild(actionButton);
 detaggingDiv.setAttribute
 ('style', 'background-color: #1F202D; color: #fff; position: fixed; right: 0px; bottom: 0px;');
 
-let endorseList: Element;
+let endorseList: HTMLUListElement;
 let regionalOfficersToDismiss: string[] = [];
 
 if (!(urlParameters['template-overall'])) {
@@ -80,7 +80,7 @@ let nationsEndorsed: string[] = [];
 
 async function actionButtonClick(e: MouseEvent): Promise<void>
 {
-    const value: string = e.target.value;
+    const value: string = (e.target as HTMLInputElement).value;
     if (value === 'Refresh') {
         const delegateRegex: RegExp = new RegExp('nation=(.+)');
         let officerBoxes = document.querySelectorAll('.officerbox');
@@ -101,13 +101,13 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
         let strongs: NodeList = responseElement.querySelectorAll('strong');
         let waDelegate: string;
         for (let i = 0; i != strongs.length; i++) {
-            if (strongs[i].innerHTML === 'WA Delegate:') {
+            if ((strongs[i] as HTMLElement).innerHTML === 'WA Delegate:') {
                 if (strongs[i].parentElement.querySelector('a'))
                     waDelegate = delegateRegex.exec(strongs[i].parentElement.querySelector('a').getAttribute('href'))[1];
                 else
                     waDelegate = '0';
             }
-            else if (strongs[i].innerHTML === 'Last WA Update:') {
+            else if ((strongs[i] as HTMLElement).innerHTML === 'Last WA Update:') {
                 updateTime = strongs[i].parentElement.querySelector('time').innerHTML;
                 break;
             }
@@ -250,7 +250,7 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
     let lis = responseElement.querySelectorAll('li');
     let resigned: string[] = [];
     for (let i = 0; i != lis.length; i++) {
-        const nationNameMatch = nationNameRegex.exec(lis[i].querySelector('a:nth-of-type(1)').href);
+        const nationNameMatch = nationNameRegex.exec((lis[i].querySelector('a:nth-of-type(1)') as HTMLAnchorElement).href);
         const nationName = nationNameMatch[1];
         // don't allow us to endorse ourself
         if (canonicalize(nationName) === canonicalize(currentNation))
@@ -267,7 +267,7 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
                 {
                     chrome.storage.local.get('localid', async (localidresult) =>
                     {
-                        e.target.setAttribute('data-clicked', '1');
+                        (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
                         const localId = localidresult.localid;
                         let formData = new FormData();
                         formData.set('nation', nationName);
@@ -281,7 +281,7 @@ async function refreshEndorseList(e: MouseEvent): Promise<void>
                         else {
                             document.querySelector('#endorse-status').innerHTML = `Endorsed ${nationName}.`;
                             nationsEndorsed.push(nationName);
-                            e.target.parentElement.removeChild(e.target);
+                            (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
                         }
                     });
                 }

@@ -28,17 +28,6 @@
         });
     }
 
-    async function getPassword(): Promise<string>
-    {
-        return new Promise((resolve, reject) =>
-        {
-            chrome.storage.local.get('password', (result) =>
-            {
-                resolve(result.password);
-            });
-        });
-    }
-
     async function init(): Promise<void>
     {
         const values = await Promise.all([getNumSwitchers(), getCurrentWa()]);

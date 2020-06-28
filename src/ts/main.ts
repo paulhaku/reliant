@@ -1,3 +1,5 @@
+const RELIANT_VERSION: string = chrome.runtime.getManifest().version;
+
 /*
  * Types
  */
@@ -89,7 +91,9 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
         let xhr = new XMLHttpRequest();
         xhr.addEventListener('loadstart', onLoadStart);
         xhr.addEventListener('loadend', onLoadEnd);
-        xhr.open(method, url);
+        const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}/userclick=${Date.now()}`;
+        console.log(fixedUrl);
+        xhr.open(method, fixedUrl);
         xhr.responseType = 'text';
         if (data !== undefined)
             xhr.send(data);

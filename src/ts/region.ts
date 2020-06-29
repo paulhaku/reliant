@@ -150,6 +150,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             }
             const chk: string = result.chk;
             let formData = new FormData();
+            // Dismiss only one officer at a time
             formData.set('nation', regionalOfficersToDismiss[0]);
             formData.set('page', 'region_control');
             formData.set('region', currentRegionName);
@@ -185,11 +186,12 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 regionStatus.innerHTML = 'Successfully self appointed as RO.';
             else {
                 regionStatus.innerHTML = 'Failed to appoint self as RO.';
+                // appointing RO fails sometimes, we don't want to try more than twice
                 if (!secondRoAttempt) {
-                    console.log(response);
+                    secondRoAttempt = true;
                     return;
                 }
-                secondRoAttempt = true;
+                console.log(response);
             }
             actionButton.setAttribute('value', 'Resign From the WA');
         });

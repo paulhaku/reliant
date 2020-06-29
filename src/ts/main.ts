@@ -242,10 +242,10 @@ chrome.storage.local.get('endorsekey', (result) =>
             let refreshButton: HTMLInputElement = document.querySelector('#refresh-endorse');
             let endorseButton: HTMLInputElement = document.querySelector('.endorse[data-clicked="0"]');
             const lastWAUpdate = document.querySelector('#last-wa-update');
+            if (lastWAUpdate.innerHTML === 'Seconds ago')
+                (document.querySelector('#copy-win') as HTMLInputElement).click();
             if (freshlyAdmitted)
                 (document.querySelector('#update-localid') as HTMLInputElement).click();
-            else if (lastWAUpdate.innerHTML === 'Seconds ago')
-                (document.querySelector('#copy-win') as HTMLInputElement).click();
             else {
                 if (!endorseButton)
                     refreshButton.click();

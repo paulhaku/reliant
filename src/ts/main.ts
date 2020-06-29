@@ -94,7 +94,7 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
             resolve(xhr.response);
         }
 
-        let xhr = new XMLHttpRequest();
+        let xhr: XMLHttpRequest = new XMLHttpRequest();
         xhr.addEventListener('loadstart', onLoadStart);
         xhr.addEventListener('loadend', onLoadEnd);
         // Recommended by Eluvatar: https://forum.nationstates.net/viewtopic.php?p=30083979#p30083979
@@ -110,9 +110,8 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
 
 function redirectPage(url: string): void
 {
-    console.log('redirecting page');
     let ajaxButtons: NodeList = document.querySelectorAll('.ajaxbutton');
-    // Disable all buttons until the page is fully redirected
+    // Disable all buttons until the page is fully redirected, though this is likely unnecessary
     for (let i = 0; i != ajaxButtons.length; i++)
         (ajaxButtons[i] as HTMLInputElement).disabled = true;
     window.location.href = url;
@@ -393,7 +392,7 @@ chrome.storage.local.get('prepkey', (result) =>
 const settingsParent = document.querySelector('.belspacer.belspacermain');
 if (settingsParent) {
     // Settings Button
-    let settingsDiv = document.createElement('div');
+    let settingsDiv: HTMLDivElement = document.createElement('div');
     settingsDiv.setAttribute('class', 'bel');
     let settingsButton: HTMLInputElement = document.createElement('input');
     settingsButton.setAttribute('type', 'button');

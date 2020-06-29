@@ -622,12 +622,8 @@
                 const newSwitchers: Switcher[] = storageChange.newValue;
                 (document.querySelector('#num-switchers') as HTMLSpanElement).innerHTML = String(newSwitchers.length);
             }
-            else if (key === 'currentwa') {
-                if (storageChange.newValue)
-                    currentWANation.innerHTML = storageChange.newValue;
-                else
-                    currentWANation.innerHTML = 'N/A';
-            }
+            else if (key === 'currentwa')
+                currentWANation.innerHTML = storageChange.newValue || 'N/A';
         }
     }
 
@@ -657,7 +653,7 @@
      * Initialization
      */
 
-    chrome.storage.local.get('switchers', (result) =>
+    chrome.storage.local.get(['switchers', 'currentwa'], (result) =>
     {
         try {
             document.querySelector('#num-switchers').innerHTML = result.switchers.length as string;
@@ -665,5 +661,7 @@
             // no wa links in storage, do nothing
             if (e instanceof TypeError) {}
         }
+
+        currentWANation.innerHTML = result.currentwa || 'N/A';
     });
 })();

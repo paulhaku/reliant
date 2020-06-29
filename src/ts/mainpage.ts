@@ -243,7 +243,7 @@
         const jpHappenings = document.querySelector('#jp-happenings');
         nationsToEndorse.innerHTML = '';
         jpHappenings.innerHTML = '';
-        chrome.storage.local.get(['jumppoint', 'endorsehappeningscount'], async (result) =>
+        chrome.storage.local.get(['jumppoint', 'endorsehappeningscount', 'currentwa'], async (result) =>
         {
             const maxHappeningsCount = Number(result.endorsehappeningscount) || 10;
             const jumpPoint = result.jumppoint || 'artificial_solar_system';
@@ -269,7 +269,7 @@
                 const nationNameMatch = nationNameRegex.exec((lis[i].querySelector('a:nth-of-type(1)') as HTMLAnchorElement).href);
                 const nationName = nationNameMatch[1];
                 // don't allow us to endorse ourself
-                if (canonicalize(nationName) === canonicalize(currentWANation.innerHTML))
+                if (canonicalize(nationName) === canonicalize(result.currentwa))
                     resigned.push(nationName);
                 // don't allow us to endorse the same nation more than once per switch
                 if (nationsEndorsed.indexOf(nationName) !== -1)
@@ -622,8 +622,12 @@
                 const newSwitchers: Switcher[] = storageChange.newValue;
                 (document.querySelector('#num-switchers') as HTMLSpanElement).innerHTML = String(newSwitchers.length);
             }
-            else if (key === 'currentwa')
-                currentWANation.innerHTML = storageChange.newValue;
+            else if (key === 'currentwa') {
+                if (storageChange.newValue)
+                    currentWANation.innerHTML = storageChange.newValue;
+                else
+                    currentWANation.innerHTML = 'N/A';
+            }
         }
     }
 

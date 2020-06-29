@@ -162,6 +162,7 @@
 
     async function manualLocalIdUpdate(e: MouseEvent): Promise<void>
     {
+        freshlyAdmitted = false;
         console.log('manually updating localid');
         let response = await makeAjaxQuery('/region=rwby', 'GET');
         getLocalId(response);
@@ -224,6 +225,7 @@
             formData.set('appid', storedSwitchers[0].appid);
             let response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
+                freshlyAdmitted = true;
                 currentWANation.innerHTML = pretty(storedSwitchers[0].name);
                 status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
                 chrome.storage.local.set({'currentwa': storedSwitchers[0].name});

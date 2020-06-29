@@ -1,4 +1,5 @@
 const RELIANT_VERSION: string = chrome.runtime.getManifest().version;
+let freshlyAdmitted: boolean = false;
 
 /*
  * Types
@@ -92,7 +93,6 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
         xhr.addEventListener('loadstart', onLoadStart);
         xhr.addEventListener('loadend', onLoadEnd);
         const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}/userclick=${Date.now()}`;
-        console.log(fixedUrl);
         xhr.open(method, fixedUrl);
         xhr.responseType = 'text';
         if (data !== undefined)
@@ -242,12 +242,16 @@ chrome.storage.local.get('endorsekey', (result) =>
             let refreshButton: HTMLInputElement = document.querySelector('#refresh-endorse');
             let endorseButton: HTMLInputElement = document.querySelector('.endorse[data-clicked="0"]');
             const lastWAUpdate = document.querySelector('#last-wa-update');
-            if (lastWAUpdate.innerHTML === 'Seconds ago')
+            if (freshlyAdmitted)
+                (document.querySelector('#update-localid') as HTMLInputElement).click();
+            else if (lastWAUpdate.innerHTML === 'Seconds ago')
                 (document.querySelector('#copy-win') as HTMLInputElement).click();
-            if (!endorseButton)
-                refreshButton.click();
-            else
-                endorseButton.click();
+            else {
+                if (!endorseButton)
+                    refreshButton.click();
+                else
+                    endorseButton.click();
+            }
         }
         else if (urlParameters['region']) {
             let endorseButton: HTMLInputElement = document.querySelector('.endorse[data-clicked="0"]');

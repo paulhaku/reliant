@@ -189,12 +189,13 @@ chrome.storage.local.get('resignkey', (result) =>
         if (urlParameters['page'] === 'join_WA')
             (document.querySelector('button[class="button primary icon approve big"') as HTMLButtonElement).click();
         else if (urlParameters['reliant'] === 'main') {
-            if (document.querySelector('#current-wa-nation').innerHTML === 'N/A')
-                (document.querySelector('#admit') as HTMLInputElement).click();
-            else {
-                if (document.querySelector('#status').innerHTML.indexOf('Admitted') === -1)
+            chrome.storage.local.get('currentwa', (currentwaresult) =>
+            {
+                if ((!freshlyAdmitted) && (currentwaresult.currentwa))
                     (document.querySelector('#resign') as HTMLInputElement).click();
-            }
+                else if ((!freshlyAdmitted))
+                    (document.querySelector('#admit') as HTMLInputElement).click();
+            });
         }
     };
 });

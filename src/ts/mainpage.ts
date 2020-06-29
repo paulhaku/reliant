@@ -175,7 +175,7 @@
         getChk(response);
         // while we're getting the chk, we may as well check the current nation too
         let nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
-        currentWANation.innerHTML = nationNameRegex.exec(response)[1];
+        chrome.storage.local.set({'currentwa': nationNameRegex.exec(response)[1]});
     }
 
     /*
@@ -192,7 +192,7 @@
             formData.set('chk', chk);
             const response = await makeAjaxQuery('/page=UN_status', 'POST', formData);
             if (response.indexOf('You inform the World Assembly that') !== -1) {
-                currentWANation.innerHTML = 'N/A';
+                freshlyAdmitted = false;
                 const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
                 const match = nationNameRegex.exec(response);
                 status.innerHTML = `Resigned from the WA on ${match[1]}`;
@@ -226,7 +226,6 @@
             let response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 freshlyAdmitted = true;
-                currentWANation.innerHTML = pretty(storedSwitchers[0].name);
                 status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
                 chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
                 // Update Chk
@@ -615,15 +614,16 @@
     }
 
 // Update the list of switchers as soon as a new WA admit page is opened
-    function onStorageChange(changes: object, areaName: string): void
+    function onStorageChange(changes: object): void
     {
         for (let key in changes) {
             let storageChange = changes[key];
-            if (key == 'switchers') {
+            if (key === 'switchers') {
                 const newSwitchers: Switcher[] = storageChange.newValue;
                 (document.querySelector('#num-switchers') as HTMLSpanElement).innerHTML = String(newSwitchers.length);
-                break;
             }
+            else if (key === 'currentwa')
+                currentWANation.innerHTML = storageChange.newValue;
         }
     }
 

@@ -1,0 +1,98 @@
+/*
+ * Aesthetics
+ */
+
+body {
+    font-family: Verdana, sans-serif;
+    background-color: #1F202D;
+    /*color: #29659C;*/
+    color: #fff;
+}
+
+input[type=button] {
+    padding: 8px;
+    font-family: Verdana, sans-serif;
+    background-color: #494154;
+    color: #fff;
+    border: 0;
+}
+
+input[type=button]:disabled {
+    background-color: #141315;
+}
+
+input[type=text] {
+    background-color: #625472;
+    color: #fff;
+}
+
+a {
+    color: #646FB6;
+}
+
+#status {
+    color: #fff;
+}
+
+/*
+ * Layout
+ */
+
+#container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    width: 100%;
+}
+
+#group-1 {
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto;
+    display: grid;
+}
+
+#switchers-prepped-container {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#status-container {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#current-switcher-container {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+#prep-button-container {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+.buttonblock {
+    display: block;
+}
+
+.header {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.subheader {
+    font-weight: bold;
+    display: block;
+    font-size: 15px;
+}
+
+.information {
+    border: 1px solid #646FB6;
+    display: block;
+    font-size: 15px;
+}
+
+ul {
+    list-style-type: none;
+}

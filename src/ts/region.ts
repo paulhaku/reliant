@@ -1,3 +1,9 @@
+/* Every button with class "ajaxbutton" indicates that the button makes a request to
+ * the NS server. The "makeAjaxQuery" function will disable these buttons when a request
+ * starts and will only be re-enabled once a complete response has been received from the
+ * NS server in order to comply with rule "4. Avoid Simultaneous Requests".
+ */
+
 const changeRegionForm: Element = document.querySelector('form[action="page=change_region"]');
 const moveButton: Element = document.querySelector('button[name=move_region]');
 if (moveButton) {

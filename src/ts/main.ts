@@ -73,9 +73,13 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
     {
         function onLoadStart(e: Event): void
         {
+            // In case we discover we somehow made a new request before our last one concluded,
+            // immediately abort it
             if (inQuery)
                 xhr.abort();
-            // for adhering to the simultaneity rule
+            // Each button with class 'ajaxbutton' make a request to the NS webiste.
+            // In order to abide by rule "4. Avoid Simultaneous Requests" we will keep all buttons
+            // with this class disabled until we receive a complete response from the NS server.
             for (let i = 0; i != ajaxButtons.length; i++)
                 (ajaxButtons[i] as HTMLInputElement).disabled = true;
             inQuery = true;
@@ -83,6 +87,7 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
 
         async function onLoadEnd(e: Event): Promise<void>
         {
+            // We've received a complete response from the NS server, so we can allow more user input
             for (let i = 0; i != ajaxButtons.length; i++)
                 (ajaxButtons[i] as HTMLInputElement).disabled = false;
             inQuery = false;
@@ -92,6 +97,7 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
         let xhr = new XMLHttpRequest();
         xhr.addEventListener('loadstart', onLoadStart);
         xhr.addEventListener('loadend', onLoadEnd);
+        // Recommended by Eluvatar: https://forum.nationstates.net/viewtopic.php?p=30083979#p30083979
         const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}/userclick=${Date.now()}`;
         xhr.open(method, fixedUrl);
         xhr.responseType = 'text';
@@ -100,6 +106,16 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
         else
             xhr.send();
     });
+}
+
+function redirectPage(url: string): void
+{
+    console.log('redirecting page');
+    let ajaxButtons: NodeList = document.querySelectorAll('.ajaxbutton');
+    // Disable all buttons until the page is fully redirected
+    for (let i = 0; i != ajaxButtons.length; i++)
+        (ajaxButtons[i] as HTMLInputElement).disabled = true;
+    window.location.href = url;
 }
 
 const urlParameters: object = getUrlParameters(document.URL);
@@ -379,36 +395,39 @@ if (settingsParent) {
     // Settings Button
     let settingsDiv = document.createElement('div');
     settingsDiv.setAttribute('class', 'bel');
-    let settingsButton = document.createElement('button');
+    let settingsButton: HTMLInputElement = document.createElement('input');
+    settingsButton.setAttribute('type', 'button');
     settingsButton.setAttribute('id', 'reliant-settings');
-    settingsButton.setAttribute('class', 'button');
-    settingsButton.innerHTML = 'Reliant Settings';
+    settingsButton.setAttribute('class', 'ajaxbutton');
+    settingsButton.value = 'Reliant Settings';
     settingsDiv.appendChild(settingsButton);
 
     // Main Reliant Button
-    let reliantButton = document.createElement('button');
+    let reliantButton: HTMLInputElement = document.createElement('input');
+    reliantButton.setAttribute('type', 'button');
     reliantButton.setAttribute('id', 'reliant-main');
-    reliantButton.setAttribute('class', 'button');
-    reliantButton.innerHTML = 'Reliant';
+    reliantButton.setAttribute('class', 'ajaxbutton');
+    reliantButton.value = 'Reliant';
     settingsDiv.appendChild(reliantButton);
     settingsParent.insertBefore(settingsDiv, settingsParent.firstChild);
     document.querySelector('#reliant-settings').addEventListener('click', (e: MouseEvent) =>
     {
-        window.location.href = '/page=blank/reliant=settings';
+        redirectPage('/page=blank/reliant=settings');
     });
     document.querySelector('#reliant-main').addEventListener('click', (e: MouseEvent) =>
     {
-        window.location.href = '/template-overall=none/page=blank/reliant=main';
+        redirectPage('/template-overall=none/page=blank/reliant=main');
     });
 
     // Prep Page
-    let prepButton = document.createElement('button');
+    let prepButton: HTMLInputElement = document.createElement('input');
+    prepButton.setAttribute('type', 'button');
     prepButton.setAttribute('id', 'reliant-prep');
-    prepButton.setAttribute('class', 'button');
-    prepButton.innerHTML = 'Prep';
+    prepButton.setAttribute('class', 'ajaxbutton');
+    prepButton.value = 'Prep';
     settingsDiv.appendChild(prepButton);
     prepButton.addEventListener('click', (e: MouseEvent) =>
     {
-        window.location.href = '/template-overall=none/page=blank/reliant=prep';
+        redirectPage('/template-overall=none/page=blank/reliant=prep');
     });
 }

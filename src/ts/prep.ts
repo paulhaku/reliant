@@ -114,6 +114,8 @@
                     const nextNation = switchers[switchers.indexOf(document.querySelector('#current-switcher').innerHTML) + 1];
                     document.querySelector('#current-switcher-number').innerHTML =
                         String(switchers.indexOf(document.querySelector('#current-switcher').innerHTML) + 1);
+                    if (typeof nextNation === 'undefined')
+                        return;
                     document.querySelector('#current-switcher').innerHTML = nextNation;
                     let response = await makeAjaxQuery(`/page=un?nation=${nextNation}&password=${result.password}&logging_in=1`,
                         'GET');

@@ -2,7 +2,7 @@
 {
     const pageContent = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Reliant - Prep</title>
     <meta charset="utf-8">

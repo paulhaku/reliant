@@ -55,12 +55,18 @@ a {
     grid-row: 1 / 1;
     display: grid;
     grid-template-columns: 10% 20% 10% 20% 40%;
-    grid-template-rows: 100%;
+    grid-template-rows: 50% 50%;
 }
 
 #switchers-container {
     grid-column: 1 / 1;
     grid-row: 1 / 1;
+}
+
+#load-time-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 2 / 2;
 }
 
 #current-wa-nation-container {

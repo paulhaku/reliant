@@ -20,6 +20,10 @@
                     <span class="header">Switchers Left</span>
                     <span class="information" id="num-switchers">0</span>
                 </div>
+                <div id="load-time-container">
+                    <span class="subheader">Load Time</span>
+                    <span class="information" id="load-time"></span>
+                </div>
                 <!-- Current WA Nation -->
                 <div id="current-wa-nation-container">
                     <div class="buttonblock">
@@ -147,7 +151,6 @@
     const currentWANation: HTMLSpanElement = document.querySelector('#current-wa-nation');
     const nationsToEndorse: HTMLUListElement = document.querySelector('#nations-to-endorse');
     const nationsToDossier: HTMLUListElement = document.querySelector('#nations-to-dossier');
-    const switchers: Element = document.querySelector('#switchers');
     const currentRegion: HTMLSpanElement = document.querySelector('#current-region');
     const didIUpdate: HTMLUListElement = document.querySelector('#did-i-update');
     const reports: HTMLUListElement = document.querySelector('#reports');

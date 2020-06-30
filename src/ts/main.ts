@@ -73,6 +73,7 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
     {
         function onLoadStart(e: Event): void
         {
+            startTime = Date.now();
             // In case we discover we somehow made a new request before our last one concluded,
             // immediately abort it
             if (inQuery)
@@ -91,9 +92,13 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
             for (let i = 0; i != ajaxButtons.length; i++)
                 (ajaxButtons[i] as HTMLInputElement).disabled = false;
             inQuery = false;
+            if (document.querySelector('#load-time'))
+                (document.querySelector('#load-time') as HTMLSpanElement).innerHTML =
+                    String(Date.now() - startTime) + ' ms';
             resolve(xhr.response);
         }
 
+        let startTime: number;
         let xhr: XMLHttpRequest = new XMLHttpRequest();
         xhr.addEventListener('loadstart', onLoadStart);
         xhr.addEventListener('loadend', onLoadEnd);

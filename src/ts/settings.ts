@@ -22,6 +22,24 @@ pageContent.innerHTML = `
 <legend>Blocked Regions</legend>
 <p>Enter a list of region names, one per line. You will be blocked from chasing raiders into these regions. Use this
 to avoid common thorn regions.</p>
+<p>Recommendations:
+<pre>
+devide_by_zero
+artificial_solar_system
+trieltics
+3_guys
+frozen_circle
+switz
+plum_island
+no_nope_and_nay
+vienna
+crystal_falls
+birb
+the_allied_nations_of_egalaria
+the_evil_empire
+hatari
+</pre>
+</p>
 <textarea id="blocked-regions"></textarea>
 <input class="button" type="button" id="set-blocked-regions" value="Set">
 <p>Current: <p><b id="current-blocked-regions"></b></p></p>

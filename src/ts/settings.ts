@@ -10,11 +10,21 @@ pageContent.innerHTML = `
 <legend>Jump Point</legend>
 <input type="text" id="new-jump-point">
 <input class="button" type="button" id="set-jump-point" value="Set">
+<p>Current: <b id="current-jumppoint"></b></p>
 </fieldset>
 <fieldset>
 <legend>Regional Officer Name</legend>
 <input type="text" id="new-ro-name">
 <input class="button" type="button" id="set-ro-name" value="Set">
+<p>Current: <b id="current-roname"></b></p>
+</fieldset>
+<fieldset>
+<legend>Blocked Regions</legend>
+<p>Enter a list of region names, one per line. You will be blocked from chasing raiders into these regions. Use this
+to avoid common thorn regions.</p>
+<textarea id="blocked-regions"></textarea>
+<input class="button" type="button" id="set-blocked-regions" value="Set">
+<p>Current: <p><b id="current-blocked-regions"></b></p></p>
 </fieldset>
 <fieldset>
 <legend>Prepping</legend>
@@ -164,6 +174,7 @@ document.querySelector('#set-max-happenings').addEventListener('click', setMaxHa
 document.querySelector('#set-switchers').addEventListener('click', setSwitchers);
 document.querySelector('#set-password').addEventListener('click', setPassword);
 document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWaApplications);
+document.querySelector('#set-blocked-regions').addEventListener('click', setBlockedRegions);
 
 /*
  * Handlers
@@ -229,6 +240,15 @@ function clearStoredWaApplications(e: MouseEvent): void
     chrome.storage.local.set({'switchers': []});
 }
 
+function setBlockedRegions(e: MouseEvent): void
+{
+    let blockedRegions: string[] = (document.querySelector('#blocked-regions') as HTMLTextAreaElement).
+        value.split('\n');
+    for (let i = 0; i !== blockedRegions.length; i++)
+        blockedRegions[i] = canonicalize(blockedRegions[i]);
+    chrome.storage.local.set({'blockedregions': blockedRegions});
+}
+
 chrome.storage.local.get('prepswitchers', (result) =>
 {
     const currentSwitcherSet = document.querySelector('#current-switcher-set');
@@ -254,7 +274,7 @@ chrome.storage.local.get('prepswitchers', (result) =>
         });
     }
 
-    async function displayCurrentKeys()
+    async function displayCurrentKeys(): Promise<void>
     {
         const currentKeys = await Promise.all([
             getCurrentKey('movekey'),
@@ -291,5 +311,21 @@ chrome.storage.local.get('prepswitchers', (result) =>
         document.querySelector('#currentsettingskey').innerHTML = currentKeys[14] || '0';
     }
 
+    async function displayCurrentSettings(): Promise<void>
+    {
+        const currentSettings = await Promise.all([
+            getCurrentKey('jumppoint'),
+            getCurrentKey('roname'),
+            getCurrentKey('blockedregions')
+        ]);
+
+        document.querySelector('#current-jumppoint').innerHTML = currentSettings[0];
+        document.querySelector('#current-roname').innerHTML = currentSettings[1];
+        const blockedRegions = currentSettings[2];
+        for (let i = 0; i !== blockedRegions.length; i++)
+            document.querySelector('#current-blocked-regions').innerHTML += `${blockedRegions[i]}<br>`;
+    }
+
     displayCurrentKeys();
+    displayCurrentSettings();
 })();

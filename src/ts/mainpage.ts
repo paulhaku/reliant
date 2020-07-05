@@ -55,6 +55,7 @@
                     <input type="hidden" id="delegate-nation" value="N/A">
                     <input type="button" class="ajaxbutton" id="endorse-delegate" value="Endorse Delegate">
                     <input type="button" id="copy-win" value="Copy Win">
+                    <input type="button" id="open-region" value="Open">
                 </div>
                 <!-- Current Region Happenings -->
                 <div id="current-region-happenings-container">
@@ -625,6 +626,12 @@
         document.body.removeChild(copyText);
     }
 
+    function openRegion(e: MouseEvent): void
+    {
+        const regionUrl = document.querySelector('#current-region').innerHTML;
+        window.open(`/region=${regionUrl}`);
+    }
+
 // Update the list of switchers as soon as a new WA admit page is opened
     function onStorageChange(changes: object): void
     {
@@ -658,6 +665,7 @@
     document.querySelector('#copy-win').addEventListener('click', copyWin);
     document.querySelector('#endorse-delegate').addEventListener('click', endorseDelegate);
     document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
+    document.querySelector('#open-region').addEventListener('click', openRegion);
     document.addEventListener('keyup', keyPress);
     chrome.storage.onChanged.addListener(onStorageChange);
 

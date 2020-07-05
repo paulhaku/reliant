@@ -176,6 +176,9 @@
         let response = await makeAjaxQuery('/region=rwby', 'GET');
         getLocalId(response);
         status.innerHTML = 'Updated localid.';
+        // reset buttons
+        (document.querySelector('#move-to-jp') as HTMLInputElement).value = 'Move to JP';
+        (document.querySelector('#chasing-button') as HTMLInputElement).value = 'Refresh';
     }
 
     async function manualChkUpdate(e: MouseEvent): Promise<void>

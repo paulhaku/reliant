@@ -305,6 +305,8 @@ chrome.storage.local.get('viewregionkey', (result) =>
             regionButton.click();
         else if (urlParameters['page'] === 'change_region')
             (document.querySelector('.info > a') as HTMLAnchorElement).click();
+        else if (urlParameters['reliant'] === 'main')
+            (document.querySelector('#open-region') as HTMLInputElement).click();
     };
 });
 

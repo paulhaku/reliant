@@ -257,8 +257,11 @@ chrome.storage.local.get('endorsekey', (result) =>
     keys[endorseKey] = () =>
     {
         const endorseButton: HTMLButtonElement = document.querySelector('button[class="endorse button icon wa"]');
+        const crossEndorse: HTMLInputElement = document.querySelector('.cross');
         if (endorseButton)
             endorseButton.click();
+        else if (crossEndorse)
+            crossEndorse.click();
         else if (urlParameters['reliant'] === 'main') {
             let refreshButton: HTMLInputElement = document.querySelector('#refresh-endorse');
             let endorseButton: HTMLInputElement = document.querySelector('.endorse[data-clicked="0"]');

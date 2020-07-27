@@ -57,6 +57,11 @@
       "https://www.nationstates.net/region=*/*"],
       "run_at": "document_end",
       "js": ["js/region.js"]
+    },
+    {
+      "matches": ["https://www.nationstates.net/nation=*"],
+      "run_at": "document_end",
+      "js": ["js/nation.js"]
     }
   ]
 }

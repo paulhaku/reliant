@@ -217,8 +217,7 @@
     {
         chrome.storage.local.get('switchers', async (result) =>
         {
-            // storedswitchers is an object of nation:appid pairs
-            // reset stuff
+            // storedswitchers is a list of nation, appid objects
             (document.querySelector('#chasing-button') as HTMLInputElement).value = 'Refresh';
             (document.querySelector('#move-to-jp') as HTMLInputElement).value = 'Move to JP';
             currentRegion.innerHTML = 'N/A';
@@ -240,12 +239,15 @@
                 freshlyAdmitted = true;
                 status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
                 chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
-                // Update Chk
                 getChk(response);
+                storedSwitchers.shift();
             }
-            else
-                status.innerHTML = `Error admitting to the WA on ${storedSwitchers[0].name}.`;
-            storedSwitchers.shift();
+            else if (response.indexOf('Another WA member nation is currently using the same email address') !== -1)
+                status.innerHTML = `Error admitting to the WA on ${storedSwitchers[0].name} (nation already in WA).`;
+            else {
+                status.innerHTML = `Error admitting to the WA on ${storedSwitchers[0].name} (invalid application).`;
+                storedSwitchers.shift();
+            }
             chrome.storage.local.set({'switchers': storedSwitchers});
         });
     }

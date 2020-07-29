@@ -230,12 +230,12 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}`;
 
             // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
-            let copyText = document.createElement('textarea');
+            /*let copyText = document.createElement('textarea');
             copyText.value = `https://www.nationstates.net/nation=${switchers[0].name}/template-overall=none`;
             document.body.appendChild(copyText);
             copyText.select();
             document.execCommand('copy');
-            document.body.removeChild(copyText);
+            document.body.removeChild(copyText);*/
 
             switchers.shift();
             chrome.storage.local.set({'switchers': switchers});

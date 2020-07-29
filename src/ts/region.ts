@@ -78,6 +78,11 @@ async function moveToRegion(e: MouseEvent): Promise<void>
         </p>
         `;
     }
+    else {
+        document.open();
+        document.write(response);
+        document.close();
+    }
 }
 
 let secondRefreshAfterUpdate = false;

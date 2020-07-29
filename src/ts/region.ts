@@ -225,9 +225,17 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 regionStatus.innerHTML = `Admitted to the WA on ${switchers[0].name}`;
                 chrome.storage.local.set({'currentwa': switchers[0].name});
                 updateChk(response);
+                switchers.shift();
+                chrome.storage.local.set({'switchers': switchers});
+                actionButton.setAttribute('disabled', '');
             }
-            else
-                regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}`;
+            else if (response.indexOf('Another WA member nation is currently using the same email address') !== -1)
+                regionStatus.innerHTML = `Failed to admit on ${switchers[0].name}. A nation is already in the WA.`;
+            else {
+                regionStatus.innerHTML = `Failed to admit to the WA on ${switchers[0].name}. Invalid application.`;
+                switchers.shift();
+                chrome.storage.local.set({'switchers': switchers});
+            }
 
             // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
             /*let copyText = document.createElement('textarea');
@@ -236,10 +244,6 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             copyText.select();
             document.execCommand('copy');
             document.body.removeChild(copyText);*/
-
-            switchers.shift();
-            chrome.storage.local.set({'switchers': switchers});
-            actionButton.setAttribute('disabled', '');
         });
     }
 }

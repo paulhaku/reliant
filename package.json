@@ -1,6 +1,6 @@
 {
   "name": "reliant",
-  "version": "0.5",
+  "version": "1",
   "dependencies": {},
   "devDependencies": {
     "@types/chrome": "0.0.117"

@@ -308,6 +308,8 @@
                                         status.innerHTML = `Failed to endorse ${nationName}.`;
                                         (e.target as HTMLInputElement).setAttribute('data-updatedlocalid', '0');
                                     }
+                                    else if (endorseResponse.indexOf('Both nations must reside in the same region') !== -1)
+                                        status.innerHTML = `Failed to endorse ${nationName} (different region).`;
                                     else {
                                         (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
                                         status.innerHTML = `Endorsed ${nationName}.`;

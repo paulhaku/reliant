@@ -14,13 +14,21 @@
         });
     }
 
-    if (urlParameters['page'] === 'join_WA') {
-        const switcherRegex: RegExp = new RegExp(`nation=([A-Za-z0-9_-]+?)&appid=([0-9]+)`, 'g');
-        const match = switcherRegex.exec(document.URL);
-        const newSwitcher: Switcher = {
-            name: match[1],
-            appid: match[2]
-        };
-        addSwitcher(newSwitcher);
-    }
+    window.addEventListener('hashchange', () =>
+    {
+        let a: NodeList = document.querySelectorAll('a');
+        for (let i = 0; i !== a.length; i++) {
+            let link: string = (a[i] as HTMLAnchorElement).href;
+            if (link.indexOf('join_WA') !== -1) {
+                const switcherRegex: RegExp = new RegExp(`nation=([A-Za-z0-9_-]+?)&appid=([0-9]+)`, 'g');
+                console.log(link);
+                const match: string[] = switcherRegex.exec(link);
+                const newSwitcher: Switcher = {
+                    name: match[1],
+                    appid: match[2]
+                };
+                addSwitcher(newSwitcher);
+            }
+        }
+    });
 })();

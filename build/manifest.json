@@ -8,7 +8,8 @@
     "24": "icons/icon24.png",
     "32": "icons/icon32.png"
   },
-  "permissions": ["activeTab", "https://*.nationstates.net/*", "storage", "https://*.nationstates.net/*"],
+  "permissions": ["activeTab", "https://*.nationstates.net/*", "storage", "https://*.nationstates.net/*",
+  "https://mail.google.com/*"],
   "browser_action": {
     "default_icon": {
       "16": "icons/icon16.png",
@@ -37,7 +38,7 @@
       "css": ["css/mainpage.css"]
     },
     {
-      "matches": ["https://www.nationstates.net/page=join_WA?*"],
+      "matches": ["https://mail.google.com/*"],
       "run_at": "document_end",
       "js": ["js/joinwa.js"]
     },

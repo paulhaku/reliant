@@ -45,6 +45,16 @@ hatari
 <p>Current: <p><b id="current-blocked-regions"></b></p></p>
 </fieldset>
 <fieldset>
+<legend>Dossier Inclusion</legend>
+<p>Enter a list of keywords, one per line. Only raider nations with any of these keywords in their name will have
+a dossier button on the main page. Useful for chasing specific teams. <b>Leave blank to show all raider nations.</b></p>
+<p>
+<textarea id="dossier-keywords"></textarea>
+</p>
+<input type="button" id="set-dossier-keywords" value="Set">
+<p id="current-dossier-keywords"></p>
+</fieldset>
+<fieldset>
 <legend>Prepping</legend>
 <p><strong>Password</strong></p>
 <input type="text" id="my-password">
@@ -195,6 +205,7 @@ document.querySelector('#set-switchers').addEventListener('click', setSwitchers)
 document.querySelector('#set-password').addEventListener('click', setPassword);
 document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWaApplications);
 document.querySelector('#set-blocked-regions').addEventListener('click', setBlockedRegions);
+document.querySelector('#set-dossier-keywords').addEventListener('click', setDossierKeywords);
 
 /*
  * Handlers
@@ -267,6 +278,15 @@ function setBlockedRegions(e: MouseEvent): void
     for (let i = 0; i !== blockedRegions.length; i++)
         blockedRegions[i] = canonicalize(blockedRegions[i]);
     chrome.storage.local.set({'blockedregions': blockedRegions});
+}
+
+function setDossierKeywords(e: MouseEvent): void
+{
+    let dossierKeywords: string[] = (document.querySelector('#dossier-keywords') as HTMLTextAreaElement)
+        .value.split('\n');
+    for (let i = 0; i !== dossierKeywords.length; i++)
+        dossierKeywords[i] = dossierKeywords[i].toLowerCase();
+    chrome.storage.local.set({'dossierkeywords': dossierKeywords});
 }
 
 chrome.storage.local.get('prepswitchers', (result) =>
@@ -345,14 +365,18 @@ chrome.storage.local.get('switchers', (result) =>
         const currentSettings = await Promise.all([
             getCurrentKey('jumppoint'),
             getCurrentKey('roname'),
-            getCurrentKey('blockedregions')
+            getCurrentKey('blockedregions'),
+            getCurrentKey('dossierkeywords')
         ]);
 
         document.querySelector('#current-jumppoint').innerHTML = currentSettings[0];
         document.querySelector('#current-roname').innerHTML = currentSettings[1];
         const blockedRegions = currentSettings[2];
+        const dossierKeywords = currentSettings[3];
         for (let i = 0; i !== blockedRegions.length; i++)
             document.querySelector('#current-blocked-regions').innerHTML += `${blockedRegions[i]}<br>`;
+        for (let i = 0; i !== dossierKeywords.length; i++)
+            document.querySelector('#current-dossier-keywords').innerHTML += `<b>${dossierKeywords[i]}</b><br>`;
     }
 
     displayCurrentKeys();

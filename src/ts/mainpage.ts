@@ -349,8 +349,11 @@
         const raiderHappenings = document.querySelector('#raider-happenings');
         raiderHappenings.innerHTML = '';
         nationsToDossier.innerHTML = '';
-        chrome.storage.local.get(['raiderjp', 'dossierhappeningscount'], async (result) =>
+        chrome.storage.local.get(['raiderjp', 'dossierhappeningscount', 'dossierkeywords'], async (result) =>
         {
+            let dossierKeywords: string[] = [];
+            if (result.dossierkeywords)
+                dossierKeywords = result.dossierkeywords;
             const maxHappeningsCount = Number(result.dossierhappeningscount) || 10;
             const raiderJp = result.raiderjp;
             let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${raiderJp}/filter=move+member+endo`,
@@ -380,6 +383,10 @@
                 // Don't include nations that probably aren't in the WA
                 if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                     resigned.push(nationName);
+                if (dossierKeywords.length &&
+                    (dossierKeywords.every((keyword) => nationName.indexOf(keyword) === -1))) {
+                    resigned.push(nationName);
+                }
                 else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
                     if (resigned.indexOf(nationName) === -1) {
                         async function onDossierClick(e: MouseEvent): Promise<void>

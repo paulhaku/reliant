@@ -177,8 +177,10 @@ Current:
 <input class="button" type="button" id="set-key" value="Set">
 </fieldset>
 </form>
-<h2>Current Switcher Set</h2>
+<h2>Current Prep Switcher Set</h2>
 <p id="current-switcher-set"></p>
+<h2>Currently Stored Applications</h2>
+<p id="current-stored-applications"></p>
 `;
 
 /*
@@ -273,6 +275,15 @@ chrome.storage.local.get('prepswitchers', (result) =>
     const prepSwitchers: string[] = result.prepswitchers;
     for (let i = 0; i != prepSwitchers.length; i++)
         currentSwitcherSet.innerHTML += `${prepSwitchers[i]}<br>`;
+});
+
+chrome.storage.local.get('switchers', (result) =>
+{
+    const currentApplications = document.querySelector('#current-stored-applications');
+    const applications: Switcher[] = result.switchers;
+    for (let i = 0; i !== applications.length; i++) {
+        currentApplications.innerHTML += `<p>Name: ${applications[i].name}<br>ID: ${applications[i].appid}</p>`;
+    }
 });
 
 /*

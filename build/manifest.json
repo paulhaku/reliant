@@ -3,6 +3,7 @@
   "name": "Reliant",
   "version": "1.0",
   "description": "Ease of defending in NationStates military gameplay.",
+  "author": "Haku",
   "icons": {
     "16": "icons/icon16.png",
     "24": "icons/icon24.png",

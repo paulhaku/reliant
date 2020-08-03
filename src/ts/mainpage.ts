@@ -75,7 +75,7 @@
                 </div>
                 <!-- Reports Container -->
                 <div id="reports-container">
-                    <span class="header">Reports</span>
+                    <span class="header">Reports</span> (<span id="reports-time"></span>)
                     <ul id="reports" class="information">
                     </ul>
                 </div>
@@ -157,6 +157,7 @@
     const reports: HTMLUListElement = document.querySelector('#reports');
     const regionHappenings: HTMLUListElement = document.querySelector('#region-happenings');
     const worldHappenings: HTMLUListElement = document.querySelector('#world-happenings');
+    const reportsTime: HTMLSpanElement = document.querySelector('#reports-time');
 
     /*
      * Things to keep track of
@@ -473,6 +474,8 @@
             let responseDiv = document.createElement('div');
             responseDiv.innerHTML = response;
             let lis = responseDiv.querySelectorAll('li');
+            reportsTime.innerHTML = (responseDiv.querySelector('input[name=report_hours]') as HTMLInputElement)
+                .value;
             // add the reports items to the page so we don't have to make a second query for it
             reports.innerHTML = '';
             for (let i = 0; i != lis.length; i++) {

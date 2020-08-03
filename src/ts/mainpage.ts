@@ -478,12 +478,23 @@
                 .value;
             // add the reports items to the page so we don't have to make a second query for it
             reports.innerHTML = '';
-            for (let i = 0; i != lis.length; i++) {
+            const maxReportsCount: number = await new Promise((resolve, reject) =>
+            {
+                chrome.storage.local.get('reportscount', (result) =>
+                {
+                    resolve(parseInt(result.reportscount));
+                });
+            }) || 10;
+            let reportsAdded: number = 0;
+            for (let i = 0; i !== lis.length; i++) {
+                if (reportsAdded === maxReportsCount)
+                    break;
                 let liAnchors = lis[i].querySelectorAll('a');
                 // fix link
                 for (let j = 0; j != liAnchors.length; j++)
                     liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
                 reports.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+                reportsAdded++;
             }
             let moveRegion = responseDiv.querySelector('.rlink:nth-of-type(3)');
             if (!moveRegion)

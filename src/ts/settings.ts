@@ -82,8 +82,12 @@ a dossier button on the main page. Useful for chasing specific teams. <b>Leave b
 <label>World</label>
 <input type="radio" name="max-happenings-section" value="worldhappeningscount">
 </p>
-<input type="number" id="max-happenings-count" min="1" max="20">
-<input class="button" type="button" id="set-max-happenings" value="Set">
+<p>
+<label>Reports</label>
+<input type="radio" name="max-happenings-section" value="reportscount"
+</p>
+<p><input type="number" id="max-happenings-count" min="1" max="20"></p>
+<p><input class="button" type="button" id="set-max-happenings" value="Set"></p>
 </fieldset>
 <fieldset id="keys">
 <legend>Change Keys</legend>

@@ -1,0 +1,187 @@
+$color-force: #DA4453;
+$color-blossom: lighten($color-force, 20%);
+$color-fade: $color-force;
+
+$color-bg: #1F202D;
+$color-bg-alt: #40363a;
+
+/* $color-text: #dedce5; */
+$color-text: #fff;
+$font-size-base: 1.8rem;
+
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+$font-family-heading: $font-family-base;
+
+#status {
+    word-wrap: break-word;
+}
+
+@import "main";
+
+/*
+ * Reliant Layout
+ */
+
+#status {
+    word-wrap: break-word;
+}
+
+.buttonblock {
+    display: block;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto auto auto;
+    width: 100%;
+}
+
+#group-2 {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+    display: grid;
+    grid-template-columns: 10% 20% 10% 20% 40%;
+    grid-template-rows: 50% 50%;
+}
+
+#switchers-container {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+#load-time-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 2 / 2;
+}
+
+#current-wa-nation-container {
+    display: inline-block;
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#status-container {
+    display: inline-block;
+    grid-column: 3 / 3;
+    grid-row: 1 / 1;
+}
+
+#current-region-container {
+    display: inline-block;
+    grid-column: 4 / 4;
+    grid-row: 1 / 1;
+}
+
+#current-region-happenings-container {
+    display: inline-block;
+    grid-column: 5 / 5;
+    grid-row: 1 / 1;
+}
+
+#group-3 {
+    grid-column: 1 / 1;
+    grid-row: 3 / 3;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
+}
+
+#endorse-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+#dossier-container {
+    display: inline-block;
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#group-4 {
+    grid-column: 1 / 1;
+    grid-row: 4 / 4;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
+}
+
+#jp-happenings-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+#raider-happenings-container {
+    display: inline-block;
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#group-5 {
+    grid-column: 1 / 1;
+    grid-row: 2 / 2;
+    display: grid;
+    grid-template-columns: 10% 90%;
+    grid-template-rows: 100%;
+}
+
+#chasing-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+#reports-container {
+    display: inline-block;
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#group-6 {
+    grid-column: 1 / 1;
+    grid-row: 5 / 5;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
+}
+
+#did-i-update-container {
+    display: inline-block;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+#world-happenings-header {
+    display: inline-block;
+}
+
+#world-happenings-container {
+    display: inline-block;
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+.header {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.subheader {
+    font-weight: bold;
+    display: block;
+    font-size: 15px;
+}
+
+.information {
+    border: 0;
+    display: block;
+    font-size: 15px;
+}
+
+ul {
+    list-style-type: none;
+}

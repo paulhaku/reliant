@@ -36,7 +36,7 @@
       "matches": ["https://www.nationstates.net/template-overall=none/page=blank/reliant=main"],
       "run_at": "document_end",
       "js": ["js/mainpage.js"],
-      "css": ["css/mainpage.css"]
+      "css": ["css/mainpage2.css", "css/mainpagegrid.css"]
     },
     {
       "matches": ["https://mail.google.com/*"],

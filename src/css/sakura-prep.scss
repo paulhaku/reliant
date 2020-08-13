@@ -1,0 +1,81 @@
+$color-force: #DA4453;
+$color-blossom: lighten($color-force, 20%);
+$color-fade: $color-force;
+
+$color-bg: #1F202D;
+$color-bg-alt: #40363a;
+
+/* $color-text: #dedce5; */
+$color-text: #fff;
+$font-size-base: 1.8rem;
+
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+$font-family-heading: $font-family-base;
+
+#status {
+    word-wrap: break-word;
+}
+
+@import "main";
+
+/*
+ * Prep Layout
+ */
+
+#container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    width: 100%;
+}
+
+#group-1 {
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto;
+    display: grid;
+}
+
+#switchers-prepped-container {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#status-container {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#current-switcher-container {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+#prep-button-container {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+.buttonblock {
+    display: block;
+}
+
+.header {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.subheader {
+    font-weight: bold;
+    display: block;
+    font-size: 15px;
+}
+
+.information {
+    display: block;
+    font-size: 15px;
+}
+
+ul {
+    list-style-type: none;
+}

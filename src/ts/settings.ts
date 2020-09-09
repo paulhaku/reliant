@@ -293,12 +293,13 @@ function setDossierKeywords(e: MouseEvent): void
     chrome.storage.local.set({'dossierkeywords': dossierKeywords});
 }
 
-chrome.storage.local.get('prepswitchers', (result) =>
+chrome.storage.local.get(['prepswitchers', 'password'], (result) =>
 {
     const currentSwitcherSet = document.querySelector('#current-switcher-set');
     const prepSwitchers: string[] = result.prepswitchers;
     for (let i = 0; i != prepSwitchers.length; i++)
-        currentSwitcherSet.innerHTML += `${prepSwitchers[i]}<br>`;
+        currentSwitcherSet.innerHTML +=
+            `<a href="/page=un?nation=${prepSwitchers[i]}&password=${result.password}&logging_in=1" target="_blank">${prepSwitchers[i]}</a><br>`;
 });
 
 chrome.storage.local.get('switchers', (result) =>

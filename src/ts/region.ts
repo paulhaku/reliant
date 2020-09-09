@@ -229,10 +229,17 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 regionStatus.innerHTML = `Admitted to the WA on ${switchers[0].name}`;
                 chrome.storage.local.set({'currentwa': switchers[0].name});
+                // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+                /*let copyText = document.createElement('textarea');
+                copyText.value = `https://www.nationstates.net/nation=${switchers[0].name}/template-overall=none`;
+                document.body.appendChild(copyText);
+                copyText.select();
+                document.execCommand('copy');
+                document.body.removeChild(copyText);
                 updateChk(response);
                 switchers.shift();
                 chrome.storage.local.set({'switchers': switchers});
-                actionButton.setAttribute('disabled', '');
+                actionButton.setAttribute('disabled', '');*/
             }
             else if (response.indexOf('Another WA member nation is currently using the same email address') !== -1)
                 regionStatus.innerHTML = `Failed to admit on ${switchers[0].name}. A nation is already in the WA.`;
@@ -241,14 +248,6 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 switchers.shift();
                 chrome.storage.local.set({'switchers': switchers});
             }
-
-            // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
-            /*let copyText = document.createElement('textarea');
-            copyText.value = `https://www.nationstates.net/nation=${switchers[0].name}/template-overall=none`;
-            document.body.appendChild(copyText);
-            copyText.select();
-            document.execCommand('copy');
-            document.body.removeChild(copyText);*/
         });
     }
 }

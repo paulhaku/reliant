@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Reliant",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Ease of defending in NationStates military gameplay.",
   "author": "Haku",
   "icons": {
@@ -36,7 +36,7 @@
       "matches": ["https://www.nationstates.net/template-overall=none/page=blank/reliant=main"],
       "run_at": "document_end",
       "js": ["js/mainpage.js"],
-      "css": ["css/mainpage2.css"]
+      "css": ["css/mainpage-modern.css"]
     },
     {
       "matches": ["https://mail.google.com/*"],
@@ -52,7 +52,7 @@
       "matches": ["https://www.nationstates.net/template-overall=none/page=blank/reliant=prep"],
       "run_at": "document_end",
       "js": ["js/prep.js"],
-      "css": ["css/prep2.css"]
+      "css": ["css/prep-modern.css"]
     },
     {
       "matches": ["https://www.nationstates.net/region=*", "https://www.nationstates.net/*/region=*",

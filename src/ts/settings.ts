@@ -197,6 +197,14 @@ Current:
 <p id="current-stored-applications"></p>
 `;
 
+let notyf = new Notyf({
+    duration: 3000,
+    position: {
+        x: 'right',
+        y: 'top'
+    }
+});
+
 /*
  * Event Listeners
  */
@@ -228,18 +236,21 @@ function setKey(e: MouseEvent): void
     }
     (document.querySelector('#new-key') as HTMLInputElement).value = '';
     chrome.storage.local.set({[keyToSet]: key});
+    notyf.success(`Set function "${keyToSet}" to key ${key}`);
 }
 
 function setJumpPoint(e: MouseEvent): void
 {
     const newJumpPoint: string = canonicalize((document.querySelector('#new-jump-point') as HTMLInputElement).value);
     chrome.storage.local.set({'jumppoint': newJumpPoint});
+    notyf.success(`Set jump point to ${newJumpPoint}`);
 }
 
 function setRoName(e: MouseEvent): void
 {
     const newRoName: string = (document.querySelector('#new-ro-name') as HTMLInputElement).value;
     chrome.storage.local.set({'roname': newRoName});
+    notyf.success(`Set detag RO name to ${newRoName}`);
 }
 
 function setMaxHappeningsCount(e: MouseEvent): void
@@ -254,6 +265,7 @@ function setMaxHappeningsCount(e: MouseEvent): void
         }
     }
     chrome.storage.local.set({[happeningSetting]: maxHappeningsCount});
+    notyf.success(`Set ${happeningSetting} to ${maxHappeningsCount}`);
 }
 
 function setSwitchers(e: MouseEvent): void
@@ -262,17 +274,20 @@ function setSwitchers(e: MouseEvent): void
     for (let i = 0; i != switchers.length; i++)
         switchers[i] = canonicalize(switchers[i]);
     chrome.storage.local.set({'prepswitchers': switchers});
+    notyf.success(`Set list of ${switchers.length} switchers.`);
 }
 
 function setPassword(e: MouseEvent): void
 {
     const password = (document.querySelector('#my-password') as HTMLInputElement).value;
     chrome.storage.local.set({'password': password});
+    notyf.success(`Set password to ${password}`);
 }
 
 function clearStoredWaApplications(e: MouseEvent): void
 {
     chrome.storage.local.set({'switchers': []});
+    notyf.success('Cleared all stored WA applications.');
 }
 
 function setBlockedRegions(e: MouseEvent): void
@@ -282,6 +297,7 @@ function setBlockedRegions(e: MouseEvent): void
     for (let i = 0; i !== blockedRegions.length; i++)
         blockedRegions[i] = canonicalize(blockedRegions[i]);
     chrome.storage.local.set({'blockedregions': blockedRegions});
+    notyf.success(`Set blocked regions.`);
 }
 
 function setDossierKeywords(e: MouseEvent): void
@@ -291,6 +307,7 @@ function setDossierKeywords(e: MouseEvent): void
     for (let i = 0; i !== dossierKeywords.length; i++)
         dossierKeywords[i] = dossierKeywords[i].toLowerCase();
     chrome.storage.local.set({'dossierkeywords': dossierKeywords});
+    notyf.success(`Set dossier keywords.`);
 }
 
 chrome.storage.local.get(['prepswitchers', 'password'], (result) =>

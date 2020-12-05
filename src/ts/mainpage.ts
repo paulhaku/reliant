@@ -144,6 +144,14 @@
     document.write(pageContent);
     document.close();
 
+    let notyf = new Notyf({
+        duration: 3000,
+        position: {
+            x: 'right',
+            y: 'top'
+        }
+    });
+
     /*
      * Dynamic Information
      */
@@ -426,6 +434,7 @@
     {
         const newRaiderJP = canonicalize((document.querySelector('#raider-jp') as HTMLInputElement).value);
         chrome.storage.local.set({'raiderjp': newRaiderJP});
+        notyf.success(`Set raider JP to ${newRaiderJP}`);
     }
 
     function moveToJP(e: MouseEvent): void

@@ -28,6 +28,12 @@
       "js": ["js/main.js"]
     },
     {
+      "matches": ["https://www.nationstates.net/*"],
+      "run_at": "document_end",
+      "js": ["js/notyf.min.js"],
+      "css": ["css/notyf.min.css"]
+    },
+    {
       "matches": ["https://www.nationstates.net/page=blank/reliant=settings"],
       "run_at": "document_end",
       "js": ["js/settings.js"]

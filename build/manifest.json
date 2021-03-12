@@ -50,6 +50,11 @@
       "js": ["js/joinwa.js"]
     },
     {
+      "matches": ["https://www.nationstates.net/page=join_WA?*"],
+      "run_at": "document_end",
+      "js": ["js/joinwa-fallback.js"]
+    },
+    {
       "matches": ["https://www.nationstates.net/page=ajax2*"],
       "run_at": "document_end",
       "js": ["js/ajax2.js"]

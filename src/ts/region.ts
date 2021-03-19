@@ -235,11 +235,11 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
                 document.body.appendChild(copyText);
                 copyText.select();
                 document.execCommand('copy');
-                document.body.removeChild(copyText);
+                document.body.removeChild(copyText);*/
                 updateChk(response);
                 switchers.shift();
                 chrome.storage.local.set({'switchers': switchers});
-                actionButton.setAttribute('disabled', '');*/
+                actionButton.setAttribute('disabled', '');
             }
             else if (response.indexOf('Another WA member nation is currently using the same email address') !== -1)
                 regionStatus.innerHTML = `Failed to admit on ${switchers[0].name}. A nation is already in the WA.`;

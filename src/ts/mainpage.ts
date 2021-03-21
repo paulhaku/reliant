@@ -475,7 +475,10 @@
         {
             chrome.storage.local.get('blockedregions', (result) =>
             {
-                resolve(result.blockedregions);
+                if (typeof result.blockedregions !== 'undefined')
+                    resolve(result.blockedregions);
+                else
+                    resolve([]);
             });
         });
         if ((e.target as HTMLInputElement).value == 'Refresh') {

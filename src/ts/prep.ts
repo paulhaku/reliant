@@ -97,7 +97,7 @@
                         document.querySelector('#status').innerHTML = `Failed to move to ${moveRegion}.`;
                     else {
                         document.querySelector('#status').innerHTML = `Moved to ${moveRegion}`;
-                        prepButton.value = 'Login to Next Switcher';
+                        prepButton.value = 'Clear Dossier';
                     }
                 });
             }
@@ -107,6 +107,12 @@
                     document.querySelector('#status').innerHTML = `Applied on ${document.querySelector('#current-switcher').innerHTML}`;
                 }
                 prepButton.value = 'Update Localid';
+            }
+            else if ((e.target as HTMLInputElement).value === 'Clear Dossier') {
+                formData.set('clear_dossier', '1');
+                let response = await makeAjaxQuery('/page=dossier', 'POST', formData);
+                document.querySelector('#status').innerHTML = 'Cleared dossier.';
+                prepButton.value = 'Login to Next Switcher';
             }
             else if ((e.target as HTMLInputElement).value === 'Login to Next Switcher') {
                 chrome.storage.local.get('password', async (result) =>

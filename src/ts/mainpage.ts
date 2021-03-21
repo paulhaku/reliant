@@ -173,6 +173,7 @@
 
     let nationsDossiered: string[] = [];
     let nationsEndorsed: string[] = [];
+    let moveCounts: object = {};
 
     /*
      * Helpers
@@ -515,12 +516,30 @@
             if (moveRegionValue === currentRegion.innerHTML)
                 return;
             let moveRegionParent = moveRegion.parentElement;
+            let movingNation: string = canonicalize(moveRegionParent.querySelector('.nnameblock').innerHTML);
             if (moveRegionParent.innerHTML.indexOf('relocated from') === -1)
                 return;
-            else {
-                (e.target as HTMLInputElement).value = `Move!`;
-                (e.target as HTMLInputElement).setAttribute('data-moveregion', moveRegionValue);
+            if (typeof moveCounts[moveRegionValue] === 'undefined')
+                moveCounts[moveRegionValue] = [movingNation];
+            else if (moveCounts[moveRegionValue].indexOf(movingNation) === -1)
+                moveCounts[moveRegionValue].push(movingNation);
+            const counterThorn: boolean = await new Promise((resolve, reject) =>
+            {
+                chrome.storage.local.get('counterthorn', (result) =>
+                {
+                    if (typeof result.counterthorn !== 'undefined')
+                        resolve(Boolean(Number(result.counterthorn)));
+                    else
+                        resolve(false);
+                });
+            });
+            if (counterThorn) {
+                if (moveCounts[moveRegionValue].length < 2) {
+                    return;
+                }
             }
+            (e.target as HTMLInputElement).value = `Move!`;
+            (e.target as HTMLInputElement).setAttribute('data-moveregion', moveRegionValue);
         }
         else if ((e.target as HTMLInputElement).getAttribute('data-moveregion')) {
             chrome.storage.local.get('localid', async (result) =>

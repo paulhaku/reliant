@@ -45,7 +45,7 @@ hatari
 <p>Current: <p><b id="current-blocked-regions"></b></p></p>
 </fieldset>
 <fieldset>
-<legend>Minimum Move Count</legend>
+<legend>Counter Thorn</legend>
 <p>Should chases to regions where there hasn't been <strong>at least</strong> 2 moves from dossiered raiders be blocked?
 This can potentially be used to counter thorning.</p>
 <p><input type="radio" name="minimum-move-count" value="1"><label>True</label></p>

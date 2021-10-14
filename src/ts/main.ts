@@ -331,7 +331,7 @@ chrome.storage.local.get('delegatekey', (result) =>
     keys[delegateKey] = () =>
     {
         if (urlParameters['region']) {
-            (document.querySelector('p:nth-child(2) > .nlink') as HTMLAnchorElement).click();
+            (document.querySelector('#regioncontent > p:nth-child(1) > a') as HTMLAnchorElement).click();
             return;
         }
         // Copy Nation Link

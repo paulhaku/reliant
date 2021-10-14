@@ -55,6 +55,7 @@
                     <input type="hidden" id="delegate-nation" value="N/A">
                     <input type="button" class="ajaxbutton" id="endorse-delegate" value="Endorse Delegate">
                     <input type="button" id="copy-win" value="Copy Win">
+                    <input type="button" id="copy-orders" value="Copy Orders">
                     <input type="button" id="open-region" value="Open">
                 </div>
                 <!-- Current Region Happenings -->
@@ -688,6 +689,23 @@
         document.body.removeChild(copyText);
     }
 
+    function copyOrders(e: MouseEvent): void
+    {
+        // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+        let copyText = document.createElement('textarea');
+        const delegateNation: string = (document.querySelector('#delegate-nation') as HTMLInputElement).value;
+        if (document.querySelector('#last-wa-update').innerHTML.indexOf('hour') === -1)
+            return;
+        else if (delegateNation.indexOf('N/A') !== -1)
+            return;
+        copyText.value =
+            `@here **NOW**\nMove to: https://www.nationstates.net/region=${currentRegion.innerHTML}\nThen endorse: https://www.nationstates.net/nation=${delegateNation}`;
+        document.body.appendChild(copyText);
+        copyText.select();
+        document.execCommand('copy');
+        document.body.removeChild(copyText);
+    }
+
     function openRegion(e: MouseEvent): void
     {
         const regionUrl = document.querySelector('#current-region').innerHTML;
@@ -728,6 +746,7 @@
     document.querySelector('#endorse-delegate').addEventListener('click', endorseDelegate);
     document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
     document.querySelector('#open-region').addEventListener('click', openRegion);
+    document.querySelector('#copy-orders').addEventListener('click', copyOrders);
     document.addEventListener('keyup', keyPress);
     chrome.storage.onChanged.addListener(onStorageChange);
 

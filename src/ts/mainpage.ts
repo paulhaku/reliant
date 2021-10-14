@@ -285,9 +285,15 @@
                 // update the jp happenings at the same time so we don't have to make an extra query
                 if (happeningsAdded < maxHappeningsCount) {
                     let liAnchors = lis[i].querySelectorAll('a');
+                    let images = lis[i].querySelectorAll('img');
                     // fix links
                     for (let j = 0; j != liAnchors.length; j++)
                         liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+                    // make images smaller
+                    for (let j = 0; j != images.length; j++) {
+                        images[j].width = 12;
+                        images[j].height = 12;
+                    }
                     jpHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                     happeningsAdded++;
                 }
@@ -380,9 +386,15 @@
                 // update the raider jp happenings at the same time so we don't have to make an extra query (max 10)
                 if (happeningsAdded < maxHappeningsCount) {
                     let liAnchors = lis[i].querySelectorAll('a');
+                    let images = lis[i].querySelectorAll('img');
                     // fix link
                     for (let j = 0; j != liAnchors.length; j++)
                         liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+                    // make images smaller
+                    for (let j = 0; j != images.length; j++) {
+                        images[j].width = 12;
+                        images[j].height = 12;
+                    }
                     raiderHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                     happeningsAdded++;
                 }
@@ -504,9 +516,15 @@
                 if (reportsAdded === maxReportsCount)
                     break;
                 let liAnchors = lis[i].querySelectorAll('a');
+                let images = lis[i].querySelectorAll('img');
                 // fix link
                 for (let j = 0; j != liAnchors.length; j++)
                     liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+                // make images smaller
+                for (let j = 0; j != images.length; j++) {
+                    images[j].width = 12;
+                    images[j].height = 12;
+                }
                 reports.innerHTML += `<li>${lis[i].innerHTML}</li>`;
                 reportsAdded++;
             }
@@ -587,9 +605,15 @@
             regionHappenings.innerHTML = '';
             for (let i = 0; i != regionHappeningsCount; i++) {
                 let anodes = regionHappeningsLis[i].querySelectorAll('a');
+                let images = regionHappeningsLis[i].querySelectorAll('img');
                 // fix link
                 for (let j = 0; j != anodes.length; j++)
                     anodes[j].href = anodes[j].href.replace('page=blank/', '');
+                // make images smaller
+                for (let j = 0; j != images.length; j++) {
+                    images[j].width = 12;
+                    images[j].height = 12;
+                }
                 regionHappenings.innerHTML += `<li>${regionHappeningsLis[i].innerHTML}</li>`;
             }
         });

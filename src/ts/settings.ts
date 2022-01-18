@@ -195,7 +195,7 @@ Current:
 Current:
 <b id="currentsettingskey"></b>
 </p>
-<input type="text" id="new-key" maxlength="1">
+<input type="text" id="new-key" maxlength="5">
 <input class="button" type="button" id="set-key" value="Set">
 </fieldset>
 </form>

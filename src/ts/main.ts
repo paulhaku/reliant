@@ -135,7 +135,7 @@ if (urlParameters['page'] !== 'blank') {
 function keyPress(e: KeyboardEvent): void
 {
     const textboxSelected: HTMLElement = document.querySelector('input:focus, textarea:focus');
-    if (e.ctrlKey || e.altKey || e.shiftKey)
+    if (e.ctrlKey || e.altKey)
         return;
     else if (textboxSelected)
         return;

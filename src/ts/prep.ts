@@ -109,6 +109,7 @@
                 prepButton.value = 'Update Localid';
             }
             else if ((e.target as HTMLInputElement).value === 'Clear Dossier') {
+                formData.set('chk', result.chk);
                 formData.set('clear_dossier', '1');
                 let response = await makeAjaxQuery('/page=dossier', 'POST', formData);
                 document.querySelector('#status').innerHTML = 'Cleared dossier.';

@@ -415,9 +415,17 @@
                         async function onDossierClick(e: MouseEvent): Promise<void>
                         {
                             (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
+                            const chk: string = await new Promise(resolve =>
+                            {
+                                chrome.storage.local.get('chk', (result) =>
+                                {
+                                    resolve(result.chk);
+                                });
+                            });
                             let formData = new FormData();
                             formData.set('nation', nationName);
                             formData.set('action', 'add');
+                            formData.set('chk', chk);
                             let dossierResponse: string = await makeAjaxQuery('/page=dossier', 'POST', formData);
                             if (dossierResponse.indexOf('has been added to your Dossier.') !== -1) {
                                 status.innerHTML = `Dossiered ${nationName}`;

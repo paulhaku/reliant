@@ -66,6 +66,7 @@ function getChk(page?: string): void
 
 let inQuery = false;
 
+/*
 function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<string>
 {
     let ajaxButtons: NodeList = document.querySelectorAll('.ajaxbutton');
@@ -111,6 +112,57 @@ function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<st
         else
             xhr.send();
     });
+}
+ */
+
+async function makeAjaxQuery(url: string, method: string, data?: FormData, admit: boolean = false): Promise<string>
+{
+    if (inQuery)
+        return;
+
+    // Recommended by Eluvatar: https://forum.nationstates.net/viewtopic.php?p=30083979#p30083979
+    const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}/userclick=${Date.now()}`;
+    // let request: Request;
+    // redirect required if admitting to the WA
+    /*if (!admit) {
+        request = new Request(fixedUrl,
+            {
+                method: method,
+                redirect: "follow",
+                body: data ?? null,
+                credentials: "include"
+            });
+    } else {
+        request = new Request(fixedUrl,
+            {
+                method: method,
+                redirect: "follow",
+                body: data ?? null,
+                credentials: "include"
+            });
+    }*/
+
+    // Each button with class 'ajaxbutton' make a request to the NS webiste.
+    // In order to abide by rule "4. Avoid Simultaneous Requests" we will keep all buttons
+    // with this class disabled until we receive a complete response from the NS server.
+    let ajaxButtons: NodeList = document.querySelectorAll('.ajaxbutton');
+    for (let i = 0; i != ajaxButtons.length; i++)
+        (ajaxButtons[i] as HTMLInputElement).disabled = true;
+
+    inQuery = true;
+    const response: Response = await fetch(fixedUrl,
+        {
+            method: method,
+            redirect: "manual",
+            body: data ?? null,
+        });
+    inQuery = false;
+
+    // We've received a complete response from the NS server, so we can allow more user input
+    for (let i = 0; i != ajaxButtons.length; i++)
+        (ajaxButtons[i] as HTMLInputElement).disabled = false;
+
+    return await response.text();
 }
 
 function redirectPage(url: string): void

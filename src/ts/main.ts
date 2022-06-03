@@ -119,16 +119,17 @@ async function makeAjaxQuery(url: string, method: string, data?: FormData, admit
 {
     if (inQuery)
         return;
+    let startTime = Date.now();
 
     // Recommended by Eluvatar: https://forum.nationstates.net/viewtopic.php?p=30083979#p30083979
     const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}/userclick=${Date.now()}`;
-    // let request: Request;
+    let request: Request;
     // redirect required if admitting to the WA
-    /*if (!admit) {
+    if (!admit) {
         request = new Request(fixedUrl,
             {
                 method: method,
-                redirect: "follow",
+                redirect: "manual",
                 body: data ?? null,
                 credentials: "include"
             });
@@ -140,7 +141,7 @@ async function makeAjaxQuery(url: string, method: string, data?: FormData, admit
                 body: data ?? null,
                 credentials: "include"
             });
-    }*/
+    }
 
     // Each button with class 'ajaxbutton' make a request to the NS webiste.
     // In order to abide by rule "4. Avoid Simultaneous Requests" we will keep all buttons
@@ -150,19 +151,20 @@ async function makeAjaxQuery(url: string, method: string, data?: FormData, admit
         (ajaxButtons[i] as HTMLInputElement).disabled = true;
 
     inQuery = true;
-    const response: Response = await fetch(fixedUrl,
-        {
-            method: method,
-            redirect: "manual",
-            body: data ?? null,
-        });
-    inQuery = false;
+    const response: Response = await fetch(request);
+
+    let ret = await response.text();
 
     // We've received a complete response from the NS server, so we can allow more user input
     for (let i = 0; i != ajaxButtons.length; i++)
         (ajaxButtons[i] as HTMLInputElement).disabled = false;
 
-    return await response.text();
+    inQuery = false;
+
+    if (document.querySelector('#load-time'))
+        (document.querySelector('#load-time') as HTMLSpanElement).innerHTML =
+            String(Date.now() - startTime) + ' ms';
+    return ret;
 }
 
 function redirectPage(url: string): void

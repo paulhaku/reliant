@@ -225,7 +225,7 @@ async function actionButtonClick(e: MouseEvent): Promise<void>
             let formData = new FormData();
             formData.set('nation', switchers[0].name);
             formData.set('appid', switchers[0].appid);
-            const response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData);
+            const response = await makeAjaxQuery('/cgi-bin/join_un.cgi', 'POST', formData, true);
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 regionStatus.innerHTML = `Admitted to the WA on ${switchers[0].name}`;
                 chrome.storage.local.set({'currentwa': switchers[0].name});

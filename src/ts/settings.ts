@@ -7,6 +7,11 @@ pageContent.innerHTML = `
 <input class="button" type="button" id="clear-wa-apps" value="Clear WA Apps">
 </fieldset>
 <fieldset>
+<legend>Main Nation</legend>
+<input type="text" id="new-main-nation">
+<input class="button" type="button" id="set-main-nation" value="Set">
+</fieldset>
+<fieldset>
 <legend>Jump Point</legend>
 <input type="text" id="new-jump-point">
 <input class="button" type="button" id="set-jump-point" value="Set">
@@ -217,6 +222,7 @@ let notyf = new Notyf({
  * Event Listeners
  */
 
+document.querySelector('#set-main-nation').addEventListener('click', setUserAgent);
 document.querySelector('#set-key').addEventListener('click', setKey);
 document.querySelector('#set-jump-point').addEventListener('click', setJumpPoint);
 document.querySelector('#set-ro-name').addEventListener('click', setRoName);
@@ -246,6 +252,15 @@ function setKey(e: MouseEvent): void
     (document.querySelector('#new-key') as HTMLInputElement).value = '';
     chrome.storage.local.set({[keyToSet]: key});
     notyf.success(`Set function "${keyToSet}" to key ${key}`);
+}
+
+function setUserAgent(e: MouseEvent): void
+{
+    const newUserAgent: string = canonicalize((document.querySelector('#new-main-nation') as HTMLInputElement).value);
+    chrome.storage.local.set({'useragent': newUserAgent}, () =>
+    {
+        notyf.success(`Set identifier to ${newUserAgent}`);
+    });
 }
 
 function setJumpPoint(e: MouseEvent): void
@@ -407,16 +422,18 @@ chrome.storage.local.get('switchers', (result) =>
     async function displayCurrentSettings(): Promise<void>
     {
         const currentSettings = await Promise.all([
+            getCurrentKey('useragent'),
             getCurrentKey('jumppoint'),
             getCurrentKey('roname'),
             getCurrentKey('blockedregions'),
             getCurrentKey('dossierkeywords')
         ]);
 
-        document.querySelector('#current-jumppoint').innerHTML = currentSettings[0];
-        document.querySelector('#current-roname').innerHTML = currentSettings[1];
-        const blockedRegions = currentSettings[2];
-        const dossierKeywords = currentSettings[3];
+        (document.querySelector('#new-main-nation') as HTMLInputElement).value = currentSettings[0];
+        document.querySelector('#current-jumppoint').innerHTML = currentSettings[1];
+        document.querySelector('#current-roname').innerHTML = currentSettings[2];
+        const blockedRegions = currentSettings[3];
+        const dossierKeywords = currentSettings[4];
         for (let i = 0; i !== blockedRegions.length; i++)
             document.querySelector('#current-blocked-regions').innerHTML += `${blockedRegions[i]}<br>`;
         for (let i = 0; i !== dossierKeywords.length; i++)

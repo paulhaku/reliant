@@ -261,7 +261,7 @@ chrome.storage.local.get('resignkey', (result) =>
     keys[resignKey] = () =>
     {
         if (urlParameters['page'] === 'join_WA')
-            (document.querySelector('button[class="button primary icon approve big"') as HTMLButtonElement).click();
+            (document.querySelector('button[class="button primary icon approve big"]') as HTMLButtonElement).click();
         else if (urlParameters['reliant'] === 'main') {
             chrome.storage.local.get('currentwa', (currentwaresult) =>
             {

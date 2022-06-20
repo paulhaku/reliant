@@ -68,6 +68,14 @@ a dossier button on the main page. Useful for chasing specific teams. <b>Leave b
 <p id="current-dossier-keywords"></p>
 </fieldset>
 <fieldset>
+<legend>Endorse Inclusion</legend>
+<p>Same as above, but for endorsing. <b>Leave blank to show all defender nations.</b></p>
+<p>
+<textarea id="endorse-keywords"></textarea>
+</p>
+<input type="button" id="set-endorse-keywords" value="Set">
+</fieldset>
+<fieldset>
 <legend>Prepping</legend>
 <p><strong>Password</strong></p>
 <input type="text" id="my-password">
@@ -232,6 +240,7 @@ document.querySelector('#set-password').addEventListener('click', setPassword);
 document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWaApplications);
 document.querySelector('#set-blocked-regions').addEventListener('click', setBlockedRegions);
 document.querySelector('#set-dossier-keywords').addEventListener('click', setDossierKeywords);
+document.querySelector('#set-endorse-keywords').addEventListener('click', setEndorseKeywords);
 document.querySelector('#set-counter-thorn').addEventListener('click', setCounterThorn);
 
 /*
@@ -334,6 +343,16 @@ function setDossierKeywords(e: MouseEvent): void
     notyf.success(`Set dossier keywords.`);
 }
 
+function setEndorseKeywords(e: MouseEvent): void
+{
+    let dossierKeywords: string[] = (document.querySelector('#endorse-keywords') as HTMLTextAreaElement)
+        .value.split('\n');
+    for (let i = 0; i !== dossierKeywords.length; i++)
+        dossierKeywords[i] = dossierKeywords[i].toLowerCase();
+    chrome.storage.local.set({'endorsekeywords': dossierKeywords});
+    notyf.success(`Set endorse keywords.`);
+}
+
 function setCounterThorn(e: MouseEvent): void
 {
     let radioButtons: NodeList = document.querySelectorAll('input[name=minimum-move-count]');
@@ -426,7 +445,8 @@ chrome.storage.local.get('switchers', (result) =>
             getCurrentKey('jumppoint'),
             getCurrentKey('roname'),
             getCurrentKey('blockedregions'),
-            getCurrentKey('dossierkeywords')
+            getCurrentKey('dossierkeywords'),
+            getCurrentKey('endorsekeywords')
         ]);
 
         (document.querySelector('#new-main-nation') as HTMLInputElement).value = currentSettings[0];
@@ -434,10 +454,13 @@ chrome.storage.local.get('switchers', (result) =>
         document.querySelector('#current-roname').innerHTML = currentSettings[2];
         const blockedRegions = currentSettings[3];
         const dossierKeywords = currentSettings[4];
+        const endorseKeywords = currentSettings[5];
         for (let i = 0; i !== blockedRegions.length; i++)
             document.querySelector('#current-blocked-regions').innerHTML += `${blockedRegions[i]}<br>`;
         for (let i = 0; i !== dossierKeywords.length; i++)
             document.querySelector('#current-dossier-keywords').innerHTML += `<b>${dossierKeywords[i]}</b><br>`;
+        for (let i = 0; i !== endorseKeywords.length; i++)
+            (document.querySelector('#endorse-keywords') as HTMLTextAreaElement).value += `${endorseKeywords[i]}\n`;
     }
 
     displayCurrentKeys();

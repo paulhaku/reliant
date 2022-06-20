@@ -268,8 +268,11 @@
         const jpHappenings = document.querySelector('#jp-happenings');
         nationsToEndorse.innerHTML = '';
         jpHappenings.innerHTML = '';
-        chrome.storage.local.get(['jumppoint', 'endorsehappeningscount', 'currentwa'], async (result) =>
+        chrome.storage.local.get(['jumppoint', 'endorsehappeningscount', 'currentwa', 'endorsekeywords'], async (result) =>
         {
+            let endorseKeywords: string[] = [];
+            if (result.endorsekeywords)
+                endorseKeywords = result.endorsekeywords;
             const maxHappeningsCount = Number(result.endorsehappeningscount) || 10;
             const jumpPoint = result.jumppoint || 'artificial_solar_system';
             let response = await makeAjaxQuery(`/page=ajax2/a=reports/view=region.${jumpPoint}/filter=move+member+endo`,
@@ -308,6 +311,11 @@
                 // Don't include nations that probably aren't in the WA
                 if (lis[i].innerHTML.indexOf('resigned from') !== -1)
                     resigned.push(nationName);
+                // Only include nations with keywords
+                if (endorseKeywords.length &&
+                    (endorseKeywords.every((keyword) => nationName.indexOf(keyword) === -1))) {
+                    resigned.push(nationName);
+                }
                 else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
                     if (resigned.indexOf(nationName) === -1) {
                         function onEndorseClick(e: MouseEvent)

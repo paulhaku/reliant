@@ -2,7 +2,7 @@
 {
     async function getNumSwitchers(): Promise<number>
     {
-        return new Promise((resolve, reject) =>
+        return new Promise((resolve) =>
         {
             chrome.storage.local.get('switchers', (result) =>
             {
@@ -16,7 +16,7 @@
 
     async function getCurrentWa(): Promise<string>
     {
-        return new Promise((resolve, reject) =>
+        return new Promise((resolve) =>
         {
             chrome.storage.local.get('currentwa', (result) =>
             {

@@ -7,7 +7,7 @@
     "typescript": "^4.9.4"
   },
   "scripts": {
-    "build:css": "sass src/css/sakura-mainpage.scss build/css/mainpage-modern.css && sass src/css/sakura-prep.scss build/css/prep-modern.css",
+    "build:css": "sass --no-source-map src/css/sakura-mainpage.scss build/css/mainpage-modern.css && sass --no-source-map src/css/sakura-prep.scss build/css/prep-modern.css",
     "build": "tsc"
   }
 }

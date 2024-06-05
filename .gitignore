@@ -1,3 +1,5 @@
 .idea/
 build/js/
 node_modules/
+build/css/mainpage-modern.css
+build/css/prep-modern.css

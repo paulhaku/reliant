@@ -561,21 +561,6 @@
                 moveCounts[moveRegionValue] = [movingNation];
             else if (moveCounts[moveRegionValue].indexOf(movingNation) === -1)
                 moveCounts[moveRegionValue].push(movingNation);
-            const counterThorn: boolean = await new Promise((resolve, reject) =>
-            {
-                chrome.storage.local.get('counterthorn', (result) =>
-                {
-                    if (typeof result.counterthorn !== 'undefined')
-                        resolve(Boolean(Number(result.counterthorn)));
-                    else
-                        resolve(false);
-                });
-            });
-            if (counterThorn) {
-                if (moveCounts[moveRegionValue].length < 2) {
-                    return;
-                }
-            }
             (e.target as HTMLInputElement).value = `Move!`;
             (e.target as HTMLInputElement).setAttribute('data-moveregion', moveRegionValue);
         }

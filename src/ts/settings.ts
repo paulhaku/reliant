@@ -50,14 +50,6 @@ hatari
 <p>Current: <p><b id="current-blocked-regions"></b></p></p>
 </fieldset>
 <fieldset>
-<legend>Counter Thorn</legend>
-<p>Should chases to regions where there hasn't been <strong>at least</strong> 2 moves from dossiered raiders be blocked?
-This can potentially be used to counter thorning.</p>
-<p><input type="radio" name="minimum-move-count" value="1"><label>True</label></p>
-<p><input type="radio" name="minimum-move-count" value="0"><label>False</label></p>
-<input type="button" id="set-counter-thorn" value="Set">
-</fieldset>
-<fieldset>
 <legend>Dossier Inclusion</legend>
 <p>Enter a list of keywords, one per line. Only raider nations with any of these keywords in their name will have
 a dossier button on the main page. Useful for chasing specific teams. <b>Leave blank to show all raider nations.</b></p>
@@ -241,7 +233,6 @@ document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWa
 document.querySelector('#set-blocked-regions').addEventListener('click', setBlockedRegions);
 document.querySelector('#set-dossier-keywords').addEventListener('click', setDossierKeywords);
 document.querySelector('#set-endorse-keywords').addEventListener('click', setEndorseKeywords);
-document.querySelector('#set-counter-thorn').addEventListener('click', setCounterThorn);
 
 /*
  * Handlers
@@ -351,19 +342,6 @@ function setEndorseKeywords(e: MouseEvent): void
         dossierKeywords[i] = dossierKeywords[i].toLowerCase();
     chrome.storage.local.set({'endorsekeywords': dossierKeywords});
     notyf.success(`Set endorse keywords.`);
-}
-
-function setCounterThorn(e: MouseEvent): void
-{
-    let radioButtons: NodeList = document.querySelectorAll('input[name=minimum-move-count]');
-    for (let i = 0; i !== radioButtons.length; i++) {
-        const currentRadioButton = radioButtons[i] as HTMLInputElement;
-        if (currentRadioButton.checked) {
-            chrome.storage.local.set({'counterthorn': currentRadioButton.value});
-            notyf.success('Set counter thorn to ' + currentRadioButton.value);
-            break;
-        }
-    }
 }
 
 chrome.storage.local.get(['prepswitchers', 'password'], (result) =>

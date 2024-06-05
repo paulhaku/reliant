@@ -30,9 +30,10 @@ $font-family-heading: $font-family-base;
 }
 
 #group-1 {
-    grid-template-columns: auto auto auto auto;
-    grid-template-rows: auto;
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 10px;
 }
 
 #switchers-prepped-container {

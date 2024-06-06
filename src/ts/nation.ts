@@ -1,5 +1,7 @@
-(() =>
+(async () =>
 {
+    await dieIfNoUserAgent();
+
     const nationTitle: HTMLDivElement = document.querySelector('.newtitlename');
     const crossButton: HTMLInputElement = document.createElement('input');
     crossButton.setAttribute('type', 'button');

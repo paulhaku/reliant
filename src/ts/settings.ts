@@ -359,8 +359,10 @@ chrome.storage.local.get('switchers', (result) =>
  * Initialization
  */
 
-(() =>
+(async () =>
 {
+    await setDefaultStorageValues();
+
     async function getCurrentKey(key: string): Promise<string>
     {
         return new Promise((resolve, reject) =>
@@ -434,6 +436,6 @@ chrome.storage.local.get('switchers', (result) =>
             (document.querySelector('#endorse-keywords') as HTMLTextAreaElement).value += `${endorseKeywords[i]}\n`;
     }
 
-    displayCurrentKeys();
-    displayCurrentSettings();
+    await displayCurrentKeys();
+    await displayCurrentSettings();
 })();

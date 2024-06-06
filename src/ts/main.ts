@@ -37,6 +37,25 @@ async function setStorageValue(key: string, value: any): Promise<void>
     });
 }
 
+async function setDefaultStorageValues(): Promise<void>
+{
+    const defaultValues: { key: string, value: any }[] = [
+        { key: 'jumppoint', value: 'artificial_solar_system' },
+        { key: 'roname', value: 'Reliant' },
+        { key: 'blockedregions', value: [] },
+        { key: 'dossierkeywords', value: [] },
+        { key: 'endorsekeywords', value: [] },
+        { key: 'prepswitchers', value: [] },
+        { key: 'switchers', value: [] },
+    ];
+
+    for (const { key, value } of defaultValues) {
+        if (await getStorageValue(key) === undefined) {
+            await setStorageValue(key, value);
+        }
+    }
+}
+
 async function dieIfNoUserAgent(): Promise<void>
 {
     const userAgent: string = await getStorageValue('useragent');
@@ -497,19 +516,5 @@ if (settingsParent) {
 
 (async () =>
 {
-    const defaultValues: { key: string, value: any }[] = [
-        { key: 'jumppoint', value: 'artificial_solar_system' },
-        { key: 'roname', value: 'Reliant' },
-        { key: 'blockedregions', value: [] },
-        { key: 'dossierkeywords', value: [] },
-        { key: 'endorsekeywords', value: [] },
-        { key: 'prepswitchers', value: [] },
-        { key: 'switchers', value: [] },
-    ];
-
-    for (const { key, value } of defaultValues) {
-        if (await getStorageValue(key) === undefined) {
-            await setStorageValue(key, value);
-        }
-    }
+    await setDefaultStorageValues();
 })();

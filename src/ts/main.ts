@@ -494,3 +494,22 @@ if (settingsParent) {
         redirectPage('/template-overall=none/page=blank/reliant=prep');
     });
 }
+
+(async () =>
+{
+    const defaultValues: { key: string, value: any }[] = [
+        { key: 'jumppoint', value: 'artificial_solar_system' },
+        { key: 'roname', value: 'Reliant' },
+        { key: 'blockedregions', value: [] },
+        { key: 'dossierkeywords', value: [] },
+        { key: 'endorsekeywords', value: [] },
+        { key: 'prepswitchers', value: [] },
+        { key: 'switchers', value: [] },
+    ];
+
+    for (const { key, value } of defaultValues) {
+        if (await getStorageValue(key) === undefined) {
+            await setStorageValue(key, value);
+        }
+    }
+})();

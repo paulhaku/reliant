@@ -29,7 +29,7 @@
     detaggingDiv.appendChild(regionStatus);
     detaggingDiv.appendChild(actionButton);
     detaggingDiv.setAttribute
-    ('style', 'background-color: #1F202D; color: #fff; position: fixed; right: 0px; bottom: 0px;');
+    ('style', 'background-color: #1F202D; color: #fff; position: fixed; right: 0px; bottom: 0px; z-index: 9999;');
 
     let endorseList: HTMLUListElement;
     let regionalOfficersToDismiss: string[] = [];

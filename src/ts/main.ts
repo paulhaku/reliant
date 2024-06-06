@@ -517,4 +517,6 @@ if (settingsParent) {
 (async () =>
 {
     await setDefaultStorageValues();
+    const userAgent = await getStorageValue('useragent');
+    await chrome.runtime.sendMessage({ userAgent: userAgent });
 })();

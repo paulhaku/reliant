@@ -9,11 +9,17 @@
     "24": "icons/icon24.png",
     "32": "icons/icon32.png"
   },
-  "permissions": ["activeTab", "storage", "webRequest"],
+  "permissions": ["activeTab",
+    "storage",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"],
   "host_permissions": [
     "https://*.nationstates.net/*",
     "https://mail.google.com/*"
   ],
+  "background": {
+    "service_worker": "js/background.js"
+  },
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",

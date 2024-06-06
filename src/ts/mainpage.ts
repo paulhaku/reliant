@@ -467,6 +467,7 @@
         const newRaiderJP = canonicalize((document.querySelector('#raider-jp') as HTMLInputElement).value);
         chrome.storage.local.set({'raiderjp': newRaiderJP});
         notyf.success(`Set raider JP to ${newRaiderJP}`);
+        (document.querySelector('#raider-jp') as HTMLInputElement).value = '';
     }
 
     function moveToJP(e: MouseEvent): void

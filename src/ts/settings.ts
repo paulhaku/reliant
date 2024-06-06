@@ -345,7 +345,7 @@ function setEndorseKeywords(e: MouseEvent): void
 chrome.storage.local.get(['prepswitchers', 'password'], (result) =>
 {
     const currentSwitcherSet = document.querySelector('#current-switcher-set');
-    const prepSwitchers: string[] = result.prepswitchers;
+    const prepSwitchers: string[] = result.prepswitchers ?? [];
     for (let i = 0; i != prepSwitchers.length; i++)
         currentSwitcherSet.innerHTML +=
             `<a href="/page=un?nation=${prepSwitchers[i]}&password=${result.password}&logging_in=1" target="_blank">${prepSwitchers[i]}</a><br>`;
@@ -354,7 +354,7 @@ chrome.storage.local.get(['prepswitchers', 'password'], (result) =>
 chrome.storage.local.get('switchers', (result) =>
 {
     const currentApplications = document.querySelector('#current-stored-applications');
-    const applications: Switcher[] = result.switchers;
+    const applications: Switcher[] = result.switchers ?? [];
     for (let i = 0; i !== applications.length; i++) {
         currentApplications.innerHTML += `<p>Name: ${applications[i].name}<br>ID: ${applications[i].appid}</p>`;
     }
@@ -428,9 +428,9 @@ chrome.storage.local.get('switchers', (result) =>
         (document.querySelector('#new-main-nation') as HTMLInputElement).value = currentSettings[0];
         document.querySelector('#current-jumppoint').innerHTML = currentSettings[1];
         document.querySelector('#current-roname').innerHTML = currentSettings[2];
-        const blockedRegions = currentSettings[3];
-        const dossierKeywords = currentSettings[4];
-        const endorseKeywords = currentSettings[5];
+        const blockedRegions = currentSettings[3] ?? [];
+        const dossierKeywords = currentSettings[4] ?? [];
+        const endorseKeywords = currentSettings[5] ?? [];
         for (let i = 0; i !== blockedRegions.length; i++)
             document.querySelector('#current-blocked-regions').innerHTML += `${blockedRegions[i]}<br>`;
         for (let i = 0; i !== dossierKeywords.length; i++)

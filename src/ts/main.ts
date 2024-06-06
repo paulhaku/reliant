@@ -15,6 +15,28 @@ interface Switcher
  * Helpers
  */
 
+async function getStorageValue(key: string): Promise<any>
+{
+    return new Promise((resolve, reject) =>
+    {
+        chrome.storage.local.get(key, (result) =>
+        {
+            resolve(result[key]);
+        });
+    });
+}
+
+async function setStorageValue(key: string, value: any): Promise<void>
+{
+    return new Promise((resolve, reject) =>
+    {
+        chrome.storage.local.set({[key]: value}, () =>
+        {
+            resolve();
+        });
+    });
+}
+
 function canonicalize(str: string): string
 {
     return str.trim().toLowerCase().replace(/ /g, '_');

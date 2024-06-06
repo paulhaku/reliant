@@ -166,11 +166,6 @@ Current:
 <b id="currentviewregionkey"></b>
 </p>
 <p>
-<label for="rokey">RO Key</label>
-<input type="radio" name="key-to-change" value="rokey">
-Not Implemented
-</p>
-<p>
 <label for="worldactivitykey">World Activity Key</label>
 <input type="radio" name="key-to-change" value="worldactivitykey">
 Current:

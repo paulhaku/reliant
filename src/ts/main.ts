@@ -47,6 +47,7 @@ async function setDefaultStorageValues(): Promise<void>
         { key: 'endorsekeywords', value: [] },
         { key: 'prepswitchers', value: [] },
         { key: 'switchers', value: [] },
+        { key: 'raiderjp', value: 'suspicious'},
     ];
 
     for (const { key, value } of defaultValues) {

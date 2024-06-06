@@ -66,55 +66,6 @@ function getChk(page?: string): void
 
 let inQuery = false;
 
-/*
-function makeAjaxQuery(url: string, method: string, data?: FormData): Promise<string>
-{
-    let ajaxButtons: NodeList = document.querySelectorAll('.ajaxbutton');
-    return new Promise((resolve, reject) =>
-    {
-        function onLoadStart(e: Event): void
-        {
-            startTime = Date.now();
-            // In case we discover we somehow made a new request before our last one concluded,
-            // immediately abort it
-            if (inQuery)
-                xhr.abort();
-            // Each button with class 'ajaxbutton' make a request to the NS webiste.
-            // In order to abide by rule "4. Avoid Simultaneous Requests" we will keep all buttons
-            // with this class disabled until we receive a complete response from the NS server.
-            for (let i = 0; i != ajaxButtons.length; i++)
-                (ajaxButtons[i] as HTMLInputElement).disabled = true;
-            inQuery = true;
-        }
-
-        async function onLoadEnd(e: Event): Promise<void>
-        {
-            // We've received a complete response from the NS server, so we can allow more user input
-            for (let i = 0; i != ajaxButtons.length; i++)
-                (ajaxButtons[i] as HTMLInputElement).disabled = false;
-            inQuery = false;
-            if (document.querySelector('#load-time'))
-                (document.querySelector('#load-time') as HTMLSpanElement).innerHTML =
-                    String(Date.now() - startTime) + ' ms';
-            resolve(xhr.response);
-        }
-
-        let startTime: number;
-        let xhr: XMLHttpRequest = new XMLHttpRequest();
-        xhr.addEventListener('loadstart', onLoadStart);
-        xhr.addEventListener('loadend', onLoadEnd);
-        // Recommended by Eluvatar: https://forum.nationstates.net/viewtopic.php?p=30083979#p30083979
-        const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}/userclick=${Date.now()}`;
-        xhr.open(method, fixedUrl);
-        xhr.responseType = 'text';
-        if (data !== undefined)
-            xhr.send(data);
-        else
-            xhr.send();
-    });
-}
- */
-
 async function makeAjaxQuery(url: string, method: string, data?: FormData, admit: boolean = false): Promise<string>
 {
     const userAgent: string = await new Promise(resolve =>

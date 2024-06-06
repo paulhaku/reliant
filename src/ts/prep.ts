@@ -1,4 +1,4 @@
-(() =>
+(async () =>
 {
     const pageContent = `
 <!DOCTYPE html>
@@ -38,6 +38,8 @@
     document.open();
     document.write(pageContent);
     document.close();
+
+    await dieIfNoUserAgent();
 
     /*
      * Event Handlers

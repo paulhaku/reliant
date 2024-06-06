@@ -1,4 +1,4 @@
-(() =>
+(async () =>
 {
     /* Every button with class "ajaxbutton" indicates that the button makes a request to
      * the NS server. The "makeAjaxQuery" function will disable these buttons when a request
@@ -144,6 +144,8 @@
     document.open();
     document.write(pageContent);
     document.close();
+
+    await dieIfNoUserAgent();
 
     let notyf = new Notyf({
         duration: 3000,

@@ -254,13 +254,11 @@ function setKey(e: MouseEvent): void
     notyf.success(`Set function "${keyToSet}" to key ${key}`);
 }
 
-function setUserAgent(e: MouseEvent): void
+async function setUserAgent(e: MouseEvent): Promise<void>
 {
     const newUserAgent: string = canonicalize((document.querySelector('#new-main-nation') as HTMLInputElement).value);
-    chrome.storage.local.set({'useragent': newUserAgent}, () =>
-    {
-        notyf.success(`Set identifier to ${newUserAgent}`);
-    });
+    await setStorageValue('useragent', newUserAgent);
+    notyf.success(`Set identifier to ${newUserAgent}`);
 }
 
 function setJumpPoint(e: MouseEvent): void

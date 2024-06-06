@@ -37,6 +37,25 @@ async function setStorageValue(key: string, value: any): Promise<void>
     });
 }
 
+async function dieIfNoUserAgent(): Promise<void>
+{
+    const userAgent: string = await getStorageValue('useragent');
+    if (userAgent) return;
+    const cancellationNotyf = new Notyf({
+        duration: 0,
+        position: {
+            x: 'right',
+            y: 'top',
+        },
+        dismissible: false,
+    });
+    Array.from(document.querySelectorAll('input'))
+        .filter((input) => input.id !== 'reliant-settings')
+        .forEach((input) => input.disabled = true);
+    cancellationNotyf.error('Please set your "Main Nation" in the <a href="/page=blank/reliant=settings">settings.</a>');
+    throw new Error('No User Agent');
+}
+
 function canonicalize(str: string): string
 {
     return str.trim().toLowerCase().replace(/ /g, '_');

@@ -23,7 +23,7 @@
     actionButton.setAttribute('type', 'button');
     actionButton.setAttribute('id', 'action-button');
     actionButton.setAttribute('class', 'ajaxbutton');
-    actionButton.setAttribute('style', 'padding: 20px;');
+    actionButton.setAttribute('style', 'padding: 20px; margin: 0 auto; display: block;');
     actionButton.setAttribute('value', 'Refresh');
 
     detaggingDiv.appendChild(regionStatus);

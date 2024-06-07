@@ -3,6 +3,9 @@ name: release
 on:
   push:
     branches: [main]
+    paths:
+        - 'src/**'
+        - 'build/manifest.json'
 
 jobs:
   build-and-release:

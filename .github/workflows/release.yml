@@ -39,6 +39,13 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           new_version=$(npm version patch -m "Upgrade to %s by GitHub Actions")
           echo "new_version=${new_version}" >> $GITHUB_ENV
+
+      - name: Update manifest version
+        run: |
+          new_version=$(jq -r '.version' package.json)
+          jq --arg new_version "$new_version" '.version = $new_version' build/manifest.json > build/manifest.tmp && mv build/manifest.tmp build/manifest.json
+          git add build/manifest.json
+          git commit -m "Update manifest.json version to ${new_version}"
           git push origin main --follow-tags
 
       - name: Extract version

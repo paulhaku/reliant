@@ -32,7 +32,7 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Increment version
+      - name: Increment version and push tag
         id: increment_version
         run: |
           git config --global user.name "github-actions[bot]"

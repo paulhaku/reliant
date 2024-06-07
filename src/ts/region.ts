@@ -88,21 +88,45 @@
     let secondRoAttempt = false;
     let nationsEndorsed: string[] = [];
 
-    async function actionButtonClick(e: MouseEvent): Promise<void> {
-        const value: string = (e.target as HTMLInputElement).value;
-        if (value === 'Refresh') {
-            const delegateRegex: RegExp = new RegExp('nation=(.+)');
-            let officerBoxes = document.querySelectorAll('.officerbox');
-            regionalOfficersToDismiss = [];
-            for (let i = 0; i !== officerBoxes.length; i++) {
-                let quietLink = officerBoxes[i].querySelector('.quietlink');
-                if (quietLink.innerHTML.indexOf('Founder') !== -1)
-                    continue;
-                else if (quietLink.innerHTML.indexOf('WA Delegate') !== -1)
-                    continue;
-                let officerName = delegateRegex.exec(officerBoxes[i].querySelector('.nlink')
-                    .getAttribute('href'))[1];
-                regionalOfficersToDismiss.push(officerName);
+async function actionButtonClick(e: MouseEvent): Promise<void>
+{
+    const value: string = (e.target as HTMLInputElement).value;
+    if (value === 'Refresh') {
+        const delegateRegex: RegExp = new RegExp('nation=(.+)');
+        let officerBoxes = document.querySelectorAll('.officerbox');
+        regionalOfficersToDismiss = [];
+        for (let i = 0; i !== officerBoxes.length; i++) {
+            let quietLink = officerBoxes[i].querySelector('.quietlink');
+            if (quietLink.innerHTML.indexOf('Founder') !== -1)
+                continue;
+            else if (quietLink.innerHTML.indexOf('WA Delegate') !== -1)
+                continue;
+            let officerName = delegateRegex.exec(officerBoxes[i].querySelector('.nlink')
+                .getAttribute('href'))[1];
+            regionalOfficersToDismiss.push(officerName);
+        }
+        const response = await makeAjaxQuery(`/template-overall=none/region=${currentRegionName}`, 'GET');
+        const responseElement = document.createRange().createContextualFragment(response);
+        let updateTime: string = responseElement.querySelector('#regioncontent > p:nth-child(4) > time').innerHTML;
+        let waDelegate: string = responseElement.querySelector('#regioncontent > p:nth-child(2) > a > span > span.nname').innerHTML;
+        console.log(regionalOfficersToDismiss);
+        console.log(waDelegate);
+        console.log(updateTime);
+        if (updateTime.indexOf('hour') === -1) {
+            if (secondRefreshAfterUpdate) {
+                chrome.storage.local.get('currentwa', (result) =>
+                {
+                    console.log(result.currentwa);
+                    console.log(waDelegate);
+                    if (canonicalize(result.currentwa) === canonicalize(waDelegate)) {
+                        regionStatus.innerHTML = 'Updated! You <b>are</b> the delegate.';
+                        actionButton.setAttribute('value', 'Dismiss RO');
+                    }
+                    else {
+                        regionStatus.innerHTML = 'Updated! You are <b>not</b> the delegate.';
+                        actionButton.setAttribute('value', 'Resign From the WA');
+                    }
+                });
             }
             const response = await makeAjaxQuery(`/template-overall=none/region=${currentRegionName}`, 'GET');
             const responseElement = document.createRange().createContextualFragment(response);

@@ -6,6 +6,7 @@ on:
     paths:
         - 'src/**'
         - 'build/manifest.json'
+        - '.github/workflows/release.yml'
 
 jobs:
   build-and-release:
@@ -28,16 +29,23 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
+      - name: Increment version and push tag
+        id: increment_version
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          new_version=$(npm version patch -m "Upgrade to %s by GitHub Actions")
+          echo "new_version=${new_version}" >> $GITHUB_ENV
+          git push origin main --follow-tags
+
+      - name: Extract version
+        id: extract_version
+        run: |
+          new_version=$(jq -r '.version' package.json)
+          echo "new_version=${new_version}" >> $GITHUB_ENV
+
       - name: Create zip of build
         run: zip -r reliant-release.zip build
-
-      - name: Bump version and push tag
-        id: bump_version
-        uses: anothrNick/github-tag-action@1.35.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-          WITH_V: true
 
       - name: Create Release
         id: create_release
@@ -45,8 +53,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.bump_version.outputs.new_tag }}
-          release_name: Release ${{ steps.bump_version.outputs.new_tag }}
+          tag_name: ${{ env.new_version }}
+          release_name: ${{ env.new_version }}
           draft: false
           prerelease: false
 

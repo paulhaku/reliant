@@ -106,26 +106,14 @@
             }
             const response = await makeAjaxQuery(`/template-overall=none/region=${currentRegionName}`, 'GET');
             const responseElement = document.createRange().createContextualFragment(response);
-            let updateTime: string;
-            let strongs: NodeList = responseElement.querySelectorAll('strong');
-            let waDelegate: string;
-            for (let i = 0; i != strongs.length; i++) {
-                if ((strongs[i] as HTMLElement).innerHTML === 'WA Delegate:') {
-                    if (strongs[i].parentElement.querySelector('a'))
-                        waDelegate = delegateRegex.exec(strongs[i].parentElement.querySelector('a').getAttribute('href'))[1];
-                    else
-                        waDelegate = '0';
-                } else if ((strongs[i] as HTMLElement).innerHTML === 'Last WA Update:') {
-                    updateTime = strongs[i].parentElement.querySelector('time').innerHTML;
-                    break;
-                }
-            }
+
+            let updateTime: string = responseElement.querySelector('#regioncontent > p:nth-child(4) > time').innerHTML;
+            let waDelegate: string = responseElement.querySelector('#regioncontent > p:nth-child(2) > a > span > span.nname').innerHTML;
             console.log(regionalOfficersToDismiss);
             console.log(waDelegate);
             console.log(updateTime);
             if (updateTime.indexOf('hour') === -1) {
                 if (secondRefreshAfterUpdate) {
-                    document.querySelectorAll('strong')[2].parentElement.innerHTML = strongs[2].parentElement.innerHTML;
                     chrome.storage.local.get('currentwa', (result) => {
                         console.log(result.currentwa);
                         console.log(waDelegate);

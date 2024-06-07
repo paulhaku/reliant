@@ -7,6 +7,7 @@ pageContent.innerHTML = `
 <input class="button" type="button" id="clear-wa-apps" value="Clear WA Apps">
 </fieldset>
 <fieldset>
+<p>This nation will be used to identify yourself in all requests to NationStates.</p>
 <legend>Main Nation</legend>
 <input type="text" id="new-main-nation">
 <input class="button" type="button" id="set-main-nation" value="Set">

@@ -29,7 +29,10 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
-      - name: Increment version and push tag
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Increment version
         id: increment_version
         run: |
           git config --global user.name "github-actions[bot]"

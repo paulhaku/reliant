@@ -1,0 +1,58 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CSS
+        run: npm run build:css
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Create zip of build
+        run: zip -r reliant-release.zip build
+
+      - name: Bump version and push tag
+        id: bump_version
+        uses: anothrNick/github-tag-action@1.35.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: true
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump_version.outputs.new_tag }}
+          release_name: Release ${{ steps.bump_version.outputs.new_tag }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./reliant-release.zip
+          asset_name: reliant-release.zip
+          asset_content_type: application/zip

@@ -1,4 +1,4 @@
-(() =>
+(async () =>
 {
     /* Every button with class "ajaxbutton" indicates that the button makes a request to
      * the NS server. The "makeAjaxQuery" function will disable these buttons when a request
@@ -144,6 +144,8 @@
     document.open();
     document.write(pageContent);
     document.close();
+
+    await dieIfNoUserAgent();
 
     let notyf = new Notyf({
         duration: 3000,
@@ -465,6 +467,7 @@
         const newRaiderJP = canonicalize((document.querySelector('#raider-jp') as HTMLInputElement).value);
         chrome.storage.local.set({'raiderjp': newRaiderJP});
         notyf.success(`Set raider JP to ${newRaiderJP}`);
+        (document.querySelector('#raider-jp') as HTMLInputElement).value = '';
     }
 
     function moveToJP(e: MouseEvent): void
@@ -582,6 +585,8 @@
                 }
                 (e.target as HTMLInputElement).value = 'Update Localid';
                 (e.target as HTMLInputElement).setAttribute('data-moveregion', '');
+                document.querySelector('#wa-delegate').innerHTML = 'N/A';
+                document.querySelector('#last-wa-update').innerHTML = 'N/A';
             });
         }
         else if ((e.target as HTMLInputElement).value == 'Update Localid') {
@@ -596,13 +601,12 @@
             return;
         const nationRegex: RegExp = new RegExp('nation=([A-Za-z0-9_-]+)');
         let response = await makeAjaxQuery(`/template-overall=none/region=${currentRegion.innerHTML}`, 'GET');
-        let responseDiv = document.createElement('div');
-        responseDiv.innerHTML = response;
+        const responseDocument = document.createRange().createContextualFragment(response);
         // update the region happenings at the same time to not make an extra query
         chrome.storage.local.get('regionhappeningscount', (result) =>
         {
             let regionHappeningsCount: number = Number(result.regionhappeningscount) || 10;
-            let regionHappeningsLis = responseDiv.querySelectorAll('ul > li');
+            let regionHappeningsLis = responseDocument.querySelectorAll('ul > li');
             regionHappenings.innerHTML = '';
             for (let i = 0; i != regionHappeningsCount; i++) {
                 let anodes = regionHappeningsLis[i].querySelectorAll('a');
@@ -618,26 +622,14 @@
                 regionHappenings.innerHTML += `<li>${regionHappeningsLis[i].innerHTML}</li>`;
             }
         });
-        let strongs = responseDiv.querySelectorAll('strong');
-        for (let i = 0; i !== strongs.length; i++) {
-            const strongParent = strongs[i].parentElement;
-            if (strongs[i].innerHTML == 'WA Delegate:' || strongs[i].innerHTML == 'WA Delegate') {
-                const waDelegate = strongParent.querySelector('a');
-                if (waDelegate) {
-                    document.querySelector('#wa-delegate').innerHTML = waDelegate.innerHTML;
-                    (document.querySelector('#delegate-nation') as HTMLInputElement).value = nationRegex.exec(strongParent.querySelector('a').href)[1];
-                }
-                else {
-                    document.querySelector('#wa-delegate').innerHTML = 'None';
-                    (document.querySelector('#delegate-nation') as HTMLInputElement).value = 'N/A';
-                }
-            }
-            else if (strongs[i].innerHTML == 'Last WA Update:') {
-                const lastWaUpdate = strongParent.querySelector('time');
-                document.querySelector('#last-wa-update').innerHTML = lastWaUpdate.innerHTML;
-                break;
-            }
+        const updatedWaDelegate = responseDocument.querySelector('#regioncontent > p:nth-child(2) > a > span');
+        if (updatedWaDelegate) {
+            document.querySelector('#wa-delegate').innerHTML = updatedWaDelegate.innerHTML;
+        } else {
+            document.querySelector('#wa-delegate').innerHTML = 'None.';
         }
+        const lastWaUpdate = responseDocument.querySelector('#regioncontent > p:nth-child(4) > time').innerHTML;
+        document.querySelector('#last-wa-update').innerHTML = lastWaUpdate;
     }
 
     async function checkCurrentRegion(e: MouseEvent): Promise<void>

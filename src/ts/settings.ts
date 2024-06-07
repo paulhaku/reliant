@@ -7,6 +7,7 @@ pageContent.innerHTML = `
 <input class="button" type="button" id="clear-wa-apps" value="Clear WA Apps">
 </fieldset>
 <fieldset>
+<p>This nation will be used to identify yourself in all requests to NationStates.</p>
 <legend>Main Nation</legend>
 <input type="text" id="new-main-nation">
 <input class="button" type="button" id="set-main-nation" value="Set">
@@ -166,11 +167,6 @@ Current:
 <b id="currentviewregionkey"></b>
 </p>
 <p>
-<label for="rokey">RO Key</label>
-<input type="radio" name="key-to-change" value="rokey">
-Not Implemented
-</p>
-<p>
 <label for="worldactivitykey">World Activity Key</label>
 <input type="radio" name="key-to-change" value="worldactivitykey">
 Current:
@@ -254,13 +250,11 @@ function setKey(e: MouseEvent): void
     notyf.success(`Set function "${keyToSet}" to key ${key}`);
 }
 
-function setUserAgent(e: MouseEvent): void
+async function setUserAgent(e: MouseEvent): Promise<void>
 {
     const newUserAgent: string = canonicalize((document.querySelector('#new-main-nation') as HTMLInputElement).value);
-    chrome.storage.local.set({'useragent': newUserAgent}, () =>
-    {
-        notyf.success(`Set identifier to ${newUserAgent}`);
-    });
+    await setStorageValue('useragent', newUserAgent);
+    notyf.success(`Set identifier to ${newUserAgent}`);
 }
 
 function setJumpPoint(e: MouseEvent): void
@@ -347,7 +341,7 @@ function setEndorseKeywords(e: MouseEvent): void
 chrome.storage.local.get(['prepswitchers', 'password'], (result) =>
 {
     const currentSwitcherSet = document.querySelector('#current-switcher-set');
-    const prepSwitchers: string[] = result.prepswitchers;
+    const prepSwitchers: string[] = result.prepswitchers ?? [];
     for (let i = 0; i != prepSwitchers.length; i++)
         currentSwitcherSet.innerHTML +=
             `<a href="/page=un?nation=${prepSwitchers[i]}&password=${result.password}&logging_in=1" target="_blank">${prepSwitchers[i]}</a><br>`;
@@ -356,7 +350,7 @@ chrome.storage.local.get(['prepswitchers', 'password'], (result) =>
 chrome.storage.local.get('switchers', (result) =>
 {
     const currentApplications = document.querySelector('#current-stored-applications');
-    const applications: Switcher[] = result.switchers;
+    const applications: Switcher[] = result.switchers ?? [];
     for (let i = 0; i !== applications.length; i++) {
         currentApplications.innerHTML += `<p>Name: ${applications[i].name}<br>ID: ${applications[i].appid}</p>`;
     }
@@ -366,8 +360,10 @@ chrome.storage.local.get('switchers', (result) =>
  * Initialization
  */
 
-(() =>
+(async () =>
 {
+    await setDefaultStorageValues();
+
     async function getCurrentKey(key: string): Promise<string>
     {
         return new Promise((resolve, reject) =>
@@ -430,9 +426,9 @@ chrome.storage.local.get('switchers', (result) =>
         (document.querySelector('#new-main-nation') as HTMLInputElement).value = currentSettings[0];
         document.querySelector('#current-jumppoint').innerHTML = currentSettings[1];
         document.querySelector('#current-roname').innerHTML = currentSettings[2];
-        const blockedRegions = currentSettings[3];
-        const dossierKeywords = currentSettings[4];
-        const endorseKeywords = currentSettings[5];
+        const blockedRegions = currentSettings[3] ?? [];
+        const dossierKeywords = currentSettings[4] ?? [];
+        const endorseKeywords = currentSettings[5] ?? [];
         for (let i = 0; i !== blockedRegions.length; i++)
             document.querySelector('#current-blocked-regions').innerHTML += `${blockedRegions[i]}<br>`;
         for (let i = 0; i !== dossierKeywords.length; i++)
@@ -441,6 +437,6 @@ chrome.storage.local.get('switchers', (result) =>
             (document.querySelector('#endorse-keywords') as HTMLTextAreaElement).value += `${endorseKeywords[i]}\n`;
     }
 
-    displayCurrentKeys();
-    displayCurrentSettings();
+    await displayCurrentKeys();
+    await displayCurrentSettings();
 })();

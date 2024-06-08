@@ -407,7 +407,6 @@ chrome.storage.local.get('delegatekey', (result) =>
         if (urlParameters['region']) {
             const delegateNation = canonicalize(document.querySelector('#regioncontent > p:nth-child(2) > a > span > span.nname').innerHTML);
             window.location.href = `https://www.nationstates.net/nation=${delegateNation}`;
-            (document.querySelector('#regioncontent > p:nth-child(1) > a') as HTMLAnchorElement).click();
             return;
         }
         // Copy Nation Link

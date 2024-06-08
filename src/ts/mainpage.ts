@@ -672,8 +672,15 @@
         for (let i = 0; i != 3; i++) {
             if (typeof lis[i] === 'undefined')
                 break;
-            else
+            else {
+                // resize image
+                let images = lis[i].querySelectorAll('img');
+                for (let j = 0; j != images.length; j++) {
+                    images[j].width = 12;
+                    images[j].height = 12;
+                }
                 didIUpdate.innerHTML += `<li>${lis[i].innerHTML}</li>`;
+            }
         }
     }
 
@@ -689,9 +696,15 @@
             let maxHappeningsCount = Number(result.worldhappeningscount) || 10;
             for (let i = 0; i < maxHappeningsCount; i++) {
                 let liAnchors = lis[i].querySelectorAll('a');
+                const images = lis[i].querySelectorAll('img');
                 // fix link
                 for (let j = 0; j != liAnchors.length; j++)
                     liAnchors[j].href = liAnchors[j].href.replace('page=blank/', '');
+                // make images smaller
+                for (let j = 0; j != images.length; j++) {
+                    images[j].width = 12;
+                    images[j].height = 12;
+                }
                 worldHappenings.innerHTML += `<li>${lis[i].innerHTML}</li>`;
             }
         });

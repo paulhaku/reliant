@@ -623,8 +623,10 @@
             }
         });
         const updatedWaDelegate = responseDocument.querySelector('#regioncontent > p:nth-child(2) > a > span');
+
         if (updatedWaDelegate) {
             document.querySelector('#wa-delegate').innerHTML = updatedWaDelegate.innerHTML;
+            (document.querySelector('#delegate-nation') as HTMLInputElement).value = updatedWaDelegate.querySelector('.nname').innerHTML;
         } else {
             document.querySelector('#wa-delegate').innerHTML = 'None.';
         }

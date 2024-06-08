@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build:css": "sass --no-source-map src/css/sakura-mainpage.scss build/css/mainpage-modern.css && sass --no-source-map src/css/sakura-prep.scss build/css/prep-modern.css",
-    "build": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "build": "tsc"
   }
 }

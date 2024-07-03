@@ -3,6 +3,11 @@ pageContent.innerHTML = `
 <h1>Reliant Settings</h1>
 <form>
 <fieldset>
+<legend>Find My WA</legend>
+<input type="button" class="ajaxbutton" id="find-wa" value="Find My WA">
+<p id="find-wa-output"></p>
+</fieldset>
+<fieldset>
 <legend>Clear Stored World Assembly Applications</legend>
 <input class="button" type="button" id="clear-wa-apps" value="Clear WA Apps">
 </fieldset>
@@ -229,6 +234,7 @@ document.querySelector('#clear-wa-apps').addEventListener('click', clearStoredWa
 document.querySelector('#set-blocked-regions').addEventListener('click', setBlockedRegions);
 document.querySelector('#set-dossier-keywords').addEventListener('click', setDossierKeywords);
 document.querySelector('#set-endorse-keywords').addEventListener('click', setEndorseKeywords);
+document.querySelector('#find-wa').addEventListener('click', findMyWa);
 
 /*
  * Handlers
@@ -336,6 +342,31 @@ function setEndorseKeywords(e: MouseEvent): void
         dossierKeywords[i] = dossierKeywords[i].toLowerCase();
     chrome.storage.local.set({'endorsekeywords': dossierKeywords});
     notyf.success(`Set endorse keywords.`);
+}
+
+async function findMyWa(e: MouseEvent): Promise<void>
+{
+    // It wouldn't work using fetch/makeAjaxQuery, I seriously have no idea why - Haku
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('GET', '/cgi-bin/api.cgi?wa=1&q=members', true);
+
+    xhr.onreadystatechange = async function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const xmlDoc = xhr.responseXML;
+
+            const membersElement = xmlDoc.querySelector('MEMBERS').textContent;
+            if (!membersElement) return;
+            const members = membersElement.split(',');
+            const prepSwitchers = await getStorageValue('prepswitchers');
+            let wa: string = members.find((member) => prepSwitchers.includes(member));
+            const output = document.querySelector('#find-wa-output');
+            output.innerHTML = wa ? `Found WA: ${wa}` : 'Could not find WA.';
+
+        }
+    };
+    (e.target as HTMLInputElement).disabled = true;
+    xhr.send();
 }
 
 chrome.storage.local.get(['prepswitchers', 'password'], (result) =>

@@ -11,10 +11,10 @@
 
     async function getNationEndorsements(nationName: string): Promise<string[]>
     {
-        const response = await makeAjaxQuery(`/cgi-bin/api.cgi/nation=${nationName}/q=endorsements`, 'GET');
-        const parser: DOMParser = new DOMParser();
-        const xml: XMLDocument = parser.parseFromString(response, 'text/xml');
-        return xml.getElementsByTagName('ENDORSEMENTS')[0].childNodes[0].nodeValue.split(',');
+        const regex = /^.+nation=(.+)$/g;
+        return Array.from(document.querySelectorAll('.unbox .nlink'))
+            .map((element) => (element as HTMLAnchorElement).href)
+            .map((href) => href.match(regex)[0].replace(regex, '$1'));
     }
 
     async function setCrossClick(e: MouseEvent): Promise<void>

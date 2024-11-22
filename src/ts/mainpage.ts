@@ -199,10 +199,8 @@
         let response = await makeAjaxQuery('/page=un', 'GET');
         getChk(response);
         // while we're getting the chk, we may as well check the current nation too
-        let responseElement = document.createRange().createContextualFragment(response);
-        let nationName = (responseElement.querySelector('body') as HTMLElement).getAttribute('data-nname');
-        // chrome.storage.local.set({'currentwa': nationName});
-        await setStorageValue('currentwa', nationName);
+        let nationNameRegex = new RegExp('data-nname="([A-Za-z0-9_-]+?)">');
+        await setStorageValue('currentwa', nationNameRegex.exec(response)[1]);
     }
 
     /*

@@ -199,8 +199,10 @@
         let response = await makeAjaxQuery('/page=un', 'GET');
         getChk(response);
         // while we're getting the chk, we may as well check the current nation too
-        let nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
-        chrome.storage.local.set({'currentwa': nationNameRegex.exec(response)[1]});
+        let responseElement = document.createRange().createContextualFragment(response);
+        let nationName = (responseElement.querySelector('body') as HTMLElement).getAttribute('data-nname');
+        // chrome.storage.local.set({'currentwa': nationName});
+        await setStorageValue('currentwa', nationName);
     }
 
     /*
@@ -211,6 +213,7 @@
     {
         chrome.storage.local.get('chk', async (result) =>
         {
+            const currentWa = await getStorageValue('currentwa');
             const chk = result.chk;
             let formData = new FormData();
             formData.set('action', 'leave_UN');
@@ -218,10 +221,8 @@
             const response = await makeAjaxQuery('/page=UN_status', 'POST', formData);
             if (response.indexOf('You inform the World Assembly that') !== -1) {
                 freshlyAdmitted = false;
-                const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
-                const match = nationNameRegex.exec(response);
-                status.innerHTML = `Resigned from the WA on ${match[1]}`;
-                chrome.storage.local.set({'currentwa': ''});
+                status.innerHTML = `Resigned from the WA on ${currentWa}.`;
+                await setStorageValue('currentwa', '');
             }
         });
     }

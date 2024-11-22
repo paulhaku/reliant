@@ -76,7 +76,7 @@ a dossier button on the main page. Useful for chasing specific teams. <b>Leave b
 <fieldset>
 <legend>Prepping</legend>
 <p><strong>Password</strong></p>
-<input type="text" id="my-password">
+<input type="password" id="my-password">
 <input class="button" type="button" id="set-password" value="Set">
 <p><strong>Switchers</strong></p>
 <textarea id="switchers"></textarea>

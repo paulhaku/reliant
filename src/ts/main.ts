@@ -142,7 +142,7 @@ async function makeAjaxQuery(url: string, method: string, data?: FormData, admit
     let startTime = Date.now();
 
     // Recommended by Eluvatar: https://forum.nationstates.net/viewtopic.php?p=30083979#p30083979
-    const fixedUrl: string = `${url}/script=reliant_${RELIANT_VERSION}_by_Haku_in_use_by_${userAgent}/userclick=${Date.now()}`;
+    const fixedUrl: string = `${url}?script=reliant_${RELIANT_VERSION}_by_Haku_in_use_by_${userAgent}&userclick=${Date.now()}`;
     let request: Request;
     // redirect required if admitting to the WA
     if (!admit) {

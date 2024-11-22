@@ -76,7 +76,11 @@
                 </div>
                 <!-- Reports Container -->
                 <div id="reports-container">
-                    <span class="header">Reports</span> (<span id="reports-time"></span>)
+                    <span class="header">Reports</span>
+                    <label for="set-sse-timeout">Timeout (seconds)</label>
+                    <input type="text" id="sse-timeout-value">
+                    <input type="button" id="set-sse-timeout" value="Set">
+                    (<span id="reports-time"></span>)
                     <ul id="reports" class="information">
                     </ul>
                 </div>
@@ -140,6 +144,113 @@
     </body>
 </html>
 `;
+
+    // Initiate SSE connection
+    const raiderJp = await getStorageValue('raiderjp');
+    // const eventSource = new EventSource(`/api/move+member+endo+region:${raiderJp}`);
+
+    // Types for our event data
+    interface EventData {
+        time: string;
+        id: string;
+        str: string;
+    }
+
+// Interface for our event patterns
+    interface EventPattern {
+        regex: RegExp;
+        format: (matches: RegExpMatchArray) => string;
+        // Add optional handler for additional processing
+        handler?: (matches: RegExpMatchArray) => void;
+    }
+
+// Event patterns configuration
+    const eventPatterns: Record<string, EventPattern> = {
+        RELOCATION: {
+            regex: /@@([^@]+)@@ relocated from %%([^%]+)%% to %%([^%]+)%%/,
+            format: (matches) => formatLink(matches[1], 'nation') +
+                ` moved from ${formatLink(matches[2], 'region')} to ${formatLink(matches[3], 'region')}`,
+            handler: (matches) => {
+                (document.querySelector('#chasing-button') as HTMLInputElement).setAttribute('data-moveregion', matches[3]);
+            }
+        },
+        ADMISSION: {
+            regex: /@@([^@]+)@@ was admitted to the World Assembly/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} was admitted to the World Assembly`
+        },
+        ENDORSEMENT: {
+            regex: /@@([^@]+)@@ endorsed @@([^@]+)@@/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} endorsed ${formatLink(matches[2], 'nation')}`
+        },
+        WITHDRAW_ENDORSEMENT: {
+            regex: /@@([^@]+)@@ withdrew its endorsement from @@([^@]+)@@/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} withdrew its endorsement from ${formatLink(matches[2], 'nation')}`
+        }
+    };
+
+// Helper function to create links
+    const formatLink = (text: string, type: 'nation' | 'region'): string => {
+        return `<a href="/${type}=${text}">${text}</a>`;
+    };
+
+// Helper function to append report
+    const appendReport = (content: string): HTMLLIElement => {
+        const reportsElement = document.querySelector('#reports');
+        if (reportsElement) {
+            const liElement = document.createElement('li');
+            liElement.innerHTML = content;
+            reportsElement.appendChild(liElement);
+            return liElement;
+        }
+    };
+
+// Main event handler
+    const handleEventMessage = async (event: MessageEvent): Promise<void> => {
+        try {
+            const data = JSON.parse(event.data) as EventData;
+
+            // Try each pattern until we find a match
+            for (const pattern of Object.values(eventPatterns)) {
+                const match = data.str.match(pattern.regex);
+                if (match) {
+                    const reportElement = appendReport(pattern.format(match));
+                    // Move region handler
+                    if (pattern.handler) {
+                        pattern.handler(match);
+                    }
+                    const sseTimeout = Number(await getStorageValue('ssetimeout')) * 1000;
+                    if (sseTimeout) {
+                        setTimeout(() => {
+                            document.querySelector('#reports').removeChild(reportElement);
+                        }, sseTimeout);
+                    }
+                    return;
+                }
+            }
+
+            // Log unmatched patterns for debugging
+            console.log('Unmatched event:', data.str);
+        } catch (error) {
+            console.error('Error processing event:', error);
+        }
+    };
+
+    // Set up event source
+    let eventSource: EventSource;
+    if (typeof EventSource !== 'undefined') {
+        eventSource = new EventSource(`/api/move+member+endo+region:${raiderJp}`);
+        eventSource.onmessage = handleEventMessage;
+    } else {
+        console.error('EventSource is not supported in this browser');
+    }
+
+    eventSource.onopen = () => {
+        console.log('SSE connection opened');
+    }
+
+    eventSource.onerror = () => {
+        console.error('SSE connection error');
+    }
 
     document.open();
     document.write(pageContent);
@@ -501,6 +612,47 @@
 
     async function chasingButton(e: MouseEvent): Promise<void>
     {
+        // updated for SSE
+        // jump points and such
+        const doNotMove: string[] = await new Promise((resolve, reject) =>
+        {
+            chrome.storage.local.get('blockedregions', (result) =>
+            {
+                if (typeof result.blockedregions !== 'undefined')
+                    resolve(result.blockedregions);
+                else
+                    resolve([]);
+            });
+        });
+        if ((e.target as HTMLInputElement).getAttribute('data-moveregion')) {
+            chrome.storage.local.get('localid', async (result) =>
+            {
+                const localId = result.localid;
+                const moveRegion = (e.target as HTMLInputElement).getAttribute('data-moveregion');
+                const formData = new FormData();
+                formData.set('localid', localId);
+                formData.set('region_name', moveRegion);
+                formData.set('move_region', '1');
+                let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
+                if (response.indexOf('This request failed a security check.') !== -1)
+                    status.innerHTML = `Failed to move to ${moveRegion}.`;
+                else {
+                    status.innerHTML = `Moved to ${moveRegion}`;
+                    currentRegion.innerHTML = moveRegion;
+                }
+                (e.target as HTMLInputElement).value = 'Update Localid';
+                (e.target as HTMLInputElement).setAttribute('data-moveregion', '');
+                document.querySelector('#wa-delegate').innerHTML = 'N/A';
+                document.querySelector('#last-wa-update').innerHTML = 'N/A';
+            });
+        }
+        else if ((e.target as HTMLInputElement).value == 'Update Localid') {
+            await manualLocalIdUpdate(e);
+            (e.target as HTMLInputElement).value = 'Refresh';
+        }
+    }
+    /*async function chasingButton(e: MouseEvent): Promise<void>
+    {
         // jump points and such
         const doNotMove: string[] = await new Promise((resolve, reject) =>
         {
@@ -592,7 +744,7 @@
             manualLocalIdUpdate(e);
             (e.target as HTMLInputElement).value = 'Refresh';
         }
-    }
+    }*/
 
     async function updateRegionStatus(e: MouseEvent): Promise<void>
     {
@@ -778,6 +930,14 @@
     document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
     document.querySelector('#open-region').addEventListener('click', openRegion);
     document.querySelector('#copy-orders').addEventListener('click', copyOrders);
+    document.querySelector('#set-sse-timeout').addEventListener('click', async () =>
+    {
+        const timeoutValue: number = Number((document.querySelector('#sse-timeout-value') as HTMLInputElement).value);
+        if (timeoutValue) {
+            await setStorageValue('ssetimeout', timeoutValue);
+            notyf.success(`Set SSE timeout to ${timeoutValue} seconds`);
+        }
+    });
     document.addEventListener('keyup', keyPress);
     chrome.storage.onChanged.addListener(onStorageChange);
 

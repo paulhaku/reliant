@@ -49,7 +49,7 @@
     {
         const response = await makeAjaxQuery('/page=un', 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
-        const nationNameRegex = new RegExp('<body id="loggedin" data-nname="([A-Za-z0-9_-]+?)">');
+        const nationNameRegex = new RegExp('data-nname="([A-Za-z0-9_-]+?)"');
         const nationName = nationNameRegex.exec(response)[1];
         (document.querySelector('#current-switcher') as HTMLSpanElement).innerHTML = nationName;
         (document.querySelector('#current-switcher-number') as HTMLSpanElement).innerHTML = String(switchers.indexOf(nationName) + 1);

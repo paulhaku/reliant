@@ -295,7 +295,7 @@
 
     async function manualLocalIdUpdate(e: MouseEvent): Promise<void> {
         document.querySelector('#update-localid').setAttribute('data-clicked', '1');
-        const response = await makeAjaxQuery('/region=rwby', 'GET');
+        const response = await makeAjaxQuery('/region=rwby2', 'GET');
         const responseElement = document.createRange().createContextualFragment(response);
         const localId = responseElement.querySelector('input[name=localid]').getAttribute('value');
         chrome.storage.local.set({'localid': localId});

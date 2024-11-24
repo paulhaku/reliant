@@ -297,7 +297,7 @@
     {
         freshlyAdmitted = false;
         console.log('manually updating localid');
-        let response = await makeAjaxQuery('/region=rwby', 'GET');
+        let response = await makeAjaxQuery('/region=rwby2', 'GET');
         getLocalId(response);
         status.innerHTML = 'Updated localid.';
         // reset buttons

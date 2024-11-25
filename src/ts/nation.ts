@@ -52,4 +52,46 @@
     }
 
     crossButton.addEventListener('click', setCrossClick);
+
+    const nationName = canonicalize(document.querySelector('#content > div.lineundercover > div.newnonflagstuff > div.newtitlebox > div.newtitlename > a').textContent);
+    console.log(nationName);
+    // Replace add to dossier button
+    // Remove it first
+    const dossierButton: HTMLInputElement = document.querySelector('button[value=add]');
+    if (!dossierButton) {
+        return;
+    }
+    dossierButton.parentElement.removeChild(dossierButton);
+    // Get tracked nations
+    const trackedNations: string[] = await getStorageValue('trackednations') || [];
+    // Add a new button
+    const trackButton: HTMLInputElement = document.createElement('input');
+    trackButton.setAttribute('type', 'button');
+    trackButton.setAttribute('value', 'Track');
+    trackButton.setAttribute('class', 'button');
+    const stopTrackingButton: HTMLInputElement = document.createElement('input');
+    stopTrackingButton.setAttribute('type', 'button');
+    stopTrackingButton.setAttribute('value', 'Stop Tracking');
+    stopTrackingButton.setAttribute('class', 'button');
+    // Add the button to the page
+    async function buttonListener(e: MouseEvent): Promise<void>
+    {
+        if ((e.target as HTMLInputElement).value === 'Track') {
+            trackedNations.push(nationName);
+            await setStorageValue('trackednations', trackedNations);
+            (e.target as HTMLInputElement).value = 'Stop Tracking';
+        } else {
+            trackedNations.splice(trackedNations.indexOf(nationName), 1);
+            await setStorageValue('trackednations', trackedNations);
+            (e.target as HTMLInputElement).value = 'Track';
+        }
+    }
+    stopTrackingButton.addEventListener('click', buttonListener);
+    trackButton.addEventListener('click', buttonListener);
+
+    if (trackedNations.includes(nationName)) {
+        document.querySelector('#composebutton').parentElement.appendChild(stopTrackingButton);
+    } else {
+        document.querySelector('#composebutton').parentElement.appendChild(trackButton);
+    }
 })();

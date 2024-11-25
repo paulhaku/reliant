@@ -290,7 +290,7 @@
      * Things to keep track of
      */
 
-    let nationsDossiered: string[] = [];
+    let nationsTracked: string[] = await getStorageValue('trackednations') || [];
     let nationsEndorsed: string[] = [];
     let moveCounts: object = {};
 
@@ -353,7 +353,6 @@
             document.querySelector('#last-wa-update').innerHTML = 'N/A';
             nationsToEndorse.innerHTML = '';
             nationsToDossier.innerHTML = '';
-            nationsDossiered = [];
             nationsEndorsed = [];
 
             let storedSwitchers: Switcher[] = result.switchers;
@@ -486,6 +485,8 @@
         });
     }
 
+    let potentialNationsToTrack = new Set<string>();
+
     function refreshDossier(e: MouseEvent): void
     {
         const raiderHappenings = document.querySelector('#raider-happenings');
@@ -526,7 +527,7 @@
                 const nationNameMatch = nationNameRegex.exec((lis[i].querySelector('a:nth-of-type(1)') as HTMLAnchorElement).href);
                 const nationName = nationNameMatch[1];
                 // don't let us dossier the same nation twice
-                if (nationsDossiered.indexOf(nationName) !== -1)
+                if (nationsTracked.indexOf(nationName) !== -1)
                     resigned.push(nationName);
                 // Don't include nations that probably aren't in the WA
                 if (lis[i].innerHTML.indexOf('resigned from') !== -1)
@@ -537,42 +538,30 @@
                 }
                 else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
                     if (resigned.indexOf(nationName) === -1) {
-                        async function onDossierClick(e: MouseEvent): Promise<void>
-                        {
-                            (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
-                            const chk: string = await new Promise(resolve =>
-                            {
-                                chrome.storage.local.get('chk', (result) =>
-                                {
-                                    resolve(result.chk);
-                                });
-                            });
-                            let formData = new FormData();
-                            formData.set('nation', nationName);
-                            formData.set('action', 'add');
-                            formData.set('chk', chk);
-                            let dossierResponse: string = await makeAjaxQuery('/page=dossier', 'POST', formData);
-                            if (dossierResponse.indexOf('has been added to your Dossier.') !== -1) {
-                                status.innerHTML = `Dossiered ${nationName}`;
-                                nationsDossiered.push(nationName);
-                                (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
-                            }
-                            else
-                                status.innerHTML = `Failed to dossier ${nationName}.`;
-                        }
-
-                        let dossierButton = document.createElement('input');
-                        dossierButton.setAttribute('type', 'button');
-                        dossierButton.setAttribute('class', 'ajaxbutton dossier');
-                        // so our key doesn't click it more than once
-                        dossierButton.setAttribute('data-clicked', '0');
-                        dossierButton.setAttribute('value', `Dossier ${pretty(nationName)}`);
-                        dossierButton.addEventListener('click', onDossierClick);
-                        let dossierLi = document.createElement('li');
-                        dossierLi.appendChild(dossierButton);
-                        nationsToDossier.appendChild(dossierLi);
                     }
                 }
+                async function onDossierClick(e: MouseEvent): Promise<void>
+                {
+                    (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
+                    status.innerHTML = `Tracking ${nationName}`;
+                    nationsTracked.push(nationName);
+                    (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
+                    await setStorageValue('trackednations', nationsTracked);
+                }
+
+                if (!potentialNationsToTrack.has(nationName)) {
+                    let dossierButton = document.createElement('input');
+                    dossierButton.setAttribute('type', 'button');
+                    dossierButton.setAttribute('class', 'ajaxbutton dossier');
+                    // so our key doesn't click it more than once
+                    dossierButton.setAttribute('data-clicked', '0');
+                    dossierButton.setAttribute('value', `Track ${pretty(nationName)}`);
+                    dossierButton.addEventListener('click', onDossierClick);
+                    let dossierLi = document.createElement('li');
+                    dossierLi.appendChild(dossierButton);
+                    nationsToDossier.appendChild(dossierLi);
+                }
+                potentialNationsToTrack.add(nationName);
             }
         });
     }
@@ -900,7 +889,8 @@
         window.open(`/region=${regionUrl}`);
     }
 
-// Update the list of switchers as soon as a new WA admit page is opened
+    // Update the list of switchers as soon as a new WA admit page is opened
+    // also update the EventSource whenever tracked nation changes
     function onStorageChange(changes: object): void
     {
         for (let key in changes) {
@@ -911,6 +901,18 @@
             }
             else if (key === 'currentwa')
                 currentWANation.innerHTML = storageChange.newValue || 'N/A';
+            else if (key === 'trackednations') {
+                eventSource.close();
+                let url = "/api/";
+                // nation:{nation} for each nation
+                const newTrackedNations: string[] = storageChange.newValue;
+                if (newTrackedNations.length) {
+                    url += newTrackedNations.map((nation) => `nation:${nation}`).join('+');
+                    eventSource = new EventSource(url);
+                    eventSource.onmessage = handleEventMessage;
+                    console.log(`New SSE url: ${url}`);
+                }
+            }
         }
     }
 

@@ -223,6 +223,11 @@
                         setTimeout(() => {
                             document.querySelector('#reports').removeChild(reportElement);
                         }, sseTimeout);
+                    } else {
+                        // Arbitrary default timeout
+                        setTimeout(() => {
+                            document.querySelector('#reports').removeChild(reportElement);
+                        }, 10000);
                     }
                     return;
                 }

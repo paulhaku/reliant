@@ -80,3 +80,9 @@ jobs:
           asset_path: ./reliant-release.zip
           asset_name: reliant-release.zip
           asset_content_type: application/zip
+
+      - name: Discord Webhook Action
+        uses: tsickert/discord-webhook@v6.0.0
+        with:
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          content: "New Reliant Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.new_version }}"

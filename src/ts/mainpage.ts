@@ -730,7 +730,7 @@
         else if (delegateNation.indexOf('N/A') !== -1)
             return;
         copyText.value =
-            `@here **NOW**\nMove to: https://www.nationstates.net/region=${currentRegion.innerHTML}\nThen endorse: https://www.nationstates.net/nation=${delegateNation}`;
+            `@here **NOW**\nMove to: https://www.nationstates.net/region=${currentRegion.innerHTML}\nThen endorse: https://www.nationstates.net/nation=${canonicalize(delegateNation)}`;
         document.body.appendChild(copyText);
         copyText.select();
         document.execCommand('copy');

@@ -311,7 +311,7 @@ chrome.storage.local.get('dossiernationkey', (result) =>
     const dossierNationKey = result.dossiernationkey || 'N';
     keys[dossierNationKey] = () =>
     {
-        const dossierButton: HTMLButtonElement = document.querySelector('button[value=add]');
+        const dossierButton: HTMLButtonElement = document.querySelector('#reliant-track');
         if (dossierButton)
             dossierButton.click();
         else if (urlParameters['reliant'] === 'main') {

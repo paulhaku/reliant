@@ -69,6 +69,7 @@
     trackButton.setAttribute('type', 'button');
     trackButton.setAttribute('value', 'Track');
     trackButton.setAttribute('class', 'button');
+    trackButton.setAttribute('id', 'reliant-track');
     const stopTrackingButton: HTMLInputElement = document.createElement('input');
     stopTrackingButton.setAttribute('type', 'button');
     stopTrackingButton.setAttribute('value', 'Stop Tracking');

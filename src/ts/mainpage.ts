@@ -76,7 +76,11 @@
                 </div>
                 <!-- Reports Container -->
                 <div id="reports-container">
-                    <span class="header">Reports</span> (<span id="reports-time"></span>)
+                    <span class="header">Reports</span>
+                    <label for="set-sse-timeout">Timeout (seconds)</label>
+                    <input type="text" id="sse-timeout-value">
+                    <input type="button" id="set-sse-timeout" value="Set">
+                    (<span id="reports-time"></span>)
                     <ul id="reports" class="information">
                     </ul>
                 </div>
@@ -141,6 +145,118 @@
 </html>
 `;
 
+    // Initiate SSE connection
+    const raiderJp = await getStorageValue('raiderjp');
+    // const eventSource = new EventSource(`/api/move+member+endo+region:${raiderJp}`);
+
+    // Types for our event data
+    interface EventData {
+        time: string;
+        id: string;
+        str: string;
+    }
+
+// Interface for our event patterns
+    interface EventPattern {
+        regex: RegExp;
+        format: (matches: RegExpMatchArray) => string;
+        // Add optional handler for additional processing
+        handler?: (matches: RegExpMatchArray) => void;
+    }
+
+// Event patterns configuration
+    const eventPatterns: Record<string, EventPattern> = {
+        RELOCATION: {
+            regex: /@@([^@]+)@@ relocated from %%([^%]+)%% to %%([^%]+)%%/,
+            format: (matches) => formatLink(matches[1], 'nation') +
+                ` moved from ${formatLink(matches[2], 'region')} to ${formatLink(matches[3], 'region')}`,
+            handler: (matches) => {
+                (document.querySelector('#chasing-button') as HTMLInputElement).setAttribute('data-moveregion', matches[3]);
+            }
+        },
+        ADMISSION: {
+            regex: /@@([^@]+)@@ was admitted to the World Assembly/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} was admitted to the World Assembly`
+        },
+        ENDORSEMENT: {
+            regex: /@@([^@]+)@@ endorsed @@([^@]+)@@/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} endorsed ${formatLink(matches[2], 'nation')}`
+        },
+        WITHDRAW_ENDORSEMENT: {
+            regex: /@@([^@]+)@@ withdrew its endorsement from @@([^@]+)@@/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} withdrew its endorsement from ${formatLink(matches[2], 'nation')}`
+        }
+    };
+
+// Helper function to create links
+    const formatLink = (text: string, type: 'nation' | 'region'): string => {
+        return `<a href="/${type}=${text}">${text}</a>`;
+    };
+
+// Helper function to append report
+    const appendReport = (content: string): HTMLLIElement => {
+        const reportsElement = document.querySelector('#reports');
+        if (reportsElement) {
+            const liElement = document.createElement('li');
+            liElement.innerHTML = content;
+            reportsElement.appendChild(liElement);
+            return liElement;
+        }
+    };
+
+// Main event handler
+    const handleEventMessage = async (event: MessageEvent): Promise<void> => {
+        try {
+            const data = JSON.parse(event.data) as EventData;
+
+            // Try each pattern until we find a match
+            for (const pattern of Object.values(eventPatterns)) {
+                const match = data.str.match(pattern.regex);
+                if (match) {
+                    const reportElement = appendReport(pattern.format(match));
+                    // Move region handler
+                    if (pattern.handler) {
+                        pattern.handler(match);
+                    }
+                    const sseTimeout = Number(await getStorageValue('ssetimeout')) * 1000;
+                    if (sseTimeout) {
+                        setTimeout(() => {
+                            document.querySelector('#reports').removeChild(reportElement);
+                        }, sseTimeout);
+                    } else {
+                        // Arbitrary default timeout
+                        setTimeout(() => {
+                            document.querySelector('#reports').removeChild(reportElement);
+                        }, 10000);
+                    }
+                    return;
+                }
+            }
+
+            // Log unmatched patterns for debugging
+            console.log('Unmatched event:', data.str);
+        } catch (error) {
+            console.error('Error processing event:', error);
+        }
+    };
+
+    // Set up event source
+    let eventSource: EventSource;
+    if (typeof EventSource !== 'undefined') {
+        eventSource = new EventSource(`/api/move+member+endo+region:${raiderJp}`);
+        eventSource.onmessage = handleEventMessage;
+    } else {
+        console.error('EventSource is not supported in this browser');
+    }
+
+    eventSource.onopen = () => {
+        console.log('SSE connection opened');
+    }
+
+    eventSource.onerror = () => {
+        console.error('SSE connection error');
+    }
+
     document.open();
     document.write(pageContent);
     document.close();
@@ -174,7 +290,7 @@
      * Things to keep track of
      */
 
-    let nationsDossiered: string[] = [];
+    let nationsTracked: string[] = await getStorageValue('trackednations') || [];
     let nationsEndorsed: string[] = [];
     let moveCounts: object = {};
 
@@ -237,7 +353,6 @@
             document.querySelector('#last-wa-update').innerHTML = 'N/A';
             nationsToEndorse.innerHTML = '';
             nationsToDossier.innerHTML = '';
-            nationsDossiered = [];
             nationsEndorsed = [];
 
             let storedSwitchers: Switcher[] = result.switchers;
@@ -370,6 +485,8 @@
         });
     }
 
+    let potentialNationsToTrack = new Set<string>();
+
     function refreshDossier(e: MouseEvent): void
     {
         const raiderHappenings = document.querySelector('#raider-happenings');
@@ -410,7 +527,7 @@
                 const nationNameMatch = nationNameRegex.exec((lis[i].querySelector('a:nth-of-type(1)') as HTMLAnchorElement).href);
                 const nationName = nationNameMatch[1];
                 // don't let us dossier the same nation twice
-                if (nationsDossiered.indexOf(nationName) !== -1)
+                if (nationsTracked.indexOf(nationName) !== -1)
                     resigned.push(nationName);
                 // Don't include nations that probably aren't in the WA
                 if (lis[i].innerHTML.indexOf('resigned from') !== -1)
@@ -424,37 +541,25 @@
                         async function onDossierClick(e: MouseEvent): Promise<void>
                         {
                             (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
-                            const chk: string = await new Promise(resolve =>
-                            {
-                                chrome.storage.local.get('chk', (result) =>
-                                {
-                                    resolve(result.chk);
-                                });
-                            });
-                            let formData = new FormData();
-                            formData.set('nation', nationName);
-                            formData.set('action', 'add');
-                            formData.set('chk', chk);
-                            let dossierResponse: string = await makeAjaxQuery('/page=dossier', 'POST', formData);
-                            if (dossierResponse.indexOf('has been added to your Dossier.') !== -1) {
-                                status.innerHTML = `Dossiered ${nationName}`;
-                                nationsDossiered.push(nationName);
-                                (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
-                            }
-                            else
-                                status.innerHTML = `Failed to dossier ${nationName}.`;
+                            status.innerHTML = `Tracking ${nationName}`;
+                            nationsTracked.push(nationName);
+                            (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
+                            await setStorageValue('trackednations', nationsTracked);
                         }
 
-                        let dossierButton = document.createElement('input');
-                        dossierButton.setAttribute('type', 'button');
-                        dossierButton.setAttribute('class', 'ajaxbutton dossier');
-                        // so our key doesn't click it more than once
-                        dossierButton.setAttribute('data-clicked', '0');
-                        dossierButton.setAttribute('value', `Dossier ${pretty(nationName)}`);
-                        dossierButton.addEventListener('click', onDossierClick);
-                        let dossierLi = document.createElement('li');
-                        dossierLi.appendChild(dossierButton);
-                        nationsToDossier.appendChild(dossierLi);
+                        if (!potentialNationsToTrack.has(nationName)) {
+                            let dossierButton = document.createElement('input');
+                            dossierButton.setAttribute('type', 'button');
+                            dossierButton.setAttribute('class', 'ajaxbutton dossier');
+                            // so our key doesn't click it more than once
+                            dossierButton.setAttribute('data-clicked', '0');
+                            dossierButton.setAttribute('value', `Track ${pretty(nationName)}`);
+                            dossierButton.addEventListener('click', onDossierClick);
+                            let dossierLi = document.createElement('li');
+                            dossierLi.appendChild(dossierButton);
+                            nationsToDossier.appendChild(dossierLi);
+                        }
+                        potentialNationsToTrack.add(nationName);
                     }
                 }
             }
@@ -500,6 +605,47 @@
     }
 
     async function chasingButton(e: MouseEvent): Promise<void>
+    {
+        // updated for SSE
+        // jump points and such
+        const doNotMove: string[] = await new Promise((resolve, reject) =>
+        {
+            chrome.storage.local.get('blockedregions', (result) =>
+            {
+                if (typeof result.blockedregions !== 'undefined')
+                    resolve(result.blockedregions);
+                else
+                    resolve([]);
+            });
+        });
+        if ((e.target as HTMLInputElement).getAttribute('data-moveregion')) {
+            chrome.storage.local.get('localid', async (result) =>
+            {
+                const localId = result.localid;
+                const moveRegion = (e.target as HTMLInputElement).getAttribute('data-moveregion');
+                const formData = new FormData();
+                formData.set('localid', localId);
+                formData.set('region_name', moveRegion);
+                formData.set('move_region', '1');
+                let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
+                if (response.indexOf('This request failed a security check.') !== -1)
+                    status.innerHTML = `Failed to move to ${moveRegion}.`;
+                else {
+                    status.innerHTML = `Moved to ${moveRegion}`;
+                    currentRegion.innerHTML = moveRegion;
+                }
+                (e.target as HTMLInputElement).value = 'Update Localid';
+                (e.target as HTMLInputElement).setAttribute('data-moveregion', '');
+                document.querySelector('#wa-delegate').innerHTML = 'N/A';
+                document.querySelector('#last-wa-update').innerHTML = 'N/A';
+            });
+        }
+        else if ((e.target as HTMLInputElement).value == 'Update Localid') {
+            await manualLocalIdUpdate(e);
+            (e.target as HTMLInputElement).value = 'Refresh';
+        }
+    }
+    /*async function chasingButton(e: MouseEvent): Promise<void>
     {
         // jump points and such
         const doNotMove: string[] = await new Promise((resolve, reject) =>
@@ -592,7 +738,7 @@
             manualLocalIdUpdate(e);
             (e.target as HTMLInputElement).value = 'Refresh';
         }
-    }
+    }*/
 
     async function updateRegionStatus(e: MouseEvent): Promise<void>
     {
@@ -743,7 +889,8 @@
         window.open(`/region=${regionUrl}`);
     }
 
-// Update the list of switchers as soon as a new WA admit page is opened
+    // Update the list of switchers as soon as a new WA admit page is opened
+    // also update the EventSource whenever tracked nation changes
     function onStorageChange(changes: object): void
     {
         for (let key in changes) {
@@ -754,6 +901,18 @@
             }
             else if (key === 'currentwa')
                 currentWANation.innerHTML = storageChange.newValue || 'N/A';
+            else if (key === 'trackednations') {
+                eventSource.close();
+                let url = "/api/";
+                // nation:{nation} for each nation
+                const newTrackedNations: string[] = storageChange.newValue;
+                if (newTrackedNations.length) {
+                    url += newTrackedNations.map((nation) => `nation:${nation}`).join('+');
+                    eventSource = new EventSource(url);
+                    eventSource.onmessage = handleEventMessage;
+                    console.log(`New SSE url: ${url}`);
+                }
+            }
         }
     }
 
@@ -778,6 +937,14 @@
     document.querySelector('#update-world-happenings').addEventListener('click', updateWorldHappenings);
     document.querySelector('#open-region').addEventListener('click', openRegion);
     document.querySelector('#copy-orders').addEventListener('click', copyOrders);
+    document.querySelector('#set-sse-timeout').addEventListener('click', async () =>
+    {
+        const timeoutValue: number = Number((document.querySelector('#sse-timeout-value') as HTMLInputElement).value);
+        if (timeoutValue) {
+            await setStorageValue('ssetimeout', timeoutValue);
+            notyf.success(`Set SSE timeout to ${timeoutValue} seconds`);
+        }
+    });
     document.addEventListener('keyup', keyPress);
     chrome.storage.onChanged.addListener(onStorageChange);
 

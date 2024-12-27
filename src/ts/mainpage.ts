@@ -246,7 +246,7 @@
         let url = "/api/";
         // nation:{nation} for each nation
         const newTrackedNations: string[] = await getStorageValue('trackednations') || [];
-        if (newTrackedNations) {
+        if (newTrackedNations.length > 0) {
             url += newTrackedNations.map((nation) => `nation:${nation}`).join('+');
         } else {
             // lol
@@ -636,6 +636,9 @@
                 const formData = new FormData();
                 formData.set('localid', localId);
                 formData.set('region_name', moveRegion);
+                if (doNotMove.indexOf(canonicalize(moveRegion)) !== -1) {
+                    return;
+                }
                 formData.set('move_region', '1');
                 let response = await makeAjaxQuery('/page=change_region', 'POST', formData);
                 if (response.indexOf('This request failed a security check.') !== -1)

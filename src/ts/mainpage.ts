@@ -538,30 +538,30 @@
                 }
                 else if (lis[i].innerHTML.indexOf('was admitted') !== -1) {
                     if (resigned.indexOf(nationName) === -1) {
+                        async function onDossierClick(e: MouseEvent): Promise<void>
+                        {
+                            (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
+                            status.innerHTML = `Tracking ${nationName}`;
+                            nationsTracked.push(nationName);
+                            (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
+                            await setStorageValue('trackednations', nationsTracked);
+                        }
+
+                        if (!potentialNationsToTrack.has(nationName)) {
+                            let dossierButton = document.createElement('input');
+                            dossierButton.setAttribute('type', 'button');
+                            dossierButton.setAttribute('class', 'ajaxbutton dossier');
+                            // so our key doesn't click it more than once
+                            dossierButton.setAttribute('data-clicked', '0');
+                            dossierButton.setAttribute('value', `Track ${pretty(nationName)}`);
+                            dossierButton.addEventListener('click', onDossierClick);
+                            let dossierLi = document.createElement('li');
+                            dossierLi.appendChild(dossierButton);
+                            nationsToDossier.appendChild(dossierLi);
+                        }
+                        potentialNationsToTrack.add(nationName);
                     }
                 }
-                async function onDossierClick(e: MouseEvent): Promise<void>
-                {
-                    (e.target as HTMLInputElement).setAttribute('data-clicked', '1');
-                    status.innerHTML = `Tracking ${nationName}`;
-                    nationsTracked.push(nationName);
-                    (e.target as HTMLInputElement).parentElement.removeChild(e.target as HTMLInputElement);
-                    await setStorageValue('trackednations', nationsTracked);
-                }
-
-                if (!potentialNationsToTrack.has(nationName)) {
-                    let dossierButton = document.createElement('input');
-                    dossierButton.setAttribute('type', 'button');
-                    dossierButton.setAttribute('class', 'ajaxbutton dossier');
-                    // so our key doesn't click it more than once
-                    dossierButton.setAttribute('data-clicked', '0');
-                    dossierButton.setAttribute('value', `Track ${pretty(nationName)}`);
-                    dossierButton.addEventListener('click', onDossierClick);
-                    let dossierLi = document.createElement('li');
-                    dossierLi.appendChild(dossierButton);
-                    nationsToDossier.appendChild(dossierLi);
-                }
-                potentialNationsToTrack.add(nationName);
             }
         });
     }

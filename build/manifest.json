@@ -135,6 +135,15 @@
       "js": [
         "js/nation.js"
       ]
+    },
+    {
+      "matches": [
+        "https://*.nationstates.net/page=blank/reliant=trackednations"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "js/my-tracked-nations.js"
+      ]
     }
   ]
 }

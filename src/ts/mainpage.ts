@@ -347,6 +347,7 @@
                 freshlyAdmitted = false;
                 status.innerHTML = `Resigned from the WA on ${currentWa}.`;
                 await setStorageValue('currentwa', '');
+                await setStorageValue('trackednations', []);
             }
         });
     }

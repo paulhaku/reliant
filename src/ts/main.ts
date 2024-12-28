@@ -302,7 +302,7 @@ chrome.storage.local.get('dossierkey', (result) =>
         if (urlParameters['page'] === 'dossier')
             (document.querySelector('button[name=clear_dossier]') as HTMLButtonElement).click();
         else
-            window.location.href = '/template-overall=none/page=dossier';
+            window.location.href = '/page=blank/reliant=trackednations';
     };
 });
 

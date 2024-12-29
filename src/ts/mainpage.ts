@@ -171,7 +171,7 @@
             format: (matches) => formatLink(matches[1], 'nation') +
                 ` moved from ${formatLink(matches[2], 'region')} to ${formatLink(matches[3], 'region')}`,
             handler: (matches) => {
-                (document.querySelector('#chasing-button') as HTMLInputElement).setAttribute('data-moveregion', matches[3]);
+                // (document.querySelector('#chasing-button') as HTMLInputElement).setAttribute('data-moveregion', matches[3]);
             }
         },
         ADMISSION: {
@@ -615,6 +615,37 @@
         }
     }
 
+    function getMovedToRegion(): string | null {
+        const ulElement = document.querySelector<HTMLUListElement>('#reports');
+        if (!ulElement) {
+            return null;
+        }
+
+        // 2. Find the first LI containing "moved from".
+        const targetLi = Array.from(ulElement.querySelectorAll<HTMLLIElement>('li'))
+            .find(li => li.textContent?.includes('moved from'));
+
+        if (!targetLi) {
+            return null; // No matching LI found
+        }
+
+        // 3. Inside this <li>, there are three <a> tags in the example:
+        //    [0] => The nation link (e.g. "/nation=oathaastealre")
+        //    [1] => The "moved from" region link (e.g. "/region=look_away")
+        //    [2] => The "moved to" region link (e.g. "/region=kaisereich")
+        const anchors = targetLi.querySelectorAll<HTMLAnchorElement>('a');
+
+        // Make sure we have at least 3 <a> tags
+        if (anchors.length < 3) {
+            return null; // Not enough anchors to match the pattern
+        }
+
+        // The "moved to" region should be anchors[2]
+        const movedToRegion = anchors[2].textContent?.trim() ?? null;
+
+        return movedToRegion;
+    }
+
     async function chasingButton(e: MouseEvent): Promise<void>
     {
         // updated for SSE
@@ -629,11 +660,13 @@
                     resolve([]);
             });
         });
-        if ((e.target as HTMLInputElement).getAttribute('data-moveregion')) {
+        // relocations look like this: <li><a href="/nation=oathaastealre">oathaastealre</a> moved from <a href="/region=look_away">look_away</a> to <a href="/region=kaisereich">kaisereich</a></li>
+        const moveRegion = getMovedToRegion();
+        if (moveRegion) {
             chrome.storage.local.get('localid', async (result) =>
             {
                 const localId = result.localid;
-                const moveRegion = (e.target as HTMLInputElement).getAttribute('data-moveregion');
+                // const moveRegion = (e.target as HTMLInputElement).getAttribute('data-moveregion');
                 const formData = new FormData();
                 formData.set('localid', localId);
                 formData.set('region_name', moveRegion);

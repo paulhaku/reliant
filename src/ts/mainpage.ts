@@ -185,6 +185,14 @@
         WITHDRAW_ENDORSEMENT: {
             regex: /@@([^@]+)@@ withdrew its endorsement from @@([^@]+)@@/,
             format: (matches) => `${formatLink(matches[1], 'nation')} withdrew its endorsement from ${formatLink(matches[2], 'nation')}`
+        },
+        RESIGN_WA: {
+            regex: /@@([^@]+)@@ resigned from the World Assembly/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} resigned from the World Assembly`
+        },
+        INFLUENCE: {
+            regex: /@@([^@]+)@@'s influence in %%([^@]+)%% rose from "[^@]+" to "[^@]+"/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} updated in ${formatLink(matches[2], 'region')}`
         }
     };
 

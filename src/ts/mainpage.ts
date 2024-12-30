@@ -255,7 +255,8 @@
     // Set up event source
     let eventSource: EventSource;
     if (typeof EventSource !== 'undefined') {
-        let url = "/api/";
+        const myNation = await getStorageValue('currentwa');
+        let url = `/api/nation:${myNation}+`;
         // nation:{nation} for each nation
         const newTrackedNations: string[] = await getStorageValue('trackednations') || [];
         if (newTrackedNations.length > 0) {
@@ -653,6 +654,13 @@
             return null; // Not enough anchors to match the pattern
         }
 
+        // Ignore our own nation
+        const movedFromNation = anchors[0].textContent?.trim() ?? null;
+        const myNation = document.querySelector('#current-wa-nation')?.textContent?.trim() ?? null;
+        if (movedFromNation === myNation) {
+            return null; // Ignore our own nation
+        }
+
         // The "moved to" region should be anchors[2]
         const movedToRegion = anchors[2].textContent?.trim() ?? null;
 
@@ -962,8 +970,9 @@
             else if (key === 'currentwa')
                 currentWANation.innerHTML = storageChange.newValue || 'N/A';
             else if (key === 'trackednations') {
+                const myNation = document.querySelector('#current-wa-nation').innerHTML;
                 eventSource.close();
-                let url = "/api/";
+                let url = `/api/nation:${myNation}+`;
                 // nation:{nation} for each nation
                 const newTrackedNations: string[] = storageChange.newValue;
                 if (newTrackedNations.length > 0) {

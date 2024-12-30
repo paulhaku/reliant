@@ -299,8 +299,8 @@ chrome.storage.local.get('dossierkey', (result) =>
     const dossierKey = result.dossierkey || 'M';
     keys[dossierKey] = () =>
     {
-        if (urlParameters['page'] === 'dossier')
-            (document.querySelector('button[name=clear_dossier]') as HTMLButtonElement).click();
+        if (urlParameters['reliant'] === 'trackednations')
+            (document.querySelector('#clear-tracked-nations') as HTMLButtonElement).click();
         else
             window.location.href = '/page=blank/reliant=trackednations';
     };

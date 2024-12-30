@@ -965,8 +965,14 @@
                 let url = "/api/";
                 // nation:{nation} for each nation
                 const newTrackedNations: string[] = storageChange.newValue;
-                if (newTrackedNations.length) {
+                if (newTrackedNations.length > 0) {
                     url += newTrackedNations.map((nation) => `nation:${nation}`).join('+');
+                    eventSource = new EventSource(url);
+                    eventSource.onmessage = handleEventMessage;
+                    console.log(`New SSE url: ${url}`);
+                } else {
+                    // lol
+                    url += `nation:haku`;
                     eventSource = new EventSource(url);
                     eventSource.onmessage = handleEventMessage;
                     console.log(`New SSE url: ${url}`);

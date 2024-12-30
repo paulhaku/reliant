@@ -683,7 +683,11 @@
         });
         // relocations look like this: <li><a href="/nation=oathaastealre">oathaastealre</a> moved from <a href="/region=look_away">look_away</a> to <a href="/region=kaisereich">kaisereich</a></li>
         const moveRegion = getMovedToRegion();
-        if (moveRegion) {
+        if ((e.target as HTMLInputElement).value == 'Update Localid') {
+            await manualLocalIdUpdate(e);
+            (e.target as HTMLInputElement).value = 'Refresh';
+        }
+        else if (moveRegion) {
             chrome.storage.local.get('localid', async (result) =>
             {
                 const localId = result.localid;
@@ -707,10 +711,6 @@
                 document.querySelector('#wa-delegate').innerHTML = 'N/A';
                 document.querySelector('#last-wa-update').innerHTML = 'N/A';
             });
-        }
-        else if ((e.target as HTMLInputElement).value == 'Update Localid') {
-            await manualLocalIdUpdate(e);
-            (e.target as HTMLInputElement).value = 'Refresh';
         }
     }
     /*async function chasingButton(e: MouseEvent): Promise<void>

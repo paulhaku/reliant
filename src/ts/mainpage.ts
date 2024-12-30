@@ -193,6 +193,10 @@
         INFLUENCE: {
             regex: /@@([^@]+)@@'s influence in %%([^@]+)%% rose from "[^@]+" to "[^@]+"/,
             format: (matches) => `${formatLink(matches[1], 'nation')} updated in ${formatLink(matches[2], 'region')}`
+        },
+        WA_DELEGATE: {
+            regex: /@@([^@]+)@@ became WA Delegate of %%([^%]+)%%/,
+            format: (matches) => `${formatLink(matches[1], 'nation')} became WA Delegate of ${formatLink(matches[2], 'region')}`
         }
     };
 

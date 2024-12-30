@@ -388,7 +388,8 @@
             if (response.indexOf('Welcome to the World Assembly, new member') !== -1) {
                 freshlyAdmitted = true;
                 status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
-                chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
+                await chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
+                await chrome.storage.local.set({ trackednations: [] });
                 getChk(response);
                 storedSwitchers.shift();
             }

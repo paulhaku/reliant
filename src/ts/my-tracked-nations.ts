@@ -6,7 +6,7 @@
     trackedNations.forEach((nation, i) => {
         const row: HTMLTableRowElement = document.createElement('tr');
         const cell: HTMLTableCellElement = document.createElement('td');
-        cell.textContent = trackedNations[i];
+        cell.innerHTML = `<a target="_blank" href="/nation=${trackedNations[i]}">${trackedNations[i]}</a>`;
         row.appendChild(cell);
         const removeButton: HTMLInputElement = document.createElement('input');
         removeButton.setAttribute('type', 'button');

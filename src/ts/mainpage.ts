@@ -360,6 +360,7 @@
                 freshlyAdmitted = false;
                 status.innerHTML = `Resigned from the WA on ${currentWa}.`;
                 await setStorageValue('currentwa', '');
+                nationsTracked = [];
                 await setStorageValue('trackednations', []);
             }
         });
@@ -390,6 +391,7 @@
                 freshlyAdmitted = true;
                 status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
                 await chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
+                nationsTracked = [];
                 await chrome.storage.local.set({ trackednations: [] });
                 getChk(response);
                 storedSwitchers.shift();

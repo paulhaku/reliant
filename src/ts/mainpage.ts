@@ -255,7 +255,8 @@
     // Set up event source
     let eventSource: EventSource;
     if (typeof EventSource !== 'undefined') {
-        let url = "/api/";
+        const myNation = await getStorageValue('currentwa');
+        let url = `/api/nation:${myNation}+`;
         // nation:{nation} for each nation
         const newTrackedNations: string[] = await getStorageValue('trackednations') || [];
         if (newTrackedNations.length > 0) {
@@ -359,6 +360,7 @@
                 freshlyAdmitted = false;
                 status.innerHTML = `Resigned from the WA on ${currentWa}.`;
                 await setStorageValue('currentwa', '');
+                nationsTracked = [];
                 await setStorageValue('trackednations', []);
             }
         });
@@ -389,6 +391,7 @@
                 freshlyAdmitted = true;
                 status.innerHTML = `Admitted to the WA on ${storedSwitchers[0].name}.`;
                 await chrome.storage.local.set({'currentwa': storedSwitchers[0].name});
+                nationsTracked = [];
                 await chrome.storage.local.set({ trackednations: [] });
                 getChk(response);
                 storedSwitchers.shift();
@@ -653,6 +656,13 @@
             return null; // Not enough anchors to match the pattern
         }
 
+        // Ignore our own nation
+        const movedFromNation = anchors[0].textContent?.trim() ?? null;
+        const myNation = document.querySelector('#current-wa-nation')?.textContent?.trim() ?? null;
+        if (movedFromNation === myNation) {
+            return null; // Ignore our own nation
+        }
+
         // The "moved to" region should be anchors[2]
         const movedToRegion = anchors[2].textContent?.trim() ?? null;
 
@@ -675,7 +685,11 @@
         });
         // relocations look like this: <li><a href="/nation=oathaastealre">oathaastealre</a> moved from <a href="/region=look_away">look_away</a> to <a href="/region=kaisereich">kaisereich</a></li>
         const moveRegion = getMovedToRegion();
-        if (moveRegion) {
+        if ((e.target as HTMLInputElement).value == 'Update Localid') {
+            await manualLocalIdUpdate(e);
+            (e.target as HTMLInputElement).value = 'Refresh';
+        }
+        else if (moveRegion) {
             chrome.storage.local.get('localid', async (result) =>
             {
                 const localId = result.localid;
@@ -699,10 +713,6 @@
                 document.querySelector('#wa-delegate').innerHTML = 'N/A';
                 document.querySelector('#last-wa-update').innerHTML = 'N/A';
             });
-        }
-        else if ((e.target as HTMLInputElement).value == 'Update Localid') {
-            await manualLocalIdUpdate(e);
-            (e.target as HTMLInputElement).value = 'Refresh';
         }
     }
     /*async function chasingButton(e: MouseEvent): Promise<void>
@@ -962,8 +972,9 @@
             else if (key === 'currentwa')
                 currentWANation.innerHTML = storageChange.newValue || 'N/A';
             else if (key === 'trackednations') {
+                const myNation = document.querySelector('#current-wa-nation').innerHTML;
                 eventSource.close();
-                let url = "/api/";
+                let url = `/api/nation:${myNation}+`;
                 // nation:{nation} for each nation
                 const newTrackedNations: string[] = storageChange.newValue;
                 if (newTrackedNations.length > 0) {
